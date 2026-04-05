@@ -575,3 +575,395 @@
     - DoorBumpOpener
     - WhitelistChameleon
     - WhitelistChameleonIdCard
+
+# Syndicate station
+
+- type: entity
+  parent: [ IDCardStandard, BaseSyndicateContraband ]
+  id: BaseSyndicateStationIDCard
+  abstract: true
+  suffix: Syndicate
+  components:
+    - type: Sprite
+      layers:
+        - state: black
+        - state: stripe_top
+          color: &color-syndicate-top "#e80c0c"
+        - state: stripe_bottom
+          color: &color-syndicate-bottom "#960606"
+        - sprite: *starlight-icon-rsi
+          offset: *icon-offset
+          state: Commander
+    - type: Access
+      tags:
+        - SyndicateStationMaintenance
+    - type: NanoChatCard
+      listNumber: false
+
+## Command
+
+- type: entity
+  parent: [ BaseSyndicateStationIDCard ]
+  id: SyndicateStationCaptainIDCard
+  name: captain ID card
+  suffix: Syndicate
+  components:
+    - type: IdCard
+      jobTitle: job-name-captain
+      jobIcon: JobIconSyndicateCaptain
+    - type: Sprite
+      layers:
+        - state: black
+        - state: stripe_top
+          color: *color-syndicate-top
+        - state: stripe_bottom
+          color: *color-syndicate-bottom
+        - sprite: *starlight-icon-rsi
+          offset: *icon-offset
+          state: SyndicateCaptain
+    - type: Access
+      groups:
+        - SyndicateStationCommand
+        - SyndicateStationService
+        - SyndicateStationMedical
+        - SyndicateStationSecurity
+        - SyndicateStationMisc
+
+- type: entity
+  parent: [ BaseSyndicateStationIDCard ]
+  id: SyndicateStationHeadOfPersonnelIDCard
+  name: head of personnel ID card
+  suffix: Syndicate
+  components:
+    - type: IdCard
+      jobTitle: job-name-hop
+      jobIcon: JobIconSyndicateHeadOfPersonnel
+    - type: Sprite
+      layers:
+        - state: black
+        - state: stripe_top
+          color: *color-syndicate-top
+        - state: stripe_bottom
+          color: *color-syndicate-bottom
+        - sprite: *starlight-icon-rsi
+          offset: *icon-offset
+          state: SyndicateHeadOfPersonnel
+    - type: Access
+      tags:
+        - SyndicateStationCommand
+        - SyndicateStationHeadOfPersonnel
+      groups:
+        - SyndicateStationService
+        - SyndicateStationMedical
+        - SyndicateStationSecurity
+        - SyndicateStationMisc
+
+- type: entity
+  parent: [ BaseSyndicateStationIDCard ]
+  id: SyndicateStationRedShieldIDCard
+  name: redshield officer ID card
+  suffix: Syndicate
+  components:
+    - type: IdCard
+      jobTitle: job-name-redshield
+      jobIcon: JobIconSyndicateRedShield
+    - type: Sprite
+      layers:
+        - state: black
+        - state: stripe_top
+          color: *color-syndicate-top
+        - state: stripe_bottom
+          color: *color-syndicate-bottom
+        - sprite: *starlight-icon-rsi
+          offset: *icon-offset
+          state: SyndicateRedShield
+    - type: Access
+      groups:
+        - SyndicateStationCommand
+        - SyndicateStationService
+        - SyndicateStationMedical
+        - SyndicateStationSecurity
+        - SyndicateStationMisc
+
+## Cargo
+- type: entity
+  parent: [ BaseSyndicateStationIDCard ]
+  id: SyndicateStationCargoTechnicianIDCard
+  name: cargo technician ID card
+  suffix: Syndicate
+  components:
+    - type: IdCard
+      jobTitle: job-name-cargotech
+      jobIcon: JobIconEvilCargoTechnician
+    - type: Sprite
+      layers:
+        - state: black
+        - state: stripe_top
+          color: *color-syndicate-top
+        - state: stripe_bottom
+          color: *color-syndicate-bottom
+        - sprite: *starlight-icon-rsi
+          offset: *icon-offset
+          state: EvilCargoTechnician
+    - type: Access
+      tags:
+        - SyndicateStationCargo
+        - SyndicateStationMaintenance
+        - SyndicateStationExternal
+
+## Service
+- type: entity
+  parent: [ BaseSyndicateStationIDCard ]
+  id: SyndicateStationBotanistIDCard
+  name: botanist ID card
+  suffix: Syndicate
+  components:
+    - type: IdCard
+      jobTitle: job-name-botanist
+      jobIcon: JobIconEvilBotanist
+    - type: Sprite
+      layers:
+        - state: black
+        - state: stripe_top
+          color: *color-syndicate-top
+        - state: stripe_bottom
+          color: *color-syndicate-bottom
+        - sprite: *starlight-icon-rsi
+          offset: *icon-offset
+          state: EvilBotanist
+    - type: Access
+      tags:
+        - SyndicateStationMaintenance
+        - SyndicateStationService
+        - SyndicateStationHydroponics
+
+- type: entity
+  parent: [ BaseSyndicateStationIDCard ]
+  id: SyndicateStationChefIDCard
+  name: chef ID card
+  suffix: Syndicate
+  components:
+    - type: IdCard
+      jobTitle: job-name-chef
+      jobIcon: JobIconEvilChef
+    - type: Sprite
+      layers:
+        - state: black
+        - state: stripe_top
+          color: *color-syndicate-top
+        - state: stripe_bottom
+          color: *color-syndicate-bottom
+        - sprite: *starlight-icon-rsi
+          offset: *icon-offset
+          state: EvilChef
+    - type: Access
+      tags:
+        - SyndicateStationMaintenance
+        - SyndicateStationService
+        - SyndicateStationKitchen
+
+- type: entity
+  parent: [ BaseSyndicateStationIDCard ]
+  id: SyndicateStationJanitorIDCard
+  name: janitor ID card
+  suffix: Syndicate
+  components:
+    - type: IdCard
+      jobTitle: job-name-janitor
+      jobIcon: JobIconEvilJanitor
+    - type: Sprite
+      layers:
+        - state: black
+        - state: stripe_top
+          color: *color-syndicate-top
+        - state: stripe_bottom
+          color: *color-syndicate-bottom
+        - sprite: *starlight-icon-rsi
+          offset: *icon-offset
+          state: EvilJanitor
+    - type: Access
+      tags:
+        - SyndicateStationMaintenance
+        - SyndicateStationService
+        - SyndicateStationJanitor
+
+
+## Engineering
+
+- type: entity
+  parent: [ BaseSyndicateStationIDCard ]
+  id: SyndicateStationEngineerIDCard
+  name: engineer ID card
+  suffix: Syndicate
+  components:
+    - type: IdCard
+      jobTitle: job-name-engineer
+      jobIcon: JobIconEvilStationEngineer
+    - type: Sprite
+      layers:
+        - state: black
+        - state: stripe_top
+          color: *color-syndicate-top
+        - state: stripe_bottom
+          color: *color-syndicate-bottom
+        - sprite: *starlight-icon-rsi
+          offset: *icon-offset
+          state: EvilStationEngineer
+    - type: Access
+      tags:
+        - SyndicateStationMaintenance
+        - SyndicateStationEngineering
+        - SyndicateStationExternal
+
+## Science
+
+- type: entity
+  parent: [ BaseSyndicateStationIDCard ]
+  id: SyndicateStationScientistIDCard
+  name: scientist ID card
+  suffix: Syndicate
+  components:
+    - type: IdCard
+      jobTitle: job-name-scientist
+      jobIcon: JobIconEvilScientist
+    - type: Sprite
+      layers:
+        - state: black
+        - state: stripe_top
+          color: *color-syndicate-top
+        - state: stripe_bottom
+          color: *color-syndicate-bottom
+        - sprite: *starlight-icon-rsi
+          offset: *icon-offset
+          state: EvilScientist
+    - type: Access
+      tags:
+        - SyndicateStationMaintenance
+        - SyndicateStationScience
+
+## Medical
+
+- type: entity
+  parent: [ BaseSyndicateStationIDCard ]
+  id: SyndicateStationMedicalDoctorIDCard
+  name: medical doctor ID card
+  suffix: Syndicate
+  components:
+    - type: IdCard
+      jobTitle: job-name-doctor
+      jobIcon: JobIconEvilMedicalDoctor
+    - type: Sprite
+      layers:
+        - state: black
+        - state: stripe_top
+          color: *color-syndicate-top
+        - state: stripe_bottom
+          color: *color-syndicate-bottom
+        - sprite: *starlight-icon-rsi
+          offset: *icon-offset
+          state: EvilMedicalDoctor
+    - type: Access
+      tags:
+        - SyndicateStationMaintenance
+        - SyndicateStationMedical
+
+- type: entity
+  parent: [ BaseSyndicateStationIDCard ]
+  id: SyndicateStationChemistIDCard
+  name: chemist ID card
+  suffix: Syndicate
+  components:
+    - type: IdCard
+      jobTitle: job-name-chemist
+      jobIcon: JobIconEvilChemist
+    - type: Sprite
+      layers:
+        - state: black
+        - state: stripe_top
+          color: *color-syndicate-top
+        - state: stripe_bottom
+          color: *color-syndicate-bottom
+        - sprite: *starlight-icon-rsi
+          offset: *icon-offset
+          state: EvilChemist
+    - type: Access
+      tags:
+        - SyndicateStationMaintenance
+        - SyndicateStationMedical
+        - SyndicateStationChemistry
+
+## Security
+
+- type: entity
+  parent: [ BaseSyndicateStationIDCard ]
+  id: SyndicateStationSecurityOfficerIDCard
+  name: security officer ID card
+  suffix: Syndicate
+  components:
+    - type: IdCard
+      jobTitle: job-name-security
+      jobIcon: JobIconEvilSecurityOfficer
+    - type: Sprite
+      layers:
+        - state: black
+        - state: stripe_top
+          color: *color-syndicate-top
+        - state: stripe_bottom
+          color: *color-syndicate-bottom
+        - sprite: *starlight-icon-rsi
+          offset: *icon-offset
+          state: EvilSecurityOfficer
+    - type: Access
+      tags:
+        - SyndicateStationMaintenance
+        - SyndicateStationSecurity
+
+- type: entity
+  parent: [ BaseSyndicateStationIDCard ]
+  id: SyndicateStationWardenIDCard
+  name: warden ID card
+  suffix: Syndicate
+  components:
+    - type: IdCard
+      jobTitle: job-name-warden
+      jobIcon: JobIconEvilWarden
+    - type: Sprite
+      layers:
+        - state: black
+        - state: stripe_top
+          color: *color-syndicate-top
+        - state: stripe_bottom
+          color: *color-syndicate-bottom
+        - sprite: *starlight-icon-rsi
+          offset: *icon-offset
+          state: EvilWarden
+    - type: Access
+      tags:
+        - SyndicateStationMaintenance
+        - SyndicateStationSecurity
+        - SyndicateStationArmory
+
+## Miscellaneous
+
+- type: entity
+  parent: [ BaseSyndicateStationIDCard ]
+  id: SyndicateStationAssistantIDCard
+  name: assistant ID card
+  suffix: Syndicate
+  components:
+    - type: IdCard
+      jobTitle: job-name-assistant
+      jobIcon: JobIconEvilAssistant
+    - type: Sprite
+      layers:
+        - state: black
+        - state: stripe_top
+          color: *color-syndicate-top
+        - state: stripe_bottom
+          color: *color-syndicate-bottom
+        - sprite: *starlight-icon-rsi
+          offset: *icon-offset
+          state: EvilAssistant
+    - type: Access
+      tags:
+        - SyndicateStationMaintenance

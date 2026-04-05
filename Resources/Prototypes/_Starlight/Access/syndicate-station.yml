@@ -1,0 +1,118 @@
+﻿# Syndicate Station accesses
+## These are intended for use in events where there is a Syndicate-aligned station.
+
+## Command
+- type: accessLevel
+  id: SyndicateStationCommand
+  name: id-card-access-level-syndicate-station-command
+
+- type: accessLevel
+  id: SyndicateStationCaptain
+  name: id-card-access-level-syndicate-station-captain
+
+- type: accessLevel
+  id: SyndicateStationHeadOfPersonnel
+  name: id-card-access-level-syndicate-station-hop
+
+## Cargo
+- type: accessLevel
+  id: SyndicateStationCargo
+  name: id-card-access-level-syndicate-station-cargo
+
+## Service
+- type: accessLevel
+  id: SyndicateStationService
+  name: id-card-access-level-syndicate-station-service
+
+- type: accessLevel
+  id: SyndicateStationHydroponics
+  name: id-card-access-level-syndicate-station-hydroponics
+
+- type: accessLevel
+  id: SyndicateStationKitchen
+  name: id-card-access-level-syndicate-station-kitchen
+
+- type: accessLevel
+  id: SyndicateStationJanitor
+  name: id-card-access-level-syndicate-station-janitor
+
+## Engineering
+- type: accessLevel
+  id: SyndicateStationEngineering
+  name: id-card-access-level-syndicate-station-engineering
+
+## Science
+- type: accessLevel
+  id: SyndicateStationScience
+  name: id-card-access-level-syndicate-station-science
+
+## Medical
+- type: accessLevel
+  id: SyndicateStationMedical
+  name: id-card-access-level-syndicate-station-medical
+
+- type: accessLevel
+  id: SyndicateStationChemistry
+  name: id-card-access-level-syndicate-station-chemistry
+
+## Security
+- type: accessLevel
+  id: SyndicateStationSecurity
+  name: id-card-access-level-syndicate-station-security
+
+- type: accessLevel
+  id: SyndicateStationArmory
+  name: id-card-access-level-syndicate-station-armory
+
+## Miscellaneous
+
+- type: accessLevel
+  id: SyndicateStationMaintenance
+  name: id-card-access-level-syndicate-station-maintenance
+
+- type: accessLevel
+  id: SyndicateStationExternal
+  name: id-card-access-level-syndicate-station-external
+
+# Access groups
+
+- type: accessGroup
+  id: SyndicateStationCommand
+  name: id-card-access-group-syndicate-station-command
+  tags:
+    - SyndicateStationCommand
+    - SyndicateStationCaptain
+    - SyndicateStationHeadOfPersonnel
+
+- type: accessGroup
+  id: SyndicateStationService
+  name: id-card-access-group-syndicate-station-service
+  tags:
+    - SyndicateStationService
+    - SyndicateStationKitchen
+    - SyndicateStationHydroponics
+    - SyndicateStationJanitor
+
+- type: accessGroup
+  id: SyndicateStationMedical
+  name: id-card-access-group-syndicate-station-medical
+  tags:
+    - SyndicateStationMedical
+    - SyndicateStationChemistry
+
+- type: accessGroup
+  id: SyndicateStationSecurity
+  name: id-card-access-group-syndicate-station-security
+  tags:
+    - SyndicateStationSecurity
+    - SyndicateStationArmory
+
+- type: accessGroup
+  id: SyndicateStationMisc # Everything that doesn't warrant its own category
+  name: id-card-access-group-syndicate-station-misc
+  tags:
+    - SyndicateStationCargo
+    - SyndicateStationScience
+    - SyndicateStationEngineering
+    - SyndicateStationExternal
+    - SyndicateStationMaintenance

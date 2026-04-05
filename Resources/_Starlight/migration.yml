@@ -72,3 +72,7 @@ WeaponRevolverSnubRevolver: null
 
 #2026-03-21
 #WeaponRifleLionhunter: WeaponSniperLionhunter Re-enable when Shooting 3.0 is back
+
+#2026-04-04
+UniversalIdConsole: ComputerIdUniversal
+UniversalIdConsoleCircuitboard: IDComputerUniversalCircuitboard

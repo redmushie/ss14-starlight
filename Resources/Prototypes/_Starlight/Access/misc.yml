@@ -39,6 +39,7 @@
   - Wizard
   - Pirate
 
+# Note: Not for syndicate station events. See syndicate-station.yml for that.
 - type: accessGroup
   id: Syndicate
   tags:

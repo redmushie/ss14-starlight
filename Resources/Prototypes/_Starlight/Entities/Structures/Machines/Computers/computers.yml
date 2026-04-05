@@ -288,11 +288,11 @@
     containers:
       board: !type:Container
     
-# Universal ID Console
+# Universal ID card computer
 - type: entity
-  parent: BaseComputerAiAccess
-  id: UniversalIdConsole
-  name: Universal ID card computer
+  parent: ComputerId
+  id: ComputerIdUniversal
+  name: universal ID card computer
   description: A terminal for programming NanoTrasen and non-NanoTrasen ID cards with extended access levels.
   components:
   - type: IdCardConsole
@@ -312,7 +312,7 @@
     - Silicon
     - Xenoborg
     privilegedIdSlot:
-      name: UniversalIdConsole-privilegedId
+      name: ComputerIdUniversal-privilegedId
       ejectSound: /Audio/Machines/id_swipe.ogg
       insertSound: /Audio/Weapons/Guns/MagIn/batrifle_magin.ogg
       ejectOnBreak: true
@@ -321,7 +321,7 @@
         components:
         - IdCard
     targetIdSlot:
-      name: UniversalIdConsole-targetId
+      name: ComputerIdUniversal-targetId
       ejectSound: /Audio/Machines/id_swipe.ogg
       insertSound: /Audio/Weapons/Guns/MagIn/batrifle_magin.ogg
       ejectOnBreak: true
@@ -329,19 +329,6 @@
       whitelist:
         components:
         - IdCard
-  - type: ActivatableUI
-    key: enum.IdCardConsoleUiKey.Key
-  - type: UserInterface
-    interfaces:
-      enum.IdCardConsoleUiKey.Key:
-        type: IdCardConsoleBoundUserInterface
-      enum.WiresUiKey.Key:
-        type: WiresBoundUserInterface
-  - type: CrewManifestViewer
-    ownerKey: enum.IdCardConsoleUiKey.Key
-  - type: Speech
-    speechVerb: Robotic
-    speechSounds: Pai
   - type: Sprite
     layers:
     - map: ["computerLayerBody"]
@@ -360,23 +347,72 @@
       sprite: Structures/Machines/computers.rsi
       state: generic_panel_open
   - type: Computer
-    board: UniversalIdConsoleCircuitboard
-  # Starlight Start - Immersive Lighting PR
+    board: IDComputerUniversalCircuitboard
   - type: PointLight
-    radius: 2.5
-    energy: 1.5
     color: "#38c759"
-    castShadows: false
-  # Starlight End
   - type: Tag
     tags:
     - AccessBreakerImmune
-  - type: ItemSlots
-  - type: ContainerContainer
-    containers:
-      board: !type:Container
-      IdCardConsole-privilegedId: !type:ContainerSlot
-      IdCardConsole-targetId: !type:ContainerSlot
+
+# Syndicate ID card computer
+- type: entity
+  parent: ComputerId
+  id: ComputerIdSyndicate
+  name: syndicate ID card computer
+  suffix: Syndicate Station
+  description: A terminal for programming Syndicate ID cards with extended access levels.
+  components:
+    - type: IdCardConsole
+      accessGroups:
+      - SyndicateStationCommand
+      - SyndicateStationMedical
+      - SyndicateStationService
+      - SyndicateStationSecurity
+      - SyndicateStationMisc
+      privilegedIdSlot:
+        name: ComputerIdSyndicate-privilegedId
+        ejectSound: /Audio/Machines/id_swipe.ogg
+        insertSound: /Audio/Weapons/Guns/MagIn/batrifle_magin.ogg
+        ejectOnBreak: true
+        swap: false
+        whitelist:
+          components:
+            - IdCard
+      targetIdSlot:
+        name: ComputerIdSyndicate-targetId
+        ejectSound: /Audio/Machines/id_swipe.ogg
+        insertSound: /Audio/Weapons/Guns/MagIn/batrifle_magin.ogg
+        ejectOnBreak: true
+        swap: false
+        whitelist:
+          components:
+            - IdCard
+    - type: Sprite
+      layers:
+        - map: ["computerLayerBody"]
+          sprite: Structures/Machines/computers.rsi
+          state: computer
+        - map: ["computerLayerKeyboard"]
+          sprite: Structures/Machines/computers.rsi
+          state: generic_keyboard
+        - map: [ "computerLayerScreen" ]
+          sprite: _Starlight/Structures/Machines/computers.rsi
+          state: syndicate_id
+        - map: [ "computerLayerKeys" ]
+          sprite: Structures/Machines/computers.rsi
+          state: id_key
+        - map: ["enum.WiresVisualLayers.MaintenancePanel"]
+          sprite: Structures/Machines/computers.rsi
+          state: generic_panel_open
+    - type: Computer
+      board: IDComputerSyndicateCircuitboard
+    - type: PointLight
+      color: "#c73838"
+    - type: ContainerContainer
+      containers:
+        board: !type:Container
+        ComputerIdSyndicate-privilegedId: !type:ContainerSlot
+        ComputerIdSyndicate-targetId: !type:ContainerSlot
 
 # Mining Shuttle Console
 - type: entity

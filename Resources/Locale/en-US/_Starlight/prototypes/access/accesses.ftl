@@ -29,3 +29,42 @@ id-card-access-level-mail = Mail
 id-card-access-level-solgov = SolGov
 
 id-card-access-level-pirate = Pirate
+
+# Syndicate station
+
+## Command
+
+id-card-access-group-syndicate-station-command = Command
+id-card-access-level-syndicate-station-captain = Captain
+id-card-access-level-syndicate-station-hop = Head of Personnel
+
+## Cargo
+id-card-access-level-syndicate-station-cargo = Cargo
+
+## Service
+id-card-access-group-syndicate-station-service = Service
+id-card-access-level-syndicate-station-service = Service
+id-card-access-level-syndicate-station-hydroponics = Hydroponics
+id-card-access-level-syndicate-station-kitchen = Kitchen
+id-card-access-level-syndicate-station-janitor = Janitor
+
+## Engineering
+id-card-access-level-syndicate-station-engineering = Engineering
+
+## Science
+id-card-access-level-syndicate-station-science = Science
+
+## Medical
+id-card-access-group-syndicate-station-medical = Medical
+id-card-access-level-syndicate-station-medical = Medical
+id-card-access-level-syndicate-station-chemistry = Chemistry
+
+## Security
+id-card-access-group-syndicate-station-security = Command
+id-card-access-level-syndicate-station-security = Security
+id-card-access-level-syndicate-station-armory = Armory
+
+## Misc
+id-card-access-group-syndicate-station-misc = Miscellaneous
+id-card-access-level-syndicate-station-maintenance = Maintenance
+id-card-access-level-syndicate-station-external = External

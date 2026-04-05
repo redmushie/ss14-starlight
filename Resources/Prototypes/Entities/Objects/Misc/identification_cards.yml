@@ -1386,6 +1386,11 @@
     - Misc
     - CentralCommand
     - Syndicate
+    - SyndicateStationCommand
+    - SyndicateStationService
+    - SyndicateStationMedical
+    - SyndicateStationSecurity
+    - SyndicateStationMisc
     - Xenoborg
     # Starlight-edit: End
   - type: Tag #  Ignore Chameleon tags

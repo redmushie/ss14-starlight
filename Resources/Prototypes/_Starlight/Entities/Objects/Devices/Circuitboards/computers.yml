@@ -42,20 +42,36 @@
 
 - type: entity
   parent: [BaseComputerCircuitboard, BaseCommandContraband]
-  id: UniversalIdConsoleCircuitboard
-  name: Universal ID console board
-  description: A circuit board for a Universal ID console.
+  id: IDComputerUniversalCircuitboard
+  name: universal ID card computer board
+  description: A circuit board for a universal ID card computer.
   components:
     - type: Sprite
       state: cpu_command
     - type: ComputerBoard
-      prototype: UniversalIdConsole
+      prototype: ComputerIdUniversal
     - type: StaticPrice
       price: 750
     - type: Tag
       tags:
       - HighRiskItem
-    
+
+- type: entity
+  parent: [BaseComputerCircuitboard, BaseCommandContraband]
+  id: IDComputerSyndicateCircuitboard
+  name: syndicate ID card computer board
+  description: A circuit board for a syndicate ID card computer.
+  components:
+    - type: Sprite
+      state: cpu_command
+    - type: ComputerBoard
+      prototype: ComputerIdSyndicate
+    - type: StaticPrice
+      price: 750
+    - type: Tag
+      tags:
+      - HighRiskItem
+
 - type: entity
   parent: BaseComputerCircuitboard
   id: MiningShuttleConsoleCircuitboard
