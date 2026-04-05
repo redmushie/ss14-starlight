@@ -42,3 +42,51 @@
 - type: wireLayout
   parent: Airlock
   id: AirlockCentralCommand
+
+# BEGIN Syndicate station
+
+## Command
+- type: wireLayout
+  parent: Airlock
+  id: AirlockSyndicateStationCommand
+
+## Cargo
+- type: wireLayout
+  parent: Airlock
+  id: AirlockSyndicateStationCargo
+
+## Service
+- type: wireLayout
+  parent: Airlock
+  id: AirlockSyndicateStationService
+
+## Engineering
+- type: wireLayout
+  parent: Airlock
+  id: AirlockSyndicateStationEngineering
+
+## Science
+- type: wireLayout
+  parent: Airlock
+  id: AirlockSyndicateStationScience
+
+## Medical
+- type: wireLayout
+  parent: Airlock
+  id: AirlockSyndicateStationMedical
+
+## Security
+- type: wireLayout
+  parent: Airlock
+  id: AirlockSyndicateStationSecurity
+
+## Miscellaneous
+- type: wireLayout
+  parent: Airlock
+  id: AirlockSyndicateStationMaintenance
+
+- type: wireLayout
+  parent: Airlock
+  id: AirlockSyndicateStationExternal
+
+# END Syndicate station

@@ -35,6 +35,7 @@ id-card-access-level-pirate = Pirate
 ## Command
 
 id-card-access-group-syndicate-station-command = Command
+id-card-access-level-syndicate-station-command = Command
 id-card-access-level-syndicate-station-captain = Captain
 id-card-access-level-syndicate-station-hop = Head of Personnel
 
@@ -60,7 +61,7 @@ id-card-access-level-syndicate-station-medical = Medical
 id-card-access-level-syndicate-station-chemistry = Chemistry
 
 ## Security
-id-card-access-group-syndicate-station-security = Command
+id-card-access-group-syndicate-station-security = Security
 id-card-access-level-syndicate-station-security = Security
 id-card-access-level-syndicate-station-armory = Armory
 

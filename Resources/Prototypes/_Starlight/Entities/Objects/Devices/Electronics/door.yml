@@ -118,3 +118,189 @@
       interfaces:
         enum.DoorElectronicsConfigurationUiKey.Key:
           type: DoorElectronicsBoundUserInterface
+
+# Syndicate station
+
+## Base
+- type: entity
+  id: BaseDoorElectronicsSyndicateStation
+  parent: [BaseDoorElectronicsSyndicate]
+  name: Syndicate door electronics
+  abstract: true
+  description: An electronics board used in doors and airlocks.
+  components:
+    - type: DoorElectronics
+      accessGroups:
+        - SyndicateStationCommand
+        - SyndicateStationService
+        - SyndicateStationMedical
+        - SyndicateStationSecurity
+        - SyndicateStationMisc
+
+## Command
+- type: entity
+  id: DoorElectronicsSyndicateStationCommand
+  parent: [BaseDoorElectronicsSyndicateStation]
+  name: Syndicate door electronics
+  suffix: Station, Command
+  description: An electronics board used in doors and airlocks.
+  components:
+    - type: AccessReader
+      access: [["SyndicateStationCommand"]]
+
+- type: entity
+  id: DoorElectronicsSyndicateStationCaptain
+  parent: [BaseDoorElectronicsSyndicateStation]
+  name: Syndicate door electronics
+  suffix: Station, Captain
+  description: An electronics board used in doors and airlocks.
+  components:
+    - type: AccessReader
+      access: [["SyndicateStationCaptain"]]
+
+- type: entity
+  id: DoorElectronicsSyndicateStationHeadOfPersonnel
+  parent: [BaseDoorElectronicsSyndicateStation]
+  name: Syndicate door electronics
+  suffix: Station, HoP
+  description: An electronics board used in doors and airlocks.
+  components:
+    - type: AccessReader
+      access: [["SyndicateStationHeadOfPersonnel"]]
+
+## Cargo
+- type: entity
+  id: DoorElectronicsSyndicateStationCargo
+  parent: [BaseDoorElectronicsSyndicateStation]
+  name: Syndicate door electronics
+  suffix: Station, Cargo
+  description: An electronics board used in doors and airlocks.
+  components:
+    - type: AccessReader
+      access: [["SyndicateStationCargo"]]
+
+## Service
+- type: entity
+  id: DoorElectronicsSyndicateStationService
+  parent: [BaseDoorElectronicsSyndicateStation]
+  name: Syndicate door electronics
+  suffix: Station, Service
+  description: An electronics board used in doors and airlocks.
+  components:
+    - type: AccessReader
+      access: [["SyndicateStationService"]]
+
+- type: entity
+  id: DoorElectronicsSyndicateStationHydroponics
+  parent: [BaseDoorElectronicsSyndicateStation]
+  name: Syndicate door electronics
+  suffix: Station, Hydroponics
+  description: An electronics board used in doors and airlocks.
+  components:
+    - type: AccessReader
+      access: [["SyndicateStationHydroponics"]]
+
+- type: entity
+  id: DoorElectronicsSyndicateStationKitchen
+  parent: [BaseDoorElectronicsSyndicateStation]
+  name: Syndicate door electronics
+  suffix: Station, Kitchen
+  description: An electronics board used in doors and airlocks.
+  components:
+    - type: AccessReader
+      access: [["SyndicateStationKitchen"]]
+
+- type: entity
+  id: DoorElectronicsSyndicateStationJanitor
+  parent: [BaseDoorElectronicsSyndicateStation]
+  name: Syndicate door electronics
+  suffix: Station, Janitor
+  description: An electronics board used in doors and airlocks.
+  components:
+    - type: AccessReader
+      access: [["SyndicateStationJanitor"]]
+
+## Engineering
+- type: entity
+  id: DoorElectronicsSyndicateStationEngineering
+  parent: [BaseDoorElectronicsSyndicateStation]
+  name: Syndicate door electronics
+  suffix: Station, Engineering
+  description: An electronics board used in doors and airlocks.
+  components:
+    - type: AccessReader
+      access: [["SyndicateStationEngineering"]]
+
+## Science
+- type: entity
+  id: DoorElectronicsSyndicateStationScience
+  parent: [BaseDoorElectronicsSyndicateStation]
+  name: Syndicate door electronics
+  suffix: Station, Science
+  description: An electronics board used in doors and airlocks.
+  components:
+    - type: AccessReader
+      access: [["SyndicateStationScience"]]
+
+## Medical
+- type: entity
+  id: DoorElectronicsSyndicateStationMedical
+  parent: [BaseDoorElectronicsSyndicateStation]
+  name: Syndicate door electronics
+  suffix: Station, Medical
+  description: An electronics board used in doors and airlocks.
+  components:
+    - type: AccessReader
+      access: [["SyndicateStationMedical"]]
+
+- type: entity
+  id: DoorElectronicsSyndicateStationChemistry
+  parent: [BaseDoorElectronicsSyndicateStation]
+  name: Syndicate door electronics
+  suffix: Station, Chemistry
+  description: An electronics board used in doors and airlocks.
+  components:
+    - type: AccessReader
+      access: [["SyndicateStationChemistry"]]
+
+## Security
+- type: entity
+  id: DoorElectronicsSyndicateStationSecurity
+  parent: [BaseDoorElectronicsSyndicateStation]
+  name: Syndicate door electronics
+  suffix: Station, Security
+  description: An electronics board used in doors and airlocks.
+  components:
+    - type: AccessReader
+      access: [["SyndicateStationSecurity"]]
+
+- type: entity
+  id: DoorElectronicsSyndicateStationArmory
+  parent: [BaseDoorElectronicsSyndicateStation]
+  name: Syndicate door electronics
+  suffix: Station, Armory
+  description: An electronics board used in doors and airlocks.
+  components:
+    - type: AccessReader
+      access: [["SyndicateStationArmory"]]
+
+## Miscellaneous
+- type: entity
+  id: DoorElectronicsSyndicateStationMaintenance
+  parent: [BaseDoorElectronicsSyndicateStation]
+  name: Syndicate door electronics
+  suffix: Station, Maintenance
+  description: An electronics board used in doors and airlocks.
+  components:
+    - type: AccessReader
+      access: [["SyndicateStationMaintenance"]]
+
+- type: entity
+  id: DoorElectronicsSyndicateStationExternal
+  parent: [BaseDoorElectronicsSyndicateStation]
+  name: Syndicate door electronics
+  suffix: Station, External
+  description: An electronics board used in doors and airlocks.
+  components:
+    - type: AccessReader
+      access: [["SyndicateStationExternal"]]
