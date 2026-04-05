@@ -142,7 +142,7 @@
   id: DoorElectronicsSyndicateStationCommand
   parent: [BaseDoorElectronicsSyndicateStation]
   name: Syndicate door electronics
-  suffix: Station, Command
+  suffix: Syndicate Command
   description: An electronics board used in doors and airlocks.
   components:
     - type: AccessReader
@@ -152,7 +152,7 @@
   id: DoorElectronicsSyndicateStationCaptain
   parent: [BaseDoorElectronicsSyndicateStation]
   name: Syndicate door electronics
-  suffix: Station, Captain
+  suffix: Syndicate Captain
   description: An electronics board used in doors and airlocks.
   components:
     - type: AccessReader
@@ -162,7 +162,7 @@
   id: DoorElectronicsSyndicateStationHeadOfPersonnel
   parent: [BaseDoorElectronicsSyndicateStation]
   name: Syndicate door electronics
-  suffix: Station, HoP
+  suffix: Syndicate HoP
   description: An electronics board used in doors and airlocks.
   components:
     - type: AccessReader
@@ -173,7 +173,7 @@
   id: DoorElectronicsSyndicateStationCargo
   parent: [BaseDoorElectronicsSyndicateStation]
   name: Syndicate door electronics
-  suffix: Station, Cargo
+  suffix: Syndicate Cargo
   description: An electronics board used in doors and airlocks.
   components:
     - type: AccessReader
@@ -184,7 +184,7 @@
   id: DoorElectronicsSyndicateStationService
   parent: [BaseDoorElectronicsSyndicateStation]
   name: Syndicate door electronics
-  suffix: Station, Service
+  suffix: Syndicate Service
   description: An electronics board used in doors and airlocks.
   components:
     - type: AccessReader
@@ -194,7 +194,7 @@
   id: DoorElectronicsSyndicateStationHydroponics
   parent: [BaseDoorElectronicsSyndicateStation]
   name: Syndicate door electronics
-  suffix: Station, Hydroponics
+  suffix: Syndicate Hydroponics
   description: An electronics board used in doors and airlocks.
   components:
     - type: AccessReader
@@ -204,7 +204,7 @@
   id: DoorElectronicsSyndicateStationKitchen
   parent: [BaseDoorElectronicsSyndicateStation]
   name: Syndicate door electronics
-  suffix: Station, Kitchen
+  suffix: Syndicate Kitchen
   description: An electronics board used in doors and airlocks.
   components:
     - type: AccessReader
@@ -214,7 +214,7 @@
   id: DoorElectronicsSyndicateStationJanitor
   parent: [BaseDoorElectronicsSyndicateStation]
   name: Syndicate door electronics
-  suffix: Station, Janitor
+  suffix: Syndicate Janitor
   description: An electronics board used in doors and airlocks.
   components:
     - type: AccessReader
@@ -225,7 +225,7 @@
   id: DoorElectronicsSyndicateStationEngineering
   parent: [BaseDoorElectronicsSyndicateStation]
   name: Syndicate door electronics
-  suffix: Station, Engineering
+  suffix: Syndicate Engineering
   description: An electronics board used in doors and airlocks.
   components:
     - type: AccessReader
@@ -236,7 +236,7 @@
   id: DoorElectronicsSyndicateStationScience
   parent: [BaseDoorElectronicsSyndicateStation]
   name: Syndicate door electronics
-  suffix: Station, Science
+  suffix: Syndicate Science
   description: An electronics board used in doors and airlocks.
   components:
     - type: AccessReader
@@ -247,7 +247,7 @@
   id: DoorElectronicsSyndicateStationMedical
   parent: [BaseDoorElectronicsSyndicateStation]
   name: Syndicate door electronics
-  suffix: Station, Medical
+  suffix: Syndicate Medical
   description: An electronics board used in doors and airlocks.
   components:
     - type: AccessReader
@@ -257,7 +257,7 @@
   id: DoorElectronicsSyndicateStationChemistry
   parent: [BaseDoorElectronicsSyndicateStation]
   name: Syndicate door electronics
-  suffix: Station, Chemistry
+  suffix: Syndicate Chemistry
   description: An electronics board used in doors and airlocks.
   components:
     - type: AccessReader
@@ -268,7 +268,7 @@
   id: DoorElectronicsSyndicateStationSecurity
   parent: [BaseDoorElectronicsSyndicateStation]
   name: Syndicate door electronics
-  suffix: Station, Security
+  suffix: Syndicate Security
   description: An electronics board used in doors and airlocks.
   components:
     - type: AccessReader
@@ -278,7 +278,7 @@
   id: DoorElectronicsSyndicateStationArmory
   parent: [BaseDoorElectronicsSyndicateStation]
   name: Syndicate door electronics
-  suffix: Station, Armory
+  suffix: Syndicate Armory
   description: An electronics board used in doors and airlocks.
   components:
     - type: AccessReader
@@ -289,7 +289,7 @@
   id: DoorElectronicsSyndicateStationMaintenance
   parent: [BaseDoorElectronicsSyndicateStation]
   name: Syndicate door electronics
-  suffix: Station, Maintenance
+  suffix: Syndicate Maintenance
   description: An electronics board used in doors and airlocks.
   components:
     - type: AccessReader
@@ -299,7 +299,7 @@
   id: DoorElectronicsSyndicateStationExternal
   parent: [BaseDoorElectronicsSyndicateStation]
   name: Syndicate door electronics
-  suffix: Station, External
+  suffix: Syndicate External
   description: An electronics board used in doors and airlocks.
   components:
     - type: AccessReader

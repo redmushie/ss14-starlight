@@ -545,13 +545,13 @@
     pathWeights:
       "/Maps/_Starlight/Shuttles/EscapePods/escape_pod_lifeboat.yml": 40
 
-# Syndicate station
+# BEGIN Syndicate station
 
 ## BASE
 - type: entity
   parent: Airlock
   id: AirlockSyndicateStation
-  suffix: Station
+  suffix: Syndicate
   components:
     - type: Sprite
       sprite: _Starlight/Structures/Doors/Airlocks/Standard/syndicate.rsi
@@ -559,16 +559,18 @@
 - type: entity
   parent: AirlockGlass
   id: AirlockSyndicateStationGlass
-  suffix: Station
+  suffix: Syndicate
   components:
     - type: Sprite
       sprite: _Starlight/Structures/Doors/Airlocks/Glass/syndicate.rsi
 
 ## Command
+
+### Unlocked
 - type: entity
   parent: AirlockSyndicateStation
   id: AirlockSyndicateStationCommand
-  suffix: Station, Command
+  suffix: Syndicate Command
   components:
     - type: WiresPanelSecurity
       securityLevel: medSecurity
@@ -580,7 +582,7 @@
 - type: entity
   parent: AirlockSyndicateStationGlass
   id: AirlockSyndicateStationCommandGlass
-  suffix: Station, Command
+  suffix: Syndicate Command
   components:
     - type: WiresPanelSecurity
       securityLevel: medSecurity
@@ -589,10 +591,11 @@
     - type: Sprite
       sprite: _Starlight/Structures/Doors/Airlocks/Glass/syndicate_command.rsi
 
+### Command Locked
 - type: entity
   parent: AirlockSyndicateStationCommand
   id: AirlockSyndicateStationCommandLocked
-  suffix: Station, Command, Locked
+  suffix: Syndicate Command, Locked
   components:
     - type: WiresPanelSecurity
       securityLevel: medSecurity
@@ -605,7 +608,7 @@
 - type: entity
   parent: AirlockSyndicateStationCommandGlass
   id: AirlockSyndicateStationCommandGlassLocked
-  suffix: Station, Command, Locked
+  suffix: Syndicate Command, Locked
   components:
     - type: WiresPanelSecurity
       securityLevel: medSecurity
@@ -616,9 +619,19 @@
         board: [ DoorElectronicsSyndicateStationCommand ]
 
 - type: entity
+  parent: HighSecDoor
+  id: HighSecSyndicateStationCommandLocked
+  suffix: Syndicate Command, HighSec, Locked
+  components:
+    - type: ContainerFill
+      containers:
+        board: [ DoorElectronicsSyndicateStationCommand ]
+
+### Captain Locked
+- type: entity
   parent: AirlockSyndicateStationCommand
   id: AirlockSyndicateStationCaptainLocked
-  suffix: Station, Captain, Locked
+  suffix: Syndicate Captain, Locked
   components:
     - type: ContainerFill
       containers:
@@ -627,16 +640,17 @@
 - type: entity
   parent: AirlockSyndicateStationCommandGlass
   id: AirlockSyndicateStationCaptainGlassLocked
-  suffix: Station, Captain, Locked
+  suffix: Syndicate Captain, Locked
   components:
     - type: ContainerFill
       containers:
         board: [ DoorElectronicsSyndicateStationCaptain ]
 
+### HoP Locked
 - type: entity
   parent: AirlockSyndicateStationCommand
   id: AirlockSyndicateStationHeadOfPersonnelLocked
-  suffix: Station, HoP, Locked
+  suffix: Syndicate HoP, Locked
   components:
     - type: ContainerFill
       containers:
@@ -645,17 +659,19 @@
 - type: entity
   parent: AirlockSyndicateStationCommandGlass
   id: AirlockSyndicateStationHeadOfPersonnelGlassLocked
-  suffix: Station, HoP, Locked
+  suffix: Syndicate HoP, Locked
   components:
     - type: ContainerFill
       containers:
         board: [ DoorElectronicsSyndicateStationHeadOfPersonnel ]
 
 ## Cargo
+
+### Unlocked
 - type: entity
   parent: AirlockSyndicateStation
   id: AirlockSyndicateStationCargo
-  suffix: Station, Cargo
+  suffix: Syndicate Cargo
   components:
     - type: Sprite
       sprite: _Starlight/Structures/Doors/Airlocks/Standard/syndicate_cargo.rsi
@@ -663,15 +679,16 @@
 - type: entity
   parent: AirlockSyndicateStationGlass
   id: AirlockSyndicateStationCargoGlass
-  suffix: Station, Cargo
+  suffix: Syndicate Cargo
   components:
     - type: Sprite
       sprite: _Starlight/Structures/Doors/Airlocks/Glass/syndicate_cargo.rsi
 
+### Cargo, Locked
 - type: entity
   parent: AirlockSyndicateStationCargo
   id: AirlockSyndicateStationCargoLocked
-  suffix: Station, Cargo, Locked
+  suffix: Syndicate Cargo, Locked
   components:
     - type: ContainerFill
       containers:
@@ -680,17 +697,19 @@
 - type: entity
   parent: AirlockSyndicateStationCargoGlass
   id: AirlockSyndicateStationCargoGlassLocked
-  suffix: Station, Cargo, Locked
+  suffix: Syndicate Cargo, Locked
   components:
     - type: ContainerFill
       containers:
         board: [ DoorElectronicsSyndicateStationCargo ]
 
 ## Service
+
+### Unlocked
 - type: entity
   parent: AirlockSyndicateStation
   id: AirlockSyndicateStationService
-  suffix: Station, Service
+  suffix: Syndicate Service
   components:
     - type: Sprite
       sprite: _Starlight/Structures/Doors/Airlocks/Standard/syndicate_service.rsi
@@ -698,15 +717,16 @@
 - type: entity
   parent: AirlockSyndicateStation
   id: AirlockSyndicateStationServiceGlass
-  suffix: Station, Service
+  suffix: Syndicate Service
   components:
     - type: Sprite
       sprite: _Starlight/Structures/Doors/Airlocks/Glass/syndicate_service.rsi
 
+### Service, Locked
 - type: entity
   parent: AirlockSyndicateStationService
   id: AirlockSyndicateStationServiceLocked
-  suffix: Station, Service, Locked
+  suffix: Syndicate Service, Locked
   components:
     - type: ContainerFill
       containers:
@@ -715,16 +735,17 @@
 - type: entity
   parent: AirlockSyndicateStationServiceGlass
   id: AirlockSyndicateStationServiceGlassLocked
-  suffix: Station, Service, Locked
+  suffix: Syndicate Service, Locked
   components:
     - type: ContainerFill
       containers:
         board: [ DoorElectronicsSyndicateStationService ]
 
+### Hydroponics, Locked
 - type: entity
   parent: AirlockSyndicateStationService
   id: AirlockSyndicateStationHydroponicsLocked
-  suffix: Station, Hydroponics, Locked
+  suffix: Syndicate Hydroponics, Locked
   components:
     - type: ContainerFill
       containers:
@@ -733,16 +754,17 @@
 - type: entity
   parent: AirlockSyndicateStationServiceGlass
   id: AirlockSyndicateStationHydroponicsGlassLocked
-  suffix: Station, Hydroponics, Locked
+  suffix: Syndicate Hydroponics, Locked
   components:
     - type: ContainerFill
       containers:
         board: [ DoorElectronicsSyndicateStationHydroponics ]
 
+### Kitchen, Locked
 - type: entity
   parent: AirlockSyndicateStationService
   id: AirlockSyndicateStationKitchenLocked
-  suffix: Station, Kitchen, Locked
+  suffix: Syndicate Kitchen, Locked
   components:
     - type: ContainerFill
       containers:
@@ -751,16 +773,17 @@
 - type: entity
   parent: AirlockSyndicateStationServiceGlass
   id: AirlockSyndicateStationKitchenGlassLocked
-  suffix: Station, Kitchen, Locked
+  suffix: Syndicate Kitchen, Locked
   components:
     - type: ContainerFill
       containers:
         board: [ DoorElectronicsSyndicateStationKitchen ]
 
+### Janitor, Locked
 - type: entity
   parent: AirlockSyndicateStationService
   id: AirlockSyndicateStationJanitorLocked
-  suffix: Station, Janitor, Locked
+  suffix: Syndicate Janitor, Locked
   components:
     - type: ContainerFill
       containers:
@@ -769,17 +792,19 @@
 - type: entity
   parent: AirlockSyndicateStationServiceGlass
   id: AirlockSyndicateStationJanitorGlassLocked
-  suffix: Station, Janitor, Locked
+  suffix: Syndicate Janitor, Locked
   components:
     - type: ContainerFill
       containers:
         board: [ DoorElectronicsSyndicateStationJanitor ]
 
 ## Engineering
+
+### Unlocked
 - type: entity
   parent: AirlockSyndicateStation
   id: AirlockSyndicateStationEngineering
-  suffix: Station, Engineering
+  suffix: Syndicate Engineering
   components:
     - type: Sprite
       sprite: _Starlight/Structures/Doors/Airlocks/Standard/syndicate_engineering.rsi
@@ -787,15 +812,16 @@
 - type: entity
   parent: AirlockSyndicateStationGlass
   id: AirlockSyndicateStationEngineeringGlass
-  suffix: Station, Engineering
+  suffix: Syndicate Engineering
   components:
     - type: Sprite
       sprite: _Starlight/Structures/Doors/Airlocks/Glass/syndicate_engineering.rsi
 
+### Engineering, Locked
 - type: entity
   parent: AirlockSyndicateStationEngineering
   id: AirlockSyndicateStationEngineeringLocked
-  suffix: Station, Engineering, Locked
+  suffix: Syndicate Engineering, Locked
   components:
     - type: ContainerFill
       containers:
@@ -804,17 +830,19 @@
 - type: entity
   parent: AirlockSyndicateStationEngineeringGlass
   id: AirlockSyndicateStationEngineeringGlassLocked
-  suffix: Station, Engineering, Locked
+  suffix: Syndicate Engineering, Locked
   components:
     - type: ContainerFill
       containers:
         board: [ DoorElectronicsSyndicateStationEngineering ]
 
 ## Science
+
+### Unlocked
 - type: entity
   parent: AirlockSyndicateStation
   id: AirlockSyndicateStationScience
-  suffix: Station, Science
+  suffix: Syndicate Science
   components:
     - type: Sprite
       sprite: _Starlight/Structures/Doors/Airlocks/Standard/syndicate_science.rsi
@@ -822,15 +850,16 @@
 - type: entity
   parent: AirlockSyndicateStationGlass
   id: AirlockSyndicateStationScienceGlass
-  suffix: Station, Science
+  suffix: Syndicate Science
   components:
     - type: Sprite
       sprite: _Starlight/Structures/Doors/Airlocks/Glass/syndicate_science.rsi
 
+### Science, Locked
 - type: entity
   parent: AirlockSyndicateStationScience
   id: AirlockSyndicateStationScienceLocked
-  suffix: Station, Science, Locked
+  suffix: Syndicate Science, Locked
   components:
     - type: ContainerFill
       containers:
@@ -839,17 +868,19 @@
 - type: entity
   parent: AirlockSyndicateStationScienceGlass
   id: AirlockSyndicateStationScienceGlassLocked
-  suffix: Station, Science, Locked
+  suffix: Syndicate Science, Locked
   components:
     - type: ContainerFill
       containers:
         board: [ DoorElectronicsSyndicateStationScience ]
 
 ## Medical
+
+### Unlocked
 - type: entity
   parent: AirlockSyndicateStation
   id: AirlockSyndicateStationMedical
-  suffix: Station, Medical
+  suffix: Syndicate Medical
   components:
     - type: Sprite
       sprite: _Starlight/Structures/Doors/Airlocks/Standard/syndicate_medical.rsi
@@ -857,15 +888,16 @@
 - type: entity
   parent: AirlockSyndicateStationGlass
   id: AirlockSyndicateStationMedicalGlass
-  suffix: Station, Medical
+  suffix: Syndicate Medical
   components:
     - type: Sprite
       sprite: _Starlight/Structures/Doors/Airlocks/Glass/syndicate_medical.rsi
 
+### Medical, Locked
 - type: entity
   parent: AirlockSyndicateStationMedical
   id: AirlockSyndicateStationMedicalLocked
-  suffix: Station, Medical, Locked
+  suffix: Syndicate Medical, Locked
   components:
     - type: ContainerFill
       containers:
@@ -874,16 +906,17 @@
 - type: entity
   parent: AirlockSyndicateStationMedicalGlass
   id: AirlockSyndicateStationMedicalGlassLocked
-  suffix: Station, Medical, Locked
+  suffix: Syndicate Medical, Locked
   components:
     - type: ContainerFill
       containers:
         board: [ DoorElectronicsSyndicateStationMedical ]
 
+### Chemistry, Locked
 - type: entity
   parent: AirlockSyndicateStationMedical
   id: AirlockSyndicateStationChemistryLocked
-  suffix: Station, Chemistry, Locked
+  suffix: Syndicate Chemistry, Locked
   components:
     - type: ContainerFill
       containers:
@@ -892,17 +925,19 @@
 - type: entity
   parent: AirlockSyndicateStationMedicalGlass
   id: AirlockSyndicateStationChemistryGlassLocked
-  suffix: Station, Chemistry, Locked
+  suffix: Syndicate Chemistry, Locked
   components:
     - type: ContainerFill
       containers:
         board: [ DoorElectronicsSyndicateStationChemistry ]
 
 ## Security
+
+### Unlocked
 - type: entity
   parent: AirlockSyndicateStation
   id: AirlockSyndicateStationSecurity
-  suffix: Station, Security
+  suffix: Syndicate Security
   components:
     - type: Sprite
       sprite: _Starlight/Structures/Doors/Airlocks/Standard/syndicate_security.rsi
@@ -910,15 +945,16 @@
 - type: entity
   parent: AirlockSyndicateStationGlass
   id: AirlockSyndicateStationSecurityGlass
-  suffix: Station, Security
+  suffix: Syndicate Security
   components:
     - type: Sprite
       sprite: _Starlight/Structures/Doors/Airlocks/Glass/syndicate_security.rsi
 
+### Security, Locked
 - type: entity
   parent: AirlockSyndicateStationSecurity
   id: AirlockSyndicateStationSecurityLocked
-  suffix: Station, Security, Locked
+  suffix: Syndicate Security, Locked
   components:
     - type: ContainerFill
       containers:
@@ -927,16 +963,17 @@
 - type: entity
   parent: AirlockSyndicateStationSecurityGlass
   id: AirlockSyndicateStationSecurityGlassLocked
-  suffix: Station, Security, Locked
+  suffix: Syndicate Security, Locked
   components:
     - type: ContainerFill
       containers:
         board: [ DoorElectronicsSyndicateStationSecurity ]
 
+### Armory, Locked
 - type: entity
   parent: AirlockSyndicateStationSecurity
   id: AirlockSyndicateStationArmoryLocked
-  suffix: Station, Armory, Locked
+  suffix: Syndicate Armory, Locked
   components:
     - type: ContainerFill
       containers:
@@ -945,18 +982,28 @@
 - type: entity
   parent: AirlockSyndicateStationSecurityGlass
   id: AirlockSyndicateStationArmoryGlassLocked
-  suffix: Station, Armory, Locked
+  suffix: Syndicate Armory, Locked
   components:
     - type: ContainerFill
       containers:
         board: [ DoorElectronicsSyndicateStationArmory ]
 
-## Miscellaneous
+- type: entity
+  parent: HighSecDoor
+  id: HighSecSyndicateStationArmoryLocked
+  suffix: Syndicate Armory, HighSec, Locked
+  components:
+    - type: ContainerFill
+      containers:
+        board: [ DoorElectronicsSyndicateStationArmory ]
 
+## Maintenance
+
+### Unlocked
 - type: entity
   parent: AirlockSyndicateStation
   id: AirlockSyndicateStationMaint
-  suffix: Station, Maintenance
+  suffix: Syndicate Maintenance
   components:
     - type: Sprite
       sprite: _Starlight/Structures/Doors/Airlocks/Standard/syndicate_maintenance.rsi
@@ -964,15 +1011,16 @@
 - type: entity
   parent: AirlockSyndicateStationGlass
   id: AirlockSyndicateStationMaintGlass
-  suffix: Station, Maintenance
+  suffix: Syndicate Maintenance
   components:
     - type: Sprite
       sprite: _Starlight/Structures/Doors/Airlocks/Glass/syndicate_maintenance.rsi
 
+### Maintenance, Locked
 - type: entity
   parent: AirlockSyndicateStationMaint
   id: AirlockSyndicateStationMaintLocked
-  suffix: Station, Maintenance, Locked
+  suffix: Syndicate Maintenance, Locked
   components:
     - type: ContainerFill
       containers:
@@ -981,16 +1029,19 @@
 - type: entity
   parent: AirlockSyndicateStationMaintGlass
   id: AirlockSyndicateStationMaintGlassLocked
-  suffix: Station, Maintenance, Locked
+  suffix: Syndicate Maintenance, Locked
   components:
     - type: ContainerFill
       containers:
         board: [ DoorElectronicsSyndicateStationMaintenance ]
 
+## Miscellaneous
+
+### External, Locked
 - type: entity
   parent: AirlockSyndicateStation
   id: AirlockSyndicateStationExternalLocked
-  suffix: Station, External, Locked
+  suffix: Syndicate External, Locked
   components:
     - type: ContainerFill
       containers:
@@ -999,7 +1050,7 @@
 - type: entity
   parent: AirlockSyndicateStationGlass
   id: AirlockSyndicateStationExternalGlassLocked
-  suffix: Station, External, Locked
+  suffix: Syndicate External, Locked
   components:
     - type: ContainerFill
       containers:
