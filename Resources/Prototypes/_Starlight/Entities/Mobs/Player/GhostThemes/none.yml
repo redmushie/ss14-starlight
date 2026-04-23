@@ -49,3 +49,69 @@
       sprite: _Starlight/Mobs/Customization/GhostThemes/ghosts.rsi
       state: ghost-moff
     color: "#ffffff"
+
+- type: ghostTheme
+  id: Sheet
+  name: Sheet
+  description: Cute sheet.
+  colorizeable: true
+  spriteSpecifier:
+    sprite:
+      sprite: _Starlight/Mobs/Customization/GhostThemes/ghosts.rsi
+      state: ghost-sheet
+    color: "#ffffff"
+
+- type: ghostTheme
+  id: Cat
+  name: Cat
+  description: A cute little cat.
+  colorizeable: true
+  spriteSpecifier:
+    sprite:
+      sprite: _Starlight/Mobs/Customization/GhostThemes/ghosts.rsi
+      state: ghost-cat
+    color: "#ffffff"
+
+- type: ghostTheme
+  id: Ian
+  name: Ian
+  description: A pure dog.
+  colorizeable: true
+  spriteSpecifier:
+    sprite:
+      sprite: _Starlight/Mobs/Customization/GhostThemes/ghosts.rsi
+      state: ghost-ian
+    color: "#ffffff"
+
+- type: ghostTheme
+  id: IanCute
+  name: IanCute
+  description: A pure dog.
+  colorizeable: true
+  spriteSpecifier:
+    sprite:
+      sprite: _Starlight/Mobs/Customization/GhostThemes/ghosts.rsi
+      state: ghost-ian_cute
+    color: "#ffffff"
+
+- type: ghostTheme
+  id: Skeleton
+  name: Skeleton
+  description: skeleton.
+  colorizeable: true
+  spriteSpecifier:
+    sprite:
+      sprite: _Starlight/Mobs/Customization/GhostThemes/ghosts.rsi
+      state: ghost-skeleton
+    color: "#ffffff"
+
+- type: ghostTheme
+  id: SharkPlushie
+  name: Shark Plushie
+  description: Rawr!
+  colorizeable: true
+  spriteSpecifier:
+    sprite:
+      sprite: _Starlight/Mobs/Customization/GhostThemes/ghosts.rsi
+      state: ghost-shark-plushie
+    color: "#ffffff"

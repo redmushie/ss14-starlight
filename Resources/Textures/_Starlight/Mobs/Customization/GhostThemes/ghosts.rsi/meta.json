@@ -134,6 +134,11 @@
       "name": "ghost-scurret",
       "copyright": "Default Scurret greyscaled",
       "directions": 4
+    },
+    {
+      "name": "ghost-shark-plushie",
+      "copyright": "Default shark plushie edited by redmushie (discord,github)",
+      "directions": 4
     }
   ]
 }
