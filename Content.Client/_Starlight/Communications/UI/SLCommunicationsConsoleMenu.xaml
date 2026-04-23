@@ -1,0 +1,128 @@
+﻿<controls:FancyWindow xmlns="https://spacestation14.io"
+    xmlns:controls="clr-namespace:Content.Client.UserInterface.Controls"
+    Title="{Loc 'comms-console-menu-title'}"
+    MinSize="400 300">
+
+    <TabContainer Name="RootTabContainer">
+
+        <!-- Alerts tab -->
+        <BoxContainer Name="AlertLevelTab"
+                      Orientation="Vertical"
+                      VerticalExpand="True"
+                      HorizontalExpand="True"
+                      MinSize="100 150">
+
+            <Label Name="AlertLevelInfo" Text="Alert level"></Label>
+
+            <GridContainer VerticalExpand="True" HorizontalExpand="True" Columns="2" Margin="8">
+                <ContainerButton Name="GreenAlert"
+                                 HorizontalExpand="True"
+                                 Margin="4"
+                                 MinHeight="48"
+                                 StyleClasses="button">
+                    <TextureRect
+                        VerticalAlignment="Center"
+                        VerticalExpand="True"
+                        TexturePath="/Textures/_Starlight/Interface/Communications/green.png"/>
+                    <Label Text="Green"
+                           Margin="42 0 0 0"></Label>
+                </ContainerButton>
+                <ContainerButton Name="BlueAlert"
+                                 HorizontalExpand="True"
+                                 Margin="4"
+                                 MinHeight="48"
+                                 StyleClasses="button">
+                    <TextureRect
+                        VerticalAlignment="Center"
+                        VerticalExpand="True"
+                        TexturePath="/Textures/_Starlight/Interface/Communications/blue.png"/>
+                    <Label Text="Blue"
+                           Margin="42 0 0 0"></Label>
+                </ContainerButton>
+            </GridContainer>
+
+        </BoxContainer>
+
+        <!-- Alerts tab -->
+        <BoxContainer Name="Alerts2"
+                      Orientation="Vertical"
+                      VerticalExpand="True"
+                      HorizontalExpand="True"
+                      MinSize="100 150">
+
+            <Label Name="Label2" Text="Test456"></Label>
+
+        </BoxContainer>
+
+    </TabContainer>
+
+    <!-- Main Container -->
+    <BoxContainer Orientation="Vertical"
+        HorizontalExpand="False"
+        VerticalExpand="True"
+        Margin="6 6 6 5"
+        Visible="False">
+
+        <TextEdit Name="MessageInput"
+            VerticalExpand="True"
+            HorizontalExpand="True"
+            VerticalAlignment="Stretch"
+            HorizontalAlignment="Stretch"
+            MinHeight="100"/>
+
+        <!-- ButtonsPart -->
+        <BoxContainer Orientation="Vertical"
+            VerticalAlignment="Bottom"
+            SeparationOverride="4">
+
+            <!-- AnnouncePart -->
+            <BoxContainer Orientation="Vertical"
+                Margin="0 2">
+
+                <Button Name="AnnounceButton"
+                    Access="Public"
+                    Text="{Loc 'comms-console-menu-announcement-button'}"
+                    ToolTip="{Loc 'comms-console-menu-announcement-button-tooltip'}"
+                    StyleClasses="OpenLeft"
+                    Margin="0 0 1 0"
+                    Disabled="True"/>
+                <!-- Starlight Start -->
+                <!-- Announce Cooldown -->
+                <RichTextLabel Name="AnnouncementCooldownLabel" />
+                <!-- Starlight End -->
+
+                <Button Name="BroadcastButton"
+                    Access="Public"
+                    Text="{Loc 'comms-console-menu-broadcast-button'}"
+                    ToolTip="{Loc 'comms-console-menu-broadcast-button-tooltip'}"
+                    StyleClasses="OpenBoth"/>
+
+                <OptionButton Name="AlertLevelButton"
+                    Access="Public"
+                    ToolTip="{Loc 'comms-console-menu-alert-level-button-tooltip'}"
+                    StyleClasses="OpenRight"/>
+                <!-- Starlight Start -->
+                <!-- Alert Cooldown -->
+                <RichTextLabel Name="AlertCooldownLabel" />
+                <!-- Starlight End -->
+
+            </BoxContainer>
+
+            <!-- EmergencyPart -->
+            <BoxContainer Orientation="Vertical"
+                SeparationOverride="6">
+
+                <RichTextLabel Name="CountdownLabel"/>
+
+                <Button Name="EmergencyShuttleButton"
+                    Access="Public"
+                    Text="Placeholder Text"
+                    ToolTip="{Loc 'comms-console-menu-emergency-shuttle-button-tooltip'}"/>
+                <!-- Starlight Start -->
+                <!-- Call/Recall Cooldown -->
+                <RichTextLabel Name="ShuttleCooldownLabel" />
+                <!-- Starlight End -->
+            </BoxContainer>
+        </BoxContainer>
+    </BoxContainer>
+</controls:FancyWindow>
