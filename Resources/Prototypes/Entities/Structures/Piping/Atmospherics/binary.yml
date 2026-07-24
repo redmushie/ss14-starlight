@@ -367,12 +367,12 @@
           !type:PipeNode
           nodeGroupID: Pipe
           pipeDirection: North
-          volume: 100
+          volume: 50 # Starlight: was 100L
         outlet:
           !type:PipeNode
           nodeGroupID: Pipe
           pipeDirection: South
-          volume: 100
+          volume: 50 # Starlight: was 100L
     - type: Construction
       graph: GasBinary
       node: valve
@@ -447,12 +447,12 @@
         !type:PipeNode
         nodeGroupID: Pipe
         pipeDirection: North
-        volume: 100
+        volume: 50 # Starlight: Was 100L
       outlet:
         !type:PipeNode
         nodeGroupID: Pipe
         pipeDirection: South
-        volume: 100
+        volume: 50 # Starlight: Was 100L
   - type: Construction
     graph: GasBinary
     node: signalvalve
