@@ -1,3 +1,4 @@
+using Content.Shared.Atmos;
 using Content.Shared.Guidebook;
 using Robust.Shared.GameStates;
 
@@ -25,7 +26,7 @@ namespace Content.Shared.Doors.Components
         /// </summary>
         [DataField("pressureThreshold"), ViewVariables(VVAccess.ReadWrite)]
         [GuidebookData]
-        public float PressureThreshold = 20;
+        public float PressureThreshold = 40; // Starlight: Was 20kPa
 
         /// <summary>
         /// Maximum temperature difference before the firelock will refuse to open, in k.
@@ -51,6 +52,40 @@ namespace Content.Shared.Doors.Components
         public TimeSpan EmergencyCloseCooldownDuration = TimeSpan.FromSeconds(2);
 
         #endregion
+        #region Starlight: Soft-close thresholds
+
+        [DataField, ViewVariables(VVAccess.ReadWrite)]
+        public float TempMin = Atmospherics.T0C - 10;
+
+        [DataField, ViewVariables(VVAccess.ReadWrite)]
+        public float TempMax = Atmospherics.T0C + 60;
+
+        [DataField, ViewVariables(VVAccess.ReadWrite)]
+        public float PressureDeltaThreshold = 30;
+
+        #endregion
+        #region Starlight: Hard-close thresholds
+
+        [DataField, ViewVariables(VVAccess.ReadWrite)]
+        public float ExtremeTemperatureMin = Atmospherics.T0C - 50;
+
+        [DataField, ViewVariables(VVAccess.ReadWrite)]
+        public float ExtremeTemperatureMax = Atmospherics.T0C + 90;
+
+        [DataField, ViewVariables(VVAccess.ReadWrite)]
+        public float ExtremePressureDeltaThreshold = 60;
+
+        #endregion
+        #region Starlight: State
+
+        [DataField, AutoNetworkedField] public bool PressureDelta;
+        [DataField, AutoNetworkedField] public bool ExtremePressureDelta;
+        [DataField, AutoNetworkedField] public bool TemperatureLow;
+        [DataField, AutoNetworkedField] public bool TemperatureHigh;
+        [DataField, AutoNetworkedField] public bool TemperatureExtremelyLow;
+        [DataField, AutoNetworkedField] public bool TemperatureExtremelyHigh;
+
+        #endregion
 
         #region Set by system
 
@@ -63,19 +98,17 @@ namespace Content.Shared.Doors.Components
         /// <summary>
         /// Whether the firelock can open, or is locked due to its environment.
         /// </summary>
-        public bool IsLocked => Pressure || Temperature;
+        public bool IsLocked => TemperatureExtremelyLow || TemperatureExtremelyHigh || ExtremePressureDelta; // Starlight-edit
 
         /// <summary>
         /// Whether the firelock is holding back a hazardous pressure.
         /// </summary>
-        [DataField, AutoNetworkedField]
-        public bool Pressure;
+        public bool Pressure => PressureDelta || ExtremePressureDelta; // Starlight-edit
 
         /// <summary>
         /// Whether the firelock is holding back extreme temperatures.
         /// </summary>
-        [DataField, AutoNetworkedField]
-        public bool Temperature;
+        public bool Temperature => TemperatureLow || TemperatureHigh || TemperatureExtremelyLow || TemperatureExtremelyHigh; // Starlight-edit
 
         /// <summary>
         /// Whether the airlock is powered.
