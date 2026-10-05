@@ -80,20 +80,17 @@ public abstract partial class SharedFirelockSystem : EntitySystem
 
     private void WarnPlayer(Entity<FirelockComponent> ent, EntityUid user)
     {
-        if (ent.Comp.Temperature)
-        {
-            _popupSystem.PopupClient(Loc.GetString("firelock-component-is-holding-fire-message"),
-                ent.Owner,
-                user,
-                PopupType.MediumCaution);
-        }
-        else if (ent.Comp.Pressure)
-        {
+        // Starlight-start
+        if (ent.Comp.TemperatureLow)
+            _popupSystem.PopupClient(Loc.GetString("firelock-component-is-holding-low-temperature-message"),
+                ent.Owner, user, PopupType.MediumCaution);
+        else if (ent.Comp.TemperatureHigh)
+            _popupSystem.PopupClient(Loc.GetString("firelock-component-is-holding-low-temperature-message"),
+                ent.Owner, user, PopupType.MediumCaution);
+        else if (ent.Comp.PressureDelta)
             _popupSystem.PopupClient(Loc.GetString("firelock-component-is-holding-pressure-message"),
-                ent.Owner,
-                user,
-                PopupType.MediumCaution);
-        }
+                ent.Owner, user, PopupType.MediumCaution);
+        // Starlight-end
     }
 
     private void OnAfterPried(EntityUid uid, FirelockComponent component, ref PriedEvent args)
@@ -141,10 +138,22 @@ public abstract partial class SharedFirelockSystem : EntitySystem
     {
         using (args.PushGroup(nameof(FirelockComponent)))
         {
-            if (ent.Comp.Pressure)
+            // Starlight-start
+            if (ent.Comp.TemperatureExtremelyLow)
+                args.PushMarkup(Loc.GetString("firelock-component-examine-extreme-low-temp-warning"));
+            else if (ent.Comp.TemperatureLow)
+                args.PushMarkup(Loc.GetString("firelock-component-examine-low-temp-warning"));
+
+            if (ent.Comp.TemperatureExtremelyHigh)
+                args.PushMarkup(Loc.GetString("firelock-component-examine-extreme-high-temp-warning"));
+            else if (ent.Comp.TemperatureHigh)
+                args.PushMarkup(Loc.GetString("firelock-component-examine-high-temp-warning"));
+
+            if (ent.Comp.ExtremePressureDelta)
+                args.PushMarkup(Loc.GetString("firelock-component-examine-extreme-pressure-warning"));
+            else if (ent.Comp.PressureDelta)
                 args.PushMarkup(Loc.GetString("firelock-component-examine-pressure-warning"));
-            if (ent.Comp.Temperature)
-                args.PushMarkup(Loc.GetString("firelock-component-examine-temperature-warning"));
+            // Starlight-end
         }
     }
 }
@@ -154,16 +163,34 @@ public enum FirelockVisuals : byte
 {
     PressureWarning,
     TemperatureWarning,
+    // Starlight start
+    TemperatureLow,
+    TemperatureHigh,
+    TemperatureExtremelyLow,
+    TemperatureExtremelyHigh,
+    PressureDelta,
+    ExtremePressureDelta,
+    // Starlight end
 }
 
 [Serializable, NetSerializable]
 public enum FirelockVisualLayersPressure : byte
 {
+    // Starlight start
+    Delta,
+    ExtremeDelta,
+    // Starlight end
     Base
 }
 
 [Serializable, NetSerializable]
 public enum FirelockVisualLayersTemperature : byte
 {
+    // Starlight start
+    Low,
+    ExtremelyLow,
+    High,
+    ExtremelyHigh,
+    // Starlight end
     Base
 }
