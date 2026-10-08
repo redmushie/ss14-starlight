@@ -8,38 +8,107 @@
   },
   "states": [
     {
-      "name": "pressure_delta"
+      "name": "pressure_delta_solid"
     },
     {
-      "name": "pressure_delta_extreme",
+      "name": "pressure_delta_blinking",
       "delays": [
         [
-          0.6,
-          0.6
+          0.8,
+          0.8
         ]
       ]
     },
     {
-      "name": "temperature_low"
-    },
-    {
-      "name": "temperature_low_extreme",
+      "name": "pressure_delta_alternating",
       "delays": [
         [
-          0.6,
-          0.6
+          0.5,
+          0.5
         ]
       ]
     },
     {
-      "name": "temperature_high"
+      "name": "pressure_high_solid"
     },
     {
-      "name": "temperature_high_extreme",
+      "name": "pressure_high_blinking",
       "delays": [
         [
-          0.6,
-          0.6
+          0.8,
+          0.8
+        ]
+      ]
+    },
+    {
+      "name": "pressure_high_alternating",
+      "delays": [
+        [
+          0.5,
+          0.5
+        ]
+      ]
+    },
+    {
+      "name": "pressure_low_solid"
+    },
+    {
+      "name": "pressure_low_blinking",
+      "delays": [
+        [
+          0.8,
+          0.8
+        ]
+      ]
+    },
+    {
+      "name": "pressure_low_alternating",
+      "delays": [
+        [
+          0.5,
+          0.5
+        ]
+      ]
+    },
+    {
+      "name": "temperature_low_solid"
+    },
+    {
+      "name": "temperature_low_blinking",
+      "delays": [
+        [
+          0.8,
+          0.8
+        ]
+      ]
+    },
+    {
+      "name": "temperature_low_alternating",
+      "delays": [
+        [
+          0.5,
+          0.5
+        ]
+      ]
+    },
+    {
+      "name": "temperature_high_solid"
+    },
+    {
+      "name": "temperature_high_blinking",
+      "delays": [
+        [
+          0.8,
+          0.8
+        ]
+      ]
+    },
+    {
+      "name": "temperature_high_alternating",
+      "delays": [
+        [
+          0.5,
+          0.5
         ]
       ]
     }

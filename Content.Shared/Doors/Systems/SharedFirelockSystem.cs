@@ -149,7 +149,7 @@ public abstract partial class SharedFirelockSystem : EntitySystem
             else if (ent.Comp.TemperatureHigh)
                 args.PushMarkup(Loc.GetString("firelock-component-examine-high-temp-warning"));
 
-            if (ent.Comp.ExtremePressureDelta)
+            if (ent.Comp.PressureDeltaExtreme)
                 args.PushMarkup(Loc.GetString("firelock-component-examine-extreme-pressure-warning"));
             else if (ent.Comp.PressureDelta)
                 args.PushMarkup(Loc.GetString("firelock-component-examine-pressure-warning"));
@@ -164,33 +164,27 @@ public enum FirelockVisuals : byte
     PressureWarning,
     TemperatureWarning,
     // Starlight start
-    TemperatureLow,
-    TemperatureHigh,
-    TemperatureExtremelyLow,
-    TemperatureExtremelyHigh,
-    PressureDelta,
-    ExtremePressureDelta,
+    None,
+    LowSolid,
+    LowBlinking,
+    LowAlternating,
+    HighSolid,
+    HighBlinking,
+    HighAlternating,
+    DeltaSolid,
+    DeltaBlinking,
+    DeltaAlternating
     // Starlight end
 }
 
 [Serializable, NetSerializable]
 public enum FirelockVisualLayersPressure : byte
 {
-    // Starlight start
-    Delta,
-    ExtremeDelta,
-    // Starlight end
     Base
 }
 
 [Serializable, NetSerializable]
 public enum FirelockVisualLayersTemperature : byte
 {
-    // Starlight start
-    Low,
-    ExtremelyLow,
-    High,
-    ExtremelyHigh,
-    // Starlight end
     Base
 }

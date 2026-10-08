@@ -1,4 +1,3 @@
-using Content.Server._Starlight.Doors.Systems;
 using Content.Server.Atmos.Components;
 using Content.Server.Atmos.EntitySystems;
 using Content.Server.Atmos.Monitor.Components;
@@ -94,24 +93,20 @@ namespace Content.Server.Doors.Systems
                     }
 
                     // Starlight-start
-                    _appearance.SetData(uid, DoorVisuals.ClosedLights, closingConditions.HardClose, appearance);
+                    var bolting = false;
+                    var changed = false;
+                    if (closingConditions.HardClose)
+                        (bolting, changed) = StartOrContinueBoltingCountdown((uid, firelock), door);
+                    else
+                        CancelCountdownOrUnboltNow((uid, firelock));
 
-                    var previous = ClosingConditions.FromFirelock(firelock);
-                    if (previous.Equals(closingConditions))
-                        continue;
+                    // var previous = GetConditionsFromFirelock(firelock);
+                    // // if (previous.Equals(closingConditions) && !changed)
+                    // //     continue;
 
-                    firelock.TemperatureLow = closingConditions.LowTemperature;
-                    firelock.TemperatureHigh = closingConditions.HighTemperature;
-                    firelock.PressureDelta = closingConditions.PressureDelta;
-                    firelock.TemperatureExtremelyLow = closingConditions.ExtremeLowTemp;
-                    firelock.TemperatureExtremelyHigh = closingConditions.ExtremeHighTemp;
-                    firelock.ExtremePressureDelta = closingConditions.ExtremePressureDelta;
-                    _appearance.SetData(uid, FirelockVisuals.TemperatureLow, firelock.TemperatureLow && !firelock.TemperatureExtremelyLow, appearance);
-                    _appearance.SetData(uid, FirelockVisuals.TemperatureExtremelyLow, firelock.TemperatureExtremelyLow, appearance);
-                    _appearance.SetData(uid, FirelockVisuals.TemperatureHigh, firelock.TemperatureHigh && !firelock.TemperatureExtremelyHigh, appearance);
-                    _appearance.SetData(uid, FirelockVisuals.TemperatureExtremelyHigh, firelock.TemperatureExtremelyHigh, appearance);
-                    _appearance.SetData(uid, FirelockVisuals.PressureDelta, firelock.PressureDelta && !firelock.ExtremePressureDelta, appearance);
-                    _appearance.SetData(uid, FirelockVisuals.ExtremePressureDelta, firelock.ExtremePressureDelta, appearance);
+                    ApplyConditionsToFirelock(firelock, closingConditions);
+                    _appearance.SetData(uid, FirelockVisuals.TemperatureWarning, GetTemperatureVisual(closingConditions, bolting), appearance);
+                    _appearance.SetData(uid, FirelockVisuals.PressureWarning, GetPressureVisual(closingConditions, bolting), appearance);
                     Dirty(uid, firelock);
                     // Starlight-end
 
@@ -228,15 +223,19 @@ namespace Content.Server.Doors.Systems
                 }
 
                 // Starlight start
-                closingConditions.LowTemperature |= minTemperature < firelock.TempMin && minTemperature > Atmospherics.TCMB;
-                closingConditions.HighTemperature |= maxTemperature > firelock.TempMax;
-                closingConditions.ExtremeLowTemp |= minTemperature < firelock.ExtremeTemperatureMin && minTemperature > Atmospherics.TCMB;
-                closingConditions.ExtremeHighTemp |= maxTemperature > firelock.ExtremeTemperatureMax;
-                closingConditions.PressureDelta |= maxPressure - minPressure > firelock.PressureDeltaThreshold;
-                closingConditions.ExtremePressureDelta |= maxPressure - minPressure > firelock.ExtremePressureDeltaThreshold;
+                closingConditions.TempDelta |= maxTemperature - minTemperature > firelock.ThresholdTempDelta;
+                closingConditions.TempDeltaExtreme |= maxTemperature - minTemperature > firelock.ThresholdTempDeltaExtreme;
+                closingConditions.TempLow |= minTemperature < firelock.ThresholdTempLow && minTemperature > TCMBWithDelta;
+                closingConditions.TempLowExtreme |= minTemperature < firelock.ThresholdTempLowExtreme && minTemperature > TCMBWithDelta;
+                closingConditions.TempHigh |= maxTemperature > firelock.ThresholdTempHigh;
+                closingConditions.TempHighExtreme |= maxTemperature > firelock.ThresholdTempHighExtreme;
 
-                // if (closingConditions.Close)
-                //     return closingConditions;
+                closingConditions.PressureDelta |= maxPressure - minPressure > firelock.ThresholdPressureDelta;
+                closingConditions.PressureDeltaExtreme |= maxPressure - minPressure > firelock.ThresholdPressureDeltaExtreme;
+                closingConditions.PressureLow |= minPressure < firelock.ThresholdPressureLow;
+                closingConditions.PressureLowExtreme |= minPressure < firelock.ThresholdPressureLowExtreme;
+                closingConditions.PressureHigh |= maxPressure > firelock.ThresholdPressureHigh;
+                closingConditions.PressureHighExtreme |= maxPressure > firelock.ThresholdPressureHighExtreme;
                 // Starlight end
             }
 
@@ -261,12 +260,19 @@ namespace Content.Server.Doors.Systems
             }
 
             // Starlight start
-            closingConditions.LowTemperature |= minTemperature < firelock.TempMin && minTemperature > Atmospherics.TCMB;
-            closingConditions.HighTemperature |= maxTemperature > firelock.TempMax;
-            closingConditions.ExtremeLowTemp |= minTemperature < firelock.ExtremeTemperatureMin && minTemperature > Atmospherics.TCMB;
-            closingConditions.ExtremeHighTemp |= maxTemperature > firelock.ExtremeTemperatureMax;
-            closingConditions.PressureDelta |= maxPressure - minPressure > firelock.PressureDeltaThreshold;
-            closingConditions.ExtremePressureDelta |= maxPressure - minPressure > firelock.ExtremePressureDeltaThreshold;
+            closingConditions.TempDelta |= maxTemperature - minTemperature > firelock.ThresholdTempDelta;
+            closingConditions.TempDeltaExtreme |= maxTemperature - minTemperature > firelock.ThresholdTempDeltaExtreme;
+            closingConditions.TempLow |= minTemperature < firelock.ThresholdTempLow && minTemperature > TCMBWithDelta;
+            closingConditions.TempLowExtreme |= minTemperature < firelock.ThresholdTempLowExtreme && minTemperature > TCMBWithDelta;
+            closingConditions.TempHigh |= maxTemperature > firelock.ThresholdTempHigh;
+            closingConditions.TempHighExtreme |= maxTemperature > firelock.ThresholdTempHighExtreme;
+
+            closingConditions.PressureDelta |= maxPressure - minPressure > firelock.ThresholdPressureDelta;
+            closingConditions.PressureDeltaExtreme |= maxPressure - minPressure > firelock.ThresholdPressureDeltaExtreme;
+            closingConditions.PressureLow |= minPressure < firelock.ThresholdPressureLow;
+            closingConditions.PressureLowExtreme |= minPressure < firelock.ThresholdPressureLowExtreme;
+            closingConditions.PressureHigh |= maxPressure > firelock.ThresholdPressureHigh;
+            closingConditions.PressureHighExtreme |= maxPressure > firelock.ThresholdPressureHighExtreme;
 
             return closingConditions;
             // Starlight end

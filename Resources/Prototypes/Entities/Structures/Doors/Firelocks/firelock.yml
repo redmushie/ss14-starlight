@@ -65,63 +65,40 @@
 #          visible: false
 #          shader: unshaded
 #          map: ["enum.FirelockVisualLayersTemperature.Base"]
-        - state: temperature_low
+        - state: temperature_low_solid
           sprite: _Starlight/Structures/Doors/Airlocks/Standard/firelock.rsi
           visible: false
           shader: unshaded
-          map: ["enum.FirelockVisualLayersTemperature.Low"]
-        - state: temperature_low_extreme
+          map: ["enum.FirelockVisualLayersTemperature.Base"]
+        - state: pressure_low_solid
           sprite: _Starlight/Structures/Doors/Airlocks/Standard/firelock.rsi
           visible: false
           shader: unshaded
-          map: [ "enum.FirelockVisualLayersTemperature.ExtremelyLow" ]
-        - state: temperature_high
-          sprite: _Starlight/Structures/Doors/Airlocks/Standard/firelock.rsi
-          visible: false
-          shader: unshaded
-          map: [ "enum.FirelockVisualLayersTemperature.High" ]
-        - state: temperature_high_extreme
-          sprite: _Starlight/Structures/Doors/Airlocks/Standard/firelock.rsi
-          visible: false
-          shader: unshaded
-          map: [ "enum.FirelockVisualLayersTemperature.ExtremelyHigh" ]
-        - state: pressure_delta
-          sprite: _Starlight/Structures/Doors/Airlocks/Standard/firelock.rsi
-          visible: false
-          shader: unshaded
-          map: [ "enum.FirelockVisualLayersPressure.Delta" ]
-        - state: pressure_delta_extreme
-          sprite: _Starlight/Structures/Doors/Airlocks/Standard/firelock.rsi
-          visible: false
-          shader: unshaded
-          map: [ "enum.FirelockVisualLayersPressure.ExtremeDelta" ]
+          map: [ "enum.FirelockVisualLayersPressure.Base" ]
     - type: GenericVisualizer
       visuals:
         # Starlight start
-        enum.FirelockVisuals.TemperatureLow:
-          enum.FirelockVisualLayersTemperature.Low:
-            True: { visible: true }
-            False: { visible: false }
-        enum.FirelockVisuals.TemperatureExtremelyLow:
-          enum.FirelockVisualLayersTemperature.ExtremelyLow:
-            True: { visible: true }
-            False: { visible: false }
-        enum.FirelockVisuals.TemperatureHigh:
-          enum.FirelockVisualLayersTemperature.High:
-            True: { visible: true }
-            False: { visible: false }
-        enum.FirelockVisuals.TemperatureExtremelyHigh:
-          enum.FirelockVisualLayersTemperature.ExtremelyHigh:
-            True: { visible: true }
-            False: { visible: false }
-        enum.FirelockVisuals.PressureDelta:
-          enum.FirelockVisualLayersPressure.Delta:
-            True: { visible: true }
-            False: { visible: false }
-        enum.FirelockVisuals.ExtremePressureDelta:
-          enum.FirelockVisualLayersPressure.ExtremeDelta:
-            True: { visible: true }
-            False: { visible: false }
+        enum.FirelockVisuals.TemperatureWarning:
+          enum.FirelockVisualLayersTemperature.Base:
+            None:             { visible: false }
+            LowSolid:         { visible: true, state: temperature_low_solid }
+            LowBlinking:      { visible: true, state: temperature_low_blinking }
+            LowAlternating:   { visible: true, state: temperature_low_alternating }
+            HighSolid:        { visible: true, state: temperature_high_solid }
+            HighBlinking:     { visible: true, state: temperature_high_blinking }
+            HighAlternating:  { visible: true, state: temperature_high_alternating }
+        enum.FirelockVisuals.PressureWarning:
+          enum.FirelockVisualLayersPressure.Base:
+            None:             { visible: false }
+            DeltaSolid:       { visible: true, state: pressure_delta_solid }
+            DeltaBlinking:    { visible: true, state: pressure_delta_blinking }
+            DeltaAlternating: { visible: true, state: pressure_delta_alternating }
+            LowSolid:         { visible: true, state: pressure_low_solid }
+            LowBlinking:      { visible: true, state: pressure_low_blinking }
+            LowAlternating:   { visible: true, state: pressure_low_alternating }
+            HighSolid:        { visible: true, state: pressure_high_solid }
+            HighBlinking:     { visible: true, state: pressure_high_blinking }
+            HighAlternating:  { visible: true, state: pressure_high_alternating }
         # Starlight end
     - type: AnimationPlayer
     - type: Fixtures
@@ -197,6 +174,13 @@
       - Fires
       - Spacing
     - type: SyncSprite
+    # Starlight start
+    - type: AmbientSound
+      range: 7
+      enabled: false
+      sound:
+        path: /Audio/_Starlight/Machines/firelock_bolt_alarm.ogg
+    # Starlight end
 
 - type: entity
   id: Firelock
