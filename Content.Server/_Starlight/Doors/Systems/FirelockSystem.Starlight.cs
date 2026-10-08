@@ -16,7 +16,6 @@ public sealed partial class FirelockSystem
 
     // ReSharper disable once InconsistentNaming
     private const double TCMBWithDelta = Atmospherics.TCMB + 2;
-    private const double Low
 
     private (bool bolting, bool changed) StartOrContinueBoltingCountdown(Entity<FirelockComponent> firelock, DoorComponent door)
     {
