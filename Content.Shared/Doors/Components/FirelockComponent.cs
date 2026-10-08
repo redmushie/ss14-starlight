@@ -1,5 +1,6 @@
 using Content.Shared.Atmos;
 using Content.Shared.Guidebook;
+using Robust.Shared.Audio;
 using Robust.Shared.GameStates;
 
 namespace Content.Shared.Doors.Components
@@ -49,41 +50,83 @@ namespace Content.Shared.Doors.Components
         /// been pried open. Measured in seconds.
         /// </summary>
         [DataField]
-        public TimeSpan EmergencyCloseCooldownDuration = TimeSpan.FromSeconds(2);
+        public TimeSpan EmergencyCloseCooldownDuration = TimeSpan.FromMilliseconds(2200);
 
         #endregion
-        #region Starlight: Soft-close thresholds
+        #region Starlight: Temperature thresholds
 
         [DataField, ViewVariables(VVAccess.ReadWrite)]
-        public float TempMin = Atmospherics.T0C - 10;
+        public float ThresholdTempDelta = 30;
+        [DataField, ViewVariables(VVAccess.ReadWrite)]
+        public float ThresholdTempDeltaExtreme = 60;
 
         [DataField, ViewVariables(VVAccess.ReadWrite)]
-        public float TempMax = Atmospherics.T0C + 60;
+        public float ThresholdTempLow = Atmospherics.T0C - 10;
+        [DataField, ViewVariables(VVAccess.ReadWrite)]
+        public float ThresholdTempLowExtreme = Atmospherics.T0C - 50;
 
         [DataField, ViewVariables(VVAccess.ReadWrite)]
-        public float PressureDeltaThreshold = 30;
+        public float ThresholdTempHigh = Atmospherics.T0C + 60;
+        [DataField, ViewVariables(VVAccess.ReadWrite)]
+        public float ThresholdTempHighExtreme = Atmospherics.T0C + 90;
 
         #endregion
-        #region Starlight: Hard-close thresholds
+        #region Starlight: Pressure thresholds
 
         [DataField, ViewVariables(VVAccess.ReadWrite)]
-        public float ExtremeTemperatureMin = Atmospherics.T0C - 50;
+        public float ThresholdPressureDelta = 30;
+        [DataField, ViewVariables(VVAccess.ReadWrite)]
+        public float ThresholdPressureDeltaExtreme = 60;
 
         [DataField, ViewVariables(VVAccess.ReadWrite)]
-        public float ExtremeTemperatureMax = Atmospherics.T0C + 90;
+        public float ThresholdPressureLow = 30;
+        [DataField, ViewVariables(VVAccess.ReadWrite)]
+        public float ThresholdPressureHigh = 400;
 
         [DataField, ViewVariables(VVAccess.ReadWrite)]
-        public float ExtremePressureDeltaThreshold = 60;
+        public float ThresholdPressureLowExtreme = 5;
+        [DataField, ViewVariables(VVAccess.ReadWrite)]
+        public float ThresholdPressureHighExtreme = 600;
 
         #endregion
         #region Starlight: State
 
-        [DataField, AutoNetworkedField] public bool PressureDelta;
-        [DataField, AutoNetworkedField] public bool ExtremePressureDelta;
-        [DataField, AutoNetworkedField] public bool TemperatureLow;
-        [DataField, AutoNetworkedField] public bool TemperatureHigh;
-        [DataField, AutoNetworkedField] public bool TemperatureExtremelyLow;
-        [DataField, AutoNetworkedField] public bool TemperatureExtremelyHigh;
+        // These are all determined server-side, so their networking implicitly comes from the
+        // visuals update triggered by the server. As such there is no need to network these fields.
+
+        public bool PressureDelta;
+        public bool PressureDeltaExtreme;
+        public bool PressureLow;
+        public bool PressureLowExtreme;
+        public bool PressureHigh;
+        public bool PressureHighExtreme;
+
+        public bool TemperatureDelta;
+        public bool TemperatureDeltaExtreme;
+        public bool TemperatureLow;
+        public bool TemperatureHigh;
+        public bool TemperatureExtremelyLow;
+        public bool TemperatureExtremelyHigh;
+
+        // Bolting however is scheduled ahead of time, so the client can definitely use this info.
+
+        [DataField, AutoNetworkedField] public TimeSpan BoltCountdownDuration =  TimeSpan.FromSeconds(10);
+        [DataField, AutoNetworkedField] public TimeSpan? BoltCountdownStart;
+        [DataField, AutoNetworkedField] public TimeSpan? BoltCountdownEnd;
+        [DataField, AutoNetworkedField] public bool Bolted;
+
+        /// <summary>
+        /// Sound to play when the bolts on the airlock go up.
+        /// </summary>
+        [DataField, ViewVariables(VVAccess.ReadWrite)]
+        public SoundSpecifier BoltUpSound = new SoundPathSpecifier("/Audio/Machines/boltsup.ogg");
+
+        /// <summary>
+        /// Sound to play when the bolts on the airlock go down.
+        /// </summary>
+        [DataField, ViewVariables(VVAccess.ReadWrite)]
+        public SoundSpecifier BoltDownSound = new SoundPathSpecifier("/Audio/Machines/boltsdown.ogg");
+
 
         #endregion
 
@@ -98,12 +141,12 @@ namespace Content.Shared.Doors.Components
         /// <summary>
         /// Whether the firelock can open, or is locked due to its environment.
         /// </summary>
-        public bool IsLocked => TemperatureExtremelyLow || TemperatureExtremelyHigh || ExtremePressureDelta; // Starlight-edit
+        public bool IsLocked => TemperatureExtremelyLow || TemperatureExtremelyHigh || PressureDeltaExtreme; // Starlight-edit
 
         /// <summary>
         /// Whether the firelock is holding back a hazardous pressure.
         /// </summary>
-        public bool Pressure => PressureDelta || ExtremePressureDelta; // Starlight-edit
+        public bool Pressure => PressureDelta || PressureDeltaExtreme; // Starlight-edit
 
         /// <summary>
         /// Whether the firelock is holding back extreme temperatures.
