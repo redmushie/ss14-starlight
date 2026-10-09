@@ -300,6 +300,7 @@ public sealed partial class FirelockGroupSystem : SharedFirelockGroupSystem
 
         // Create the new group.
         var newGroup = EnsureComp<FirelockGroupComponent>(closestEntity);
+        Entity<FirelockGroupComponent> newGroupEnt = (closestEntity, newGroup);
         newGroup.Members = members.Select(member => member.Owner).ToHashSet();
         Dirty(closestEntity, newGroup);
 
@@ -309,6 +310,11 @@ public sealed partial class FirelockGroupSystem : SharedFirelockGroupSystem
             member.Comp2.Holder = closestEntity;
             DirtyField(member, member.Comp2, nameof(FirelockGroupMemberComponent.Holder));
         }
+
+        // Raise the event.
+        var leaderChangeEv = new FirelockGroupLeaderChangedEvent(groupEnt, newGroupEnt);
+        RaiseLocalEvent(groupEnt, ref leaderChangeEv);
+        RaiseLocalEvent(newGroupEnt, ref leaderChangeEv);
 
         // Remove the group comp from the old group holder.
         RemComp<FirelockGroupComponent>(groupEnt);

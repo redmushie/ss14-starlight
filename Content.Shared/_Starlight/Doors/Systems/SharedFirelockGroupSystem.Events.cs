@@ -27,27 +27,27 @@ public abstract partial class SharedFirelockGroupSystem : EntitySystem
 }
 
 [ByRefEvent]
-public struct FirelockGroupDestroyedEvent(Entity<FirelockGroupComponent> firelock)
+public sealed class FirelockGroupDestroyedEvent(Entity<FirelockGroupComponent> group) : EntityEventArgs
 {
-    public readonly Entity<FirelockGroupComponent> Firelock = firelock;
+    public readonly Entity<FirelockGroupComponent> Group = group;
 }
 
 [ByRefEvent]
-public struct FirelockLeavesGroupEvent(
+public struct FirelockGroupMemberRemovedEvent(
     Entity<FirelockGroupComponent> group,
-    Entity<FirelockGroupMemberComponent> firelock)
+    Entity<FirelockGroupMemberComponent> member)
 {
     public readonly Entity<FirelockGroupComponent> Group = group;
-    public readonly Entity<FirelockGroupMemberComponent> Firelock = firelock;
+    public readonly Entity<FirelockGroupMemberComponent> Member = member;
 }
 
 [ByRefEvent]
-public struct FirelockJoinsGroupEvent(
+public struct FirelockGroupMemberAddedEvent(
     Entity<FirelockGroupComponent> group,
-    Entity<FirelockGroupMemberComponent> firelock)
+    Entity<FirelockGroupMemberComponent> member)
 {
     public readonly Entity<FirelockGroupComponent> Group = group;
-    public readonly Entity<FirelockGroupMemberComponent> Firelock = firelock;
+    public readonly Entity<FirelockGroupMemberComponent> Member = member;
 }
 
 [ByRefEvent]
@@ -57,6 +57,15 @@ public struct FirelockGroupMergeEvent(
 {
     public readonly Entity<FirelockGroupComponent> Group = group;
     public readonly Entity<FirelockGroupComponent> Absorbed = absorbed;
+}
+
+[ByRefEvent]
+public struct FirelockGroupLeaderChangedEvent(
+    Entity<FirelockGroupComponent> previousLeader,
+    Entity<FirelockGroupComponent> currentLeader)
+{
+    public readonly Entity<FirelockGroupComponent> PreviousLeader = previousLeader;
+    public readonly Entity<FirelockGroupComponent> CurrentLeader = currentLeader;
 }
 
 [ByRefEvent]
