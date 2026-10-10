@@ -71,7 +71,7 @@ public sealed partial class CCVars
     ///     1.0 for instant spacing, 0.2 means 20% of remaining air lost each time
     /// </summary>
     public static readonly CVarDef<float> AtmosSpacingEscapeRatio =
-        CVarDef.Create("atmos.mmos_spacing_speed", 0.15f, CVar.SERVERONLY);
+        CVarDef.Create("atmos.mmos_spacing_speed", 0.5f, CVar.SERVERONLY); // Starlight: Was 0.15f
 
     /// <summary>
     ///     Minimum amount of air allowed on a spaced tile before it is reset to 0 immediately in kPa
@@ -86,7 +86,7 @@ public sealed partial class CCVars
     ///     (I.e spacing is limited in large rooms heading into smaller spaces)
     /// </summary>
     public static readonly CVarDef<float> AtmosSpacingMaxWind =
-        CVarDef.Create("atmos.mmos_max_wind", 500f, CVar.SERVERONLY);
+        CVarDef.Create("atmos.mmos_max_wind", 2000f, CVar.SERVERONLY); // Starlight: Was 500f
 
     /// <summary>
     ///     Whether atmos superconduction is enabled.
