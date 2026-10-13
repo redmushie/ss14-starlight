@@ -1,10 +1,9 @@
-using System.Diagnostics.CodeAnalysis;
+using System.Diagnostics;
 using System.Linq;
 using System.Numerics;
 using Content.Shared._Starlight.Doors.Components;
 using Content.Shared._Starlight.Doors.Systems;
 using Content.Shared.Doors.Components;
-using Content.Shared.Examine;
 using Robust.Shared.Map.Components;
 
 namespace Content.Server._Starlight.Doors.Systems;
@@ -31,8 +30,8 @@ public sealed partial class FirelockGroupSystem : SharedFirelockGroupSystem
         if (!TryComp<FirelockGroupComponent>(member.Comp.Holder, out var groupComp)) return;
         Log.Debug($"OnMemberAnchorStateChanged {member.Owner}");
 
-        // It *should* be impossible for an unanchored entity to be a group member.
-        // We try to make it gracefully leave the group if possible.
+        // It *should* be impossible for an unanchored entity to be a group member, but this also happens on map init,
+        // so we'll just try to handle it nicely.
         if (ev.Anchored)
         {
             JoinOrCreateGroupPassively((member, firelock));
@@ -79,7 +78,8 @@ public sealed partial class FirelockGroupSystem : SharedFirelockGroupSystem
     }
 
     #endregion
-    #region Interal API
+
+    #region High-level API
 
     /// <summary>
     /// Given a single firelock, creates a new group with itself as its sole member.
@@ -88,7 +88,7 @@ public sealed partial class FirelockGroupSystem : SharedFirelockGroupSystem
     {
         var group = EnsureComp<FirelockGroupComponent>(firelock);
         var membership = EnsureComp<FirelockGroupMemberComponent>(firelock);
-        group.Members =  new() { firelock };
+        group.Members = new() { firelock };
         membership.Holder = firelock.Owner;
         Dirty(firelock, group);
         Dirty(firelock, membership);
@@ -96,20 +96,34 @@ public sealed partial class FirelockGroupSystem : SharedFirelockGroupSystem
         return (firelock, group);
     }
 
-    /// <summary>
-    /// Joins a member to a group. Note that the member cannot already be part of a group!
-    /// </summary>
-    private Entity<FirelockGroupMemberComponent> JoinGroup(Entity<FirelockGroupComponent> group, Entity<FirelockComponent> firelock)
+    private void DestroyGroup(Entity<FirelockGroupComponent> group)
     {
-        var membership = EnsureComp<FirelockGroupMemberComponent>(firelock);
-        membership.Holder = group.Owner;
-        Dirty(firelock, membership);
+        if (group.Comp.Members.Count > 1)
+        {
+            Log.Error($"Firelock group {group.Owner} cannot be destroyed as it has multiple members.", new StackTrace());
+            return;
+        }
 
-        group.Comp.Members.Add(firelock);
-        DirtyField(group, group.Comp, nameof(FirelockGroupComponent.Members));
+        if (group.Comp.Members.Count == 1 && !group.Comp.Members.Contains(group.Owner))
+        {
+            Log.Error($"Firelock group {group.Owner} has one member, but it's not the owner?", new StackTrace());
+            return;
+        }
 
+        Log.Debug($"Destroying firelock group {group.Owner}");
+        RemCompDeferred<FirelockGroupComponent>(group);
+        RemCompDeferred<FirelockGroupMemberComponent>(group);
+        RaiseGroupDestroyedEvent(group);
+    }
+
+    /// <summary>
+    /// Joins a member to a group.
+    /// </summary>
+    private Entity<FirelockGroupMemberComponent> JoinGroup(Entity<FirelockGroupComponent> group,
+        Entity<FirelockComponent> firelock)
+    {
+        var membership = JoinGroupInternal(firelock, group);
         Log.Debug($"Firelock {firelock} has joined group {group}");
-
         return (firelock, membership);
     }
 
@@ -117,42 +131,34 @@ public sealed partial class FirelockGroupSystem : SharedFirelockGroupSystem
     /// Makes the member leave whatever group it belongs to. May trigger a rebalance if it was the group owner.
     /// </summary>
     /// <param name="member">The member to remove from their group</param>
-    private void LeaveGroup(Entity<FirelockGroupMemberComponent> member)
+    private void LeaveGroup(Entity<FirelockGroupMemberComponent> member, bool rebalance = true)
     {
         var groupHolder = member.Comp.Holder;
         Log.Debug($"Firelock {member} is leaving group: {groupHolder}");
+        LeaveGroupInternal(member, out var groupEnt, removeMemberComp: true, logErrorOnGroupMissing: true);
 
-        // If the group cannot be found, just delete the comp.
-        if (!TryComp<FirelockGroupComponent>(groupHolder, out var groupComp))
+        // If the group was not found, there's nothing more we can do.
+        if (!groupEnt.HasValue)
+            return;
+
+        // If this entity was the only member, the group ceases to exist.
+        if (groupEnt.Value.Comp.Members.Count == 0)
         {
-            Log.Warning($"Firelock {member} has membership comp, but group owner does not exist: {groupHolder}");
-            RemComp<FirelockGroupMemberComponent>(member);
-            Dirty(member);
+            Log.Debug($"Firelock group {groupHolder} is now empty, deleting");
+
+            RemComp<FirelockGroupComponent>(groupHolder);
+            Dirty(groupEnt.Value);
             return;
         }
-
-        // Remove this entity from the group membership.
-        groupComp.Members.Remove(member.Owner);
-        DirtyField(groupHolder, groupComp, nameof(FirelockGroupComponent.Members));
-        RemComp<FirelockGroupMemberComponent>(member);
-        Dirty(member);
 
         // We're done if this entity was not the group owner.
         if (groupHolder != member.Owner)
             return;
 
-        // If this entity was the only member, the group ceases to exist.
-        if (groupComp.Members.Count == 0)
-        {
-            Log.Debug($"Firelock group {groupHolder} is now empty, deleting");
-            RemComp<FirelockGroupComponent>(groupHolder);
-            Dirty(groupHolder, groupComp);
-            return;
-        }
-
         // Otherwise, rebalance the group. This must be done after we removed the previous owner from the membership
         // list, but can still reference the old entity.
-        RebalanceGroup((groupHolder, groupComp));
+        if (rebalance)
+            RebalanceGroup(groupEnt.Value);
     }
 
     private Entity<FirelockGroupComponent> MergeGroups(HashSet<Entity<FirelockGroupComponent>> groups)
@@ -195,10 +201,15 @@ public sealed partial class FirelockGroupSystem : SharedFirelockGroupSystem
         return resultGroup;
     }
 
+    /// <summary>
+    /// Checks if all firelocks in a group are still connected using a floodfill algorithm. If multiple islands are
+    /// detected, they are split off into their own groups.
+    /// </summary>
+    /// <param name="group">The group to validate and possibly split up</param>
     private void ValidateOrSplitGroup(Entity<FirelockGroupComponent> group)
     {
         var remaining = new HashSet<EntityUid>(group.Comp.Members);
-        var islands = new HashSet<HashSet<Entity<FirelockComponent>>>();
+        var firelockIslands = new HashSet<HashSet<Entity<FirelockComponent>>>();
 
         while (remaining.Count > 0)
         {
@@ -208,49 +219,62 @@ public sealed partial class FirelockGroupSystem : SharedFirelockGroupSystem
             if (!TryComp<FirelockComponent>(memberId, out var firelockComp))
                 continue;
 
-            Entity<FirelockComponent> memberFirelock = (memberId, firelockComp);
-            var island = FindIslandFirelocks(memberFirelock);
+            var island = FindIslandFirelocks((memberId, firelockComp));
             foreach (var islandEnt in island)
                 remaining.Remove(islandEnt.Owner);
-            islands.Add(island);
+            firelockIslands.Add(island);
         }
 
         // If all remaining firelocks still form one consecutive group we won't have to split.
-        if (islands.Count <= 1)
+        if (firelockIslands.Count <= 1)
             return;
 
         // All islands force-create new groups.
-        var newGroups = new HashSet<Entity<FirelockGroupComponent>>();
-        foreach (var island in islands)
+        foreach (var firelockIsland in firelockIslands)
         {
-            var islandGroup = AppointIslandLeader(island);
-            RebalanceGroup(islandGroup);
-            newGroups.Add(islandGroup);
+            var memberIsland = ToMemberEntities(firelockIsland);
+            var islandGroup = SplitGroup(memberIsland);
+            RebalanceGroup(islandGroup, raiseEvents: false);
         }
-
-        // Raise a single split event.
-        var islandSplitEv = new FirelockGroupSplitEvent(group, newGroups);
-        RaiseLocalEvent(group, ref islandSplitEv);
     }
 
     /// <summary>
     /// Given an island, appoint a new group leader, assign all members to this group, and return the new group.
+    /// Note: This does NOT raise any events about a new group being formed.
     /// </summary>
-    private Entity<FirelockGroupComponent> AppointIslandLeader(HashSet<Entity<FirelockComponent>> island)
+    private Entity<FirelockGroupComponent> SplitGroup(HashSet<Entity<FirelockGroupMemberComponent>> island)
     {
-        // Whichever first entity we find becomes the leader. (Rebalancing happens later).
+        // Whichever entity we find first becomes the leader. (Rebalancing happens later).
         var newLeader = island.First();
+        LeaveGroupInternal(newLeader, out var formerGroupEnt, removeMemberComp: false);
+        RaiseMemberLeaveEvent(newLeader, formerGroupEnt);
 
-        var groupComp = EnsureComp<FirelockGroupComponent>(newLeader);
-        groupComp.Members = island.Select(ent => ent.Owner).ToHashSet();
+        // Create the new group, announce it.
+        var newGroupComp = EnsureComp<FirelockGroupComponent>(newLeader);
+        var newGroupEnt = (newLeader, newGroupComp);
+        RaiseGroupCreatedEvent(newGroupEnt);
+
+        // Join each member to the new island, raise event for each join.
+        foreach (var islandMemberEnt in island)
+        {
+            RaiseMemberLeaveEvent(islandMemberEnt, formerGroupEnt);
+            JoinGroupInternal(islandMemberEnt, newGroupEnt);
+            RaiseMemberJoinEvent(islandMemberEnt, newGroupEnt);
+        }
 
         foreach (var firelock in island)
         {
-            var member = EnsureComp<FirelockGroupMemberComponent>(firelock);
+            if (TryComp<FirelockGroupMemberComponent>(firelock, out var member))
+            {
+                // Raise a leave event for each member.
+                LeaveGroup((firelock, member));
+            }
+
+            member ??= EnsureComp<FirelockGroupMemberComponent>(firelock);
             member.Holder = newLeader;
         }
 
-        return (newLeader, groupComp);
+        return (newLeader, newGroupComp);
     }
 
     /// <summary>
@@ -260,7 +284,9 @@ public sealed partial class FirelockGroupSystem : SharedFirelockGroupSystem
     /// with rebalancing after a member leaves, provided the group membership list has had the previous owner removed.
     /// </summary>
     /// <param name="groupEnt">The current or former group owner</param>
-    private void RebalanceGroup(Entity<FirelockGroupComponent> groupEnt)
+    /// <param name="raiseEvents">Whether to raise the leader-changed event.</param>
+    private Entity<FirelockGroupComponent> RebalanceGroup(Entity<FirelockGroupComponent> groupEnt,
+        bool raiseEvents = true)
     {
         var members = new List<Entity<TransformComponent, FirelockGroupMemberComponent>>();
         var positionSum = Vector2.Zero;
@@ -275,7 +301,7 @@ public sealed partial class FirelockGroupSystem : SharedFirelockGroupSystem
         }
 
         if (members.Count < 2)
-            return;
+            return groupEnt;
 
         var center = positionSum / members.Count;
         var closestEntity = members[0];
@@ -295,7 +321,7 @@ public sealed partial class FirelockGroupSystem : SharedFirelockGroupSystem
         if (closestEntity.Owner == groupEnt.Owner)
         {
             Log.Debug($"Best firelock group leader candidate is current owner, no action taken");
-            return;
+            return groupEnt;
         }
 
         // Create the new group.
@@ -312,14 +338,75 @@ public sealed partial class FirelockGroupSystem : SharedFirelockGroupSystem
         }
 
         // Raise the event.
-        var leaderChangeEv = new FirelockGroupLeaderChangedEvent(groupEnt, newGroupEnt);
-        RaiseLocalEvent(groupEnt, ref leaderChangeEv);
-        RaiseLocalEvent(newGroupEnt, ref leaderChangeEv);
+        if (raiseEvents)
+        {
+            var leaderChangeEv = new FirelockGroupLeaderChangedEvent(groupEnt);
+            RaiseLocalEvent(newGroupEnt, ref leaderChangeEv);
+        }
 
         // Remove the group comp from the old group holder.
         RemComp<FirelockGroupComponent>(groupEnt);
         Dirty(groupEnt);
         Log.Debug($"New group leader chosen: was {groupEnt}, is now {closestEntity}");
+        return (closestEntity, newGroup);
+    }
+
+    #endregion
+    #region Internal API
+
+    private Entity<FirelockGroupMemberComponent> JoinGroupInternal(
+        Entity<FirelockComponent> firelock,
+        Entity<FirelockGroupComponent> group)
+    {
+        var membership = EnsureComp<FirelockGroupMemberComponent>(firelock);
+        return JoinGroupInternal((firelock, membership), group);
+    }
+
+    private Entity<FirelockGroupMemberComponent> JoinGroupInternal(
+        Entity<FirelockGroupMemberComponent> membership,
+        Entity<FirelockGroupComponent> group)
+    {
+        membership.Comp.Holder = group.Owner;
+        Dirty(membership);
+
+        group.Comp.Members.Add(membership);
+        DirtyField(group, group.Comp, nameof(FirelockGroupComponent.Members));
+        return membership;
+    }
+
+    /// <summary>
+    /// Removes a member from the member list, removes the membership comp. If they were the group leader and members
+    /// remain, the first found member is assigned group leader.
+    /// </summary>
+    /// <param name="memberEnt">The member to make leave their group</param>
+    /// <param name="groupEnt">The resolved group, if any</param>
+    /// <param name="removeMemberComp">Whether to remove the membership component after leaving</param>
+    /// <param name="logErrorOnGroupMissing">Whether to log an error when the group owner cannot be found</param>
+    private void LeaveGroupInternal(
+        Entity<FirelockGroupMemberComponent> memberEnt,
+        out Entity<FirelockGroupComponent>? groupEnt,
+        bool removeMemberComp = true,
+        bool logErrorOnGroupMissing = true)
+    {
+        // Remove this member from the groups' member list if possible.
+        if (LifeStage(memberEnt.Comp.Holder) < EntityLifeStage.Terminating &&
+            TryComp<FirelockGroupComponent>(memberEnt.Comp.Holder, out var groupComp))
+        {
+            groupEnt = (memberEnt.Comp.Holder, groupComp);
+            groupEnt.Value.Comp.Members.Remove(memberEnt.Owner);
+            DirtyField(groupEnt.Value, groupEnt.Value.Comp, nameof(FirelockGroupComponent.Members));
+        }
+        else if (logErrorOnGroupMissing)
+            Log.Error(
+                $"Tried to remove {memberEnt} from group {memberEnt.Comp.Holder} but group owner could not be found!");
+
+        groupEnt = null;
+        if (!removeMemberComp)
+            return;
+
+        // Remove membership comp.
+        RemComp<FirelockGroupMemberComponent>(memberEnt);
+        Dirty(memberEnt);
     }
 
     /// <summary>
@@ -343,51 +430,47 @@ public sealed partial class FirelockGroupSystem : SharedFirelockGroupSystem
 
     #endregion
 
+    #region Event helpers
+
+    private void RaiseGroupCreatedEvent(Entity<FirelockGroupComponent> groupEnt)
+    {
+        var ev = new FirelockGroupCreatedEvent();
+        RaiseLocalEvent(groupEnt, ref ev);
+    }
+
+    private void RaiseGroupDestroyedEvent(Entity<FirelockGroupComponent> group)
+    {
+        var ev = new FirelockGroupDestroyedEvent();
+        RaiseLocalEvent(group, ref ev);
+    }
+
+    private void RaiseMemberJoinEvent(
+        Entity<FirelockGroupMemberComponent> memberEnt,
+        Entity<FirelockGroupComponent> groupEnt)
+    {
+        var ev = new FirelockGroupMemberJoinEvent(groupEnt);
+        RaiseLocalEvent(memberEnt, ref ev);
+    }
+
+    private void RaiseMemberLeaveEvent(
+        Entity<FirelockGroupMemberComponent> memberEnt,
+        Entity<FirelockGroupComponent>? groupEnt)
+    {
+        var ev = new FirelockGroupMemberLeaveEvent(groupEnt);
+        RaiseLocalEvent(memberEnt, ref ev);
+    }
+
+    #endregion
+
     #region Helpers
 
-    private bool GetGroup(EntityUid uid, [NotNullWhen(true)] out Entity<FirelockGroupComponent>? group)
+    private HashSet<Entity<FirelockGroupMemberComponent>> ToMemberEntities(HashSet<Entity<FirelockComponent>> entities)
     {
-        if (TryComp<FirelockGroupMemberComponent>(uid, out var groupMember))
-            return GetGroup((uid, groupMember), out group);
-
-        if (TryComp<FirelockGroupComponent>(uid, out var groupComponent))
-        {
-            group = (uid, groupComponent);
-            return true;
-        }
-
-        group = null;
-        return false;
-    }
-
-    private bool GetGroup(Entity<FirelockComponent> firelock, [NotNullWhen(true)] out Entity<FirelockGroupComponent>? group)
-    {
-        if (TryComp<FirelockGroupComponent>(firelock, out var groupComponent))
-        {
-            group = (firelock.Owner, groupComponent);
-            return true;
-        }
-
-        if (TryComp<FirelockGroupMemberComponent>(firelock, out var groupMember))
-            return GetGroup((firelock, groupMember), out group);
-
-        group = null;
-        return false;
-    }
-
-    private bool GetGroup(
-        Entity<FirelockGroupMemberComponent> member,
-        [NotNullWhen(true)] out Entity<FirelockGroupComponent>? group)
-    {
-        if (TryComp<FirelockGroupComponent>(member.Comp.Holder, out var groupComp))
-        {
-            group = (member, groupComp);
-            return true;
-        }
-
-        group = null;
-        RemComp<FirelockGroupMemberComponent>(member);
-        return false;
+        var result = new HashSet<Entity<FirelockGroupMemberComponent>>();
+        foreach (var firelockEnt in entities)
+            if (TryComp<FirelockGroupMemberComponent>(firelockEnt, out var memberComp))
+                result.Add((firelockEnt, memberComp));
+        return result;
     }
 
     #endregion
@@ -419,7 +502,8 @@ public sealed partial class FirelockGroupSystem : SharedFirelockGroupSystem
     /// Returns the firelocks anchored on the four cardinal tiles directly adjacent to
     /// <paramref name="firelock"/>.
     /// </summary>
-    private List<Entity<FirelockComponent>> FindAdjacentFirelocks(Entity<FirelockComponent> firelock, TransformComponent xform)
+    private List<Entity<FirelockComponent>> FindAdjacentFirelocks(Entity<FirelockComponent> firelock,
+        TransformComponent xform)
     {
         var result = new List<Entity<FirelockComponent>>();
 
