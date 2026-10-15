@@ -8,6 +8,8 @@ public sealed partial class FirelockGroupSystem
 
     public override void Update(float frameTime)
     {
+        UpdateSensingGlobal(frameTime);
+
         var query = EntityQueryEnumerator<FirelockComponent, FirelockGroupComponent>();
         while (query.MoveNext(out var uid, out var firelock, out var groupComp))
         {
