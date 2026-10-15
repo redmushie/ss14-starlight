@@ -198,6 +198,7 @@ public sealed partial class FirelockGroupSystem : SharedFirelockGroupSystem
             Dirty(collectiveMember, membership);
         }
 
+        DirtySensingIslands(resultGroup);
         return resultGroup;
     }
 
@@ -337,6 +338,9 @@ public sealed partial class FirelockGroupSystem : SharedFirelockGroupSystem
             DirtyField(member, member.Comp2, nameof(FirelockGroupMemberComponent.Holder));
         }
 
+        DirtySensingIslands(groupEnt);
+        DirtySensingIslands(newGroupEnt);
+
         // Raise the event.
         if (raiseEvents)
         {
@@ -371,6 +375,7 @@ public sealed partial class FirelockGroupSystem : SharedFirelockGroupSystem
 
         group.Comp.Members.Add(membership);
         DirtyField(group, group.Comp, nameof(FirelockGroupComponent.Members));
+        DirtySensingIslands(group);
         return membership;
     }
 
@@ -395,6 +400,7 @@ public sealed partial class FirelockGroupSystem : SharedFirelockGroupSystem
             groupEnt = (memberEnt.Comp.Holder, groupComp);
             groupEnt.Value.Comp.Members.Remove(memberEnt.Owner);
             DirtyField(groupEnt.Value, groupEnt.Value.Comp, nameof(FirelockGroupComponent.Members));
+            DirtySensingIslands(groupEnt.Value);
         }
         else if (logErrorOnGroupMissing)
             Log.Error(
