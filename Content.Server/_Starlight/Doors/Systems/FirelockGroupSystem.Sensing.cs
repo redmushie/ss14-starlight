@@ -335,9 +335,8 @@ public sealed partial class FirelockGroupSystem
             List<Vector2i> adjacentTiles = new(4);
             List<Direction8> directions = new(4);
 
-            for (var i = 0; i < Atmospherics.Directions; i++)
+            foreach (var dir in Direction8Extensions.Cardinals)
             {
-                var dir = ((AtmosDirection)(1 << i)).ToDirection8();
                 directions.Add(dir);
                 adjacentTiles.Add(pos.Offset(dir));
             }
@@ -366,7 +365,7 @@ public sealed partial class FirelockGroupSystem
                     adjacentTile.IslandingDirections &= ~GetDirectionCone45(oppositeDir);
 
                 // TODO: this naively adds links between our tile and the adjacent tile, regardless of whether the IslandingDirections permit this. probably not an issue though
-                adjacentTile.SensingFirelocks.Add((dir.GetOpposite(), pos));
+                adjacentTile.SensingFirelocks.Add((oppositeDir, pos));
                 firelockTile.SensedTiles.Add(adjacentPos);
                 tiles[adjacentPos] = adjacentTile;
             }
@@ -421,9 +420,9 @@ public sealed partial class FirelockGroupSystem
             currentIsland.Tiles.Add(currentPos, currentTile);
 
             // Queue adjacent that haven't already been visited.
-            var adjacents = GetAdjacentTiles(currentPos);
-            foreach (var (direction, adjacentPos) in adjacents)
+            foreach (var direction in Direction8Extensions.AllDirections)
             {
+                var adjacentPos = currentPos.Offset(direction);
                 if (visitedTiles.Contains(adjacentPos)) continue;
                 if (!tiles.TryGetValue(adjacentPos, out var adjacentTile)) continue;
                 if (toVisit.Contains(adjacentPos)) continue;
@@ -443,18 +442,6 @@ public sealed partial class FirelockGroupSystem
 
         return (internalIsland, completedIslands);
     }
-
-    private (Direction8, Vector2i)[] GetAdjacentTiles(Vector2i coord) => new[]
-        {
-            (Direction8.North, coord + (0, -1)),
-            (Direction8.NorthEast, coord + (1, -1)),
-            (Direction8.East, coord + (1, 0)),
-            (Direction8.SouthEast, coord + (1, 1)),
-            (Direction8.South, coord + (0, 1)),
-            (Direction8.SouthWest, coord + (-1, 1)),
-            (Direction8.West, coord + (-1, 0)),
-            (Direction8.NorthWest, coord + (-1, -1)),
-        };
 
     private Direction8 GetDirectionCone45(Direction8 direction) =>
         direction.TurnCounterClockwise() | direction | direction.TurnClockwise();

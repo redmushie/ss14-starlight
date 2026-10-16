@@ -33,6 +33,17 @@ public enum Direction8 : byte
 public static class Direction8Extensions
 {
 
+    public static readonly Direction8[] Cardinals =
+    {
+        Direction8.North, Direction8.East, Direction8.South, Direction8.West
+    };
+
+    public static readonly Direction8[] AllDirections =
+    {
+        Direction8.North, Direction8.NorthEast, Direction8.East, Direction8.SouthEast, Direction8.South,
+        Direction8.SouthWest, Direction8.West, Direction8.NorthWest,
+    };
+
     public static Direction8 GetOpposite(this Direction8 direction)
         => (Direction8)(((byte)direction << 4) | ((byte)direction >> 4));
 
@@ -70,7 +81,7 @@ public static class Direction8Extensions
             Direction8.SouthEast => AtmosDirection.SouthEast,
             Direction8.South => AtmosDirection.South,
             Direction8.SouthWest => AtmosDirection.SouthWest,
-            Direction8.West => AtmosDirection.SouthWest,
+            Direction8.West => AtmosDirection.West,
             Direction8.NorthWest => AtmosDirection.NorthWest,
             Direction8.All => AtmosDirection.All,
             _ => throw new ArgumentOutOfRangeException(nameof(direction), direction, null)
@@ -96,14 +107,14 @@ public static class Direction8Extensions
     public static Vector2i ToIntVec(this Direction8 direction) =>
         direction switch
         {
-            Direction8.North => (0, -1),
-            Direction8.NorthEast => (1, -1),
+            Direction8.North => (0, 1),
+            Direction8.NorthEast => (1, 1),
             Direction8.East => (1, 0),
-            Direction8.SouthEast => (1, 1),
-            Direction8.South => (0, 1),
-            Direction8.SouthWest => (-1, 1),
+            Direction8.SouthEast => (1, -1),
+            Direction8.South => (0, -1),
+            Direction8.SouthWest => (-1, -1),
             Direction8.West => (-1, 0),
-            Direction8.NorthWest => (-1, -1),
+            Direction8.NorthWest => (-1, 1),
             _ => throw new ArgumentOutOfRangeException(nameof(Direction8), direction, null)
         };
 
