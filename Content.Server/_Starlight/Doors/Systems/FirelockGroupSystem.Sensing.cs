@@ -364,6 +364,11 @@ public sealed partial class FirelockGroupSystem
                 if (dir == firelockDirection)
                     adjacentTile.IslandingDirections &= ~GetDirectionCone45(oppositeDir);
 
+                // Tiles adjacent to a solid firelock may not diagonally island with one another.
+                // This effectively blocks the two diagonals facing the firelock tile.
+                if (!edgeFirelock)
+                    adjacentTile.IslandingDirections &= ~(oppositeDir.TurnCounterClockwise() | oppositeDir.TurnClockwise());
+
                 // TODO: this naively adds links between our tile and the adjacent tile, regardless of whether the IslandingDirections permit this. probably not an issue though
                 adjacentTile.SensingFirelocks.Add((oppositeDir, pos));
                 firelockTile.SensedTiles.Add(adjacentPos);
@@ -386,6 +391,9 @@ public sealed partial class FirelockGroupSystem
 
         void QueueNextIsland()
         {
+            if (remainingTiles.Count == 0)
+                return;
+
             var first = remainingTiles.First();
             remainingTiles.Remove(first);
             toVisit.Enqueue(first);
