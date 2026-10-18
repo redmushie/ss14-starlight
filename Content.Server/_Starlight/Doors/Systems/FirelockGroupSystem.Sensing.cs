@@ -17,11 +17,11 @@ public sealed partial class FirelockGroupSystem
 
     private readonly TimeSpan _recalculateIslandsInterval = TimeSpan.FromMinutes(2);
     private readonly TimeSpan _sensingInterval = TimeSpan.FromSeconds(1);
-    private readonly Queue<Entity<FirelockGroupComponent>> _recalculateIslandsQueue = new();
+    private readonly Queue<Entity<FirelockLeaderComponent>> _recalculateIslandsQueue = new();
 
     #region Internal API
 
-    private void DirtySensingIslands(Entity<FirelockGroupComponent> group)
+    private void DirtySensingIslands(Entity<FirelockLeaderComponent> group)
     {
         // Already dirty -> do nothing
         if (group.Comp.IslandsPending)
@@ -49,7 +49,7 @@ public sealed partial class FirelockGroupSystem
         // TODO: call UpdateSensing
     }
 
-    private void UpdateSensing(float frameTime, Entity<FirelockGroupComponent> group)
+    private void UpdateSensing(float frameTime, Entity<FirelockLeaderComponent> group)
     {
         // Queue island recalculation if it's that time.
         if (RequiresIslandRecalculation(group))
@@ -75,11 +75,11 @@ public sealed partial class FirelockGroupSystem
         }
     }
 
-    private bool RequiresIslandRecalculation(Entity<FirelockGroupComponent> group) =>
+    private bool RequiresIslandRecalculation(Entity<FirelockLeaderComponent> group) =>
         !group.Comp.IslandsPending && (!group.Comp.IslandsInitialized ||
         group.Comp.SensingIslandsLastCalculated + _recalculateIslandsInterval < _timing.CurTime);
 
-    private void RecalculateSensingIslands(Entity<FirelockGroupComponent> group)
+    private void RecalculateSensingIslands(Entity<FirelockLeaderComponent> group)
     {
         group.Comp.IslandsPending = false;
         group.Comp.SensingIslandsLastCalculated = _timing.CurTime;
@@ -97,7 +97,7 @@ public sealed partial class FirelockGroupSystem
     #region Judging
 
     private SensingResult JudgeReading(
-        Entity<FirelockGroupComponent> group,
+        Entity<FirelockLeaderComponent> group,
         SensorReading reading)
     {
         var judgement = new SensingResult();
@@ -185,7 +185,7 @@ public sealed partial class FirelockGroupSystem
     /// <param name="island"></param>
     /// <returns></returns>
     private SensorReading SenseIsland(
-        Entity<FirelockGroupComponent> group,
+        Entity<FirelockLeaderComponent> group,
         SensingIsland island)
     {
         var xform = Transform(group.Owner);
@@ -279,7 +279,7 @@ public sealed partial class FirelockGroupSystem
     /// Given a firelock group, collects all tiles eligible for sensing, grouped by coordinate.
     /// </summary>
     private Dictionary<Vector2i, SensingTile> CollectSensingTiles(
-        Entity<FirelockGroupComponent> group,
+        Entity<FirelockLeaderComponent> group,
         EntityQuery<AirtightComponent> airtightQuery)
     {
         Dictionary<Vector2i, SensingTile> tiles = new();

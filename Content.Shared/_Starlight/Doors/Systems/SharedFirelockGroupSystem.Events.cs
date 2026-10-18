@@ -7,7 +7,7 @@ namespace Content.Shared._Starlight.Doors.Systems;
 public abstract partial class SharedFirelockGroupSystem : EntitySystem
 {
     [SubscribeLocalEvent]
-    private void OnExamineFirelockGroup(Entity<FirelockGroupComponent> firelock, ref ExaminedEvent ev)
+    private void OnExamineFirelockGroup(Entity<FirelockLeaderComponent> firelock, ref ExaminedEvent ev)
     {
         using (ev.PushGroup("firelock-group"))
         {
@@ -16,12 +16,12 @@ public abstract partial class SharedFirelockGroupSystem : EntitySystem
     }
 
     [SubscribeLocalEvent]
-    private void OnExamineFirelockGroupMember(Entity<FirelockGroupMemberComponent> firelock, ref ExaminedEvent ev)
+    private void OnExamineFirelockGroupMember(Entity<FirelockFollowerComponent> firelock, ref ExaminedEvent ev)
     {
         using (ev.PushGroup("firelock-group-member"))
         {
             ev.PushMarkup($"ID: {GetNetEntity(firelock).Id}");
-            ev.PushMarkup($"Member of group {GetNetEntity(firelock.Comp.Holder).Id}");
+            ev.PushMarkup($"Member of group {GetNetEntity(firelock.Comp.Leader).Id}");
         }
     }
 }
@@ -43,9 +43,9 @@ public struct FirelockGroupDestroyedEvent;
 /// </summary>
 /// <param name="group">The group</param>
 [ByRefEvent]
-public struct FirelockGroupMemberJoinEvent(Entity<FirelockGroupComponent> group)
+public struct FirelockGroupMemberJoinEvent(Entity<FirelockLeaderComponent> group)
 {
-    public readonly Entity<FirelockGroupComponent> Group = group;
+    public readonly Entity<FirelockLeaderComponent> Group = group;
 }
 
 /// <summary>
@@ -53,16 +53,16 @@ public struct FirelockGroupMemberJoinEvent(Entity<FirelockGroupComponent> group)
 /// </summary>
 /// <param name="group">The group</param>
 [ByRefEvent]
-public struct FirelockGroupMemberLeaveEvent(Entity<FirelockGroupComponent>? group)
+public struct FirelockGroupMemberLeaveEvent(Entity<FirelockLeaderComponent>? group)
 {
-    public readonly Entity<FirelockGroupComponent>? Group = group;
+    public readonly Entity<FirelockLeaderComponent>? Group = group;
 }
 
 /// <summary>
 /// Raised on the *new leader* entity when a firelock group changes leader.
 /// </summary>
 [ByRefEvent]
-public struct FirelockGroupLeaderChangedEvent(Entity<FirelockGroupComponent> formerLeader)
+public struct FirelockGroupLeaderChangedEvent(Entity<FirelockLeaderComponent> formerLeader)
 {
-    public readonly Entity<FirelockGroupComponent> FormerLeader = formerLeader;
+    public readonly Entity<FirelockLeaderComponent> FormerLeader = formerLeader;
 }

@@ -14,7 +14,7 @@ namespace Content.Shared._Starlight.Doors.Components;
 [RegisterComponent, NetworkedComponent]
 [AutoGenerateComponentState(fieldDeltas: true)]
 // [AutoGenerateComponentPause]
-public sealed partial class FirelockGroupComponent : Component
+public sealed partial class FirelockLeaderComponent : Component
 {
     #region Groups
 

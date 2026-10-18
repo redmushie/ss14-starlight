@@ -11,7 +11,7 @@ public sealed partial class FirelockGroupSystem
         // Update global sensing things. This recalculates islands, one group per tick.
         UpdateSensingGlobal(frameTime);
 
-        var query = EntityQueryEnumerator<FirelockComponent, FirelockGroupComponent>();
+        var query = EntityQueryEnumerator<FirelockComponent, FirelockLeaderComponent>();
         while (query.MoveNext(out var uid, out var firelock, out var groupComp))
         {
             if (LifeStage(uid) >= EntityLifeStage.Terminating)
