@@ -33,6 +33,7 @@ public sealed partial class FirelockGroupSystem
     }
 
     #endregion
+
     #region Updating
 
     private void UpdateSensingGlobal(float frameTime)
@@ -49,35 +50,10 @@ public sealed partial class FirelockGroupSystem
         // TODO: call UpdateSensing
     }
 
-    private void UpdateSensing(float frameTime, Entity<FirelockLeaderComponent> group)
-    {
-        // Queue island recalculation if it's that time.
-        if (RequiresIslandRecalculation(group))
-        {
-            _recalculateIslandsQueue.Enqueue(group);
-            group.Comp.IslandsPending = true;
-        }
-
-        // If we haven't determined islands at all yet, we cannot sense, so exit here.
-        if (!group.Comp.IslandsInitialized)
-            return;
-
-        // Check if we should sense.
-        if (group.Comp.SensingIslandsLastSensed + _sensingInterval < _timing.CurTime)
-            return;
-
-        // Sense each island.
-        group.Comp.SensingIslandsLastSensed = _timing.CurTime;
-        foreach (var sensingIsland in group.Comp.ExternalSensingIslands)
-        {
-            var readings = SenseIsland(group, sensingIsland);
-
-        }
-    }
-
     private bool RequiresIslandRecalculation(Entity<FirelockLeaderComponent> group) =>
         !group.Comp.IslandsPending && (!group.Comp.IslandsInitialized ||
-        group.Comp.SensingIslandsLastCalculated + _recalculateIslandsInterval < _timing.CurTime);
+                                       group.Comp.SensingIslandsLastCalculated + _recalculateIslandsInterval <
+                                       _timing.CurTime);
 
     private void RecalculateSensingIslands(Entity<FirelockLeaderComponent> group)
     {
@@ -176,6 +152,7 @@ public sealed partial class FirelockGroupSystem
     }
 
     #endregion
+
     #region Sensing
 
     /// <summary>
@@ -246,6 +223,11 @@ public sealed partial class FirelockGroupSystem
             maxTemperature = Math.Max(maxTemperature, gas.Temperature);
         }
 
+        result.MinPressure = minPressure;
+        result.MaxPressure = maxPressure;
+        result.MinTemperature = minTemperature;
+        result.MaxTemperature = maxTemperature;
+
         return result;
     }
 
@@ -269,10 +251,12 @@ public sealed partial class FirelockGroupSystem
             // Leaves only unblocked air directions.
             directions &= ~(airtight.AirBlockedDirection.ToDirection8());
         }
+
         return directions;
     }
 
     #endregion
+
     #region Island management
 
     /// <summary>
@@ -309,15 +293,17 @@ public sealed partial class FirelockGroupSystem
                 // If the firelock direction is specific, that means we are dealing with an edge firelock.
                 // Edge firelocks are able to detect the contents of their own tile under basically all conditions
                 // except full tile blocking. Hence, the sensing direction we store is All.
-                firelockTile.SensingFirelocks.Add((Direction8.All, pos));
+                firelockTile.SensingFirelocks.Add((Direction8.All, memberId, pos));
 
                 /*
                  * Edge firelocks also have a unique sensing island pattern. Assuming a north-blocking edge firelock,
                  * the overlapping tile, which is thus implicitly 'south' of the edge firelock, will not be able to
                  * pair with north, north-east and north-west directions.
                  */
-                var frontCone = firelockDirection.TurnCounterClockwise() | firelockDirection | firelockDirection.TurnClockwise();
-                firelockTile.IslandingDirections &= ~frontCone; // Disable the obscured tile from islanding with the front.
+                var frontCone = firelockDirection.TurnCounterClockwise() | firelockDirection |
+                                firelockDirection.TurnClockwise();
+                firelockTile.IslandingDirections &=
+                    ~frontCone; // Disable the obscured tile from islanding with the front.
 
                 /*
                  * In addition, the tile directly obscured by the blocked side will have its south, south-east and
@@ -328,7 +314,7 @@ public sealed partial class FirelockGroupSystem
             {
                 // Full firelock still senses its own tile, and works unless the tile is fully blocked.
                 firelockTile.SensedTiles.Add(pos);
-                firelockTile.SensingFirelocks.Add((Direction8.All, pos));
+                firelockTile.SensingFirelocks.Add((Direction8.All, memberId, pos));
                 firelockTile.IslandingDirections = Direction8.None;
             }
 
@@ -367,10 +353,11 @@ public sealed partial class FirelockGroupSystem
                 // Tiles adjacent to a solid firelock may not diagonally island with one another.
                 // This effectively blocks the two diagonals facing the firelock tile.
                 if (!edgeFirelock)
-                    adjacentTile.IslandingDirections &= ~(oppositeDir.TurnCounterClockwise() | oppositeDir.TurnClockwise());
+                    adjacentTile.IslandingDirections &=
+                        ~(oppositeDir.TurnCounterClockwise() | oppositeDir.TurnClockwise());
 
                 // TODO: this naively adds links between our tile and the adjacent tile, regardless of whether the IslandingDirections permit this. probably not an issue though
-                adjacentTile.SensingFirelocks.Add((oppositeDir, pos));
+                adjacentTile.SensingFirelocks.Add((oppositeDir, memberId, pos));
                 firelockTile.SensedTiles.Add(adjacentPos);
                 tiles[adjacentPos] = adjacentTile;
             }
@@ -398,6 +385,7 @@ public sealed partial class FirelockGroupSystem
             remainingTiles.Remove(first);
             toVisit.Enqueue(first);
         }
+
         QueueNextIsland();
 
         while (toVisit.Count > 0 || remainingTiles.Count > 0)
@@ -468,15 +456,25 @@ record struct SensorReading(float MinPressure, float MaxPressure, float MinTempe
     public float DeltaTemperature = MaxTemperature - MinTemperature;
 }
 
+[Flags]
 enum SensorSeverity
 {
-    Safe,
-    Warning,
-    Danger,
-    Death
+    Safe = 0,
+    Warning = 1,
+    Danger = 2,
+    Death = 4
 }
 
-record struct SensingResult()
+static class SensorSeverityExtensions
+{
+    public static SensorSeverity Max(this SensorSeverity self, SensorSeverity other) =>
+        (int)self > (int)other ? self : other;
+
+    public static SensorSeverity Min(this SensorSeverity self, SensorSeverity other) =>
+        (int)self < (int)other ? self : other;
+}
+
+record SensingResult()
 {
     public SensorSeverity DeltaTemperature = SensorSeverity.Safe;
     public SensorSeverity LowTemperature = SensorSeverity.Safe;
@@ -485,4 +483,20 @@ record struct SensingResult()
     public SensorSeverity DeltaPressure = SensorSeverity.Safe;
     public SensorSeverity LowPressure = SensorSeverity.Safe;
     public SensorSeverity HighPressure = SensorSeverity.Safe;
+
+    public SensorSeverity Combined => DeltaTemperature | LowTemperature | HighTemperature |
+                                      DeltaPressure | LowPressure | HighPressure;
+
+    public SensorSeverity GetHighestSeverity()
+    {
+        var combined = Combined;
+
+        var values = Enum.GetValues<SensorSeverity>();
+        var greatest = SensorSeverity.Safe;
+        foreach (var test in values)
+            if ((combined & test) == test && test > greatest)
+                greatest = test;
+
+        return greatest;
+    }
 }

@@ -113,7 +113,7 @@ public record SensingTile(
     /// The <see cref="AtmosDirection"/> is Invalid for self-referencing tiles. For adjacent sensing tiles, the
     /// direction is facing from the sensing tile towards the firelock tile.
     /// </summary>
-    public List<(Direction8, Vector2i)> SensingFirelocks = new();
+    public List<(Direction8, EntityUid, Vector2i)> SensingFirelocks = new();
 
     /// <summary>
     /// Adjacent sensing tiles that reference this tile as containing an affected firelock.
