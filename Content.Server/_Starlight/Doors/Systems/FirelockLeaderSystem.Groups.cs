@@ -1,5 +1,4 @@
 using System.Linq;
-using System.Numerics;
 using System.Runtime.CompilerServices;
 using Content.Shared._Starlight.Doors.Components;
 using Content.Shared._Starlight.Doors.Systems;
@@ -9,10 +8,9 @@ using Robust.Shared.Utility;
 
 namespace Content.Server._Starlight.Doors.Systems;
 
-public sealed partial class FirelockGroupSystem : SharedFirelockGroupSystem
+public sealed partial class FirelockLeaderSystem : SharedFirelockGroupSystem
 {
     [Robust.Shared.IoC.Dependency] private SharedMapSystem _map = default!;
-    [Robust.Shared.IoC.Dependency] private SharedTransformSystem _transform = default!;
 
     [SubscribeLocalEvent]
     private void OnFirelockInit(Entity<FirelockComponent> firelock, ref ComponentInit ev)
@@ -20,29 +18,24 @@ public sealed partial class FirelockGroupSystem : SharedFirelockGroupSystem
         if (!IsValid(firelock)) return;
         Log.Debug($"OnFirelockInit {firelock.Owner}");
 
-        var initials = GetInitials(firelock.Owner);
-        var islandScans = ScanIslands(GetFirelocks(initials));
-        RebuildIslands(islandScans);
+        RebuildIslands(firelock);
     }
 
     [SubscribeLocalEvent]
-    private void OnMemberAnchorStateChanged(Entity<FirelockComponent> firelock, ref AnchorStateChangedEvent ev)
+    private void OnAnchorStateChanged(Entity<FirelockComponent> firelock, ref AnchorStateChangedEvent ev)
     {
-        var initials = GetInitials(firelock.Owner);
-        var islandScans = ScanIslands(GetFirelocks(initials));
-        RebuildIslands(islandScans);
+        Log.Debug($"OnAnchorStateChanged {firelock.Owner}");
+        RebuildIslands(firelock);
     }
 
     [SubscribeLocalEvent]
-    private void OnMemberEntityDeleted(Entity<FirelockFollowerComponent> follower, ref EntityTerminatingEvent ev)
+    private void OnEntityTerminating(Entity<FirelockComponent> firelock, ref EntityTerminatingEvent ev)
     {
-        var initials = GetInitials(follower.Owner);
-        var islandScans = ScanIslands(GetFirelocks(initials));
-        RebuildIslands(islandScans);
+        Log.Debug($"OnEntityTerminating {firelock.Owner}");
+        RebuildIslands(firelock);
     }
 
     #region Internal API
-
 
     /// <summary>
     /// Tests whether an individual firelock is eligible for grouping.
@@ -55,18 +48,17 @@ public sealed partial class FirelockGroupSystem : SharedFirelockGroupSystem
     #endregion
     #region Island management
 
-    private List<Island> RebuildIslands(List<IslandScan> scans)
+    private void RebuildIslands(EntityUid firelock)
     {
-        var result = new List<Island>();
-        foreach (var scan in scans)
-            result.Add(RebuildIsland(scan));
-        return result;
+        var initials = GetInitials(firelock);
+        var islandScans = ScanIslands(GetFirelocks(initials));
+        foreach (var scan in islandScans)
+            RebuildIsland(scan);
     }
 
-    private Island RebuildIsland(IslandScan scan)
+    private void RebuildIsland(IslandScan scan)
     {
         var selectedLeader = SelectLeader(scan);
-        var island = new Island(selectedLeader);
 
         // Assign all firelocks on the island to the selected leader.
         foreach (var firelock in scan.Firelocks)
@@ -118,12 +110,10 @@ public sealed partial class FirelockGroupSystem : SharedFirelockGroupSystem
                 DirtyLeader(selectedLeader);
 
                 RaiseMemberJoinEvent((firelock, followerComp), selectedLeader);
-                island.Members.Add(follower);
             }
         }
 
         DirtySensingIslands(selectedLeader);
-        return island;
     }
 
     /// <summary>
@@ -180,8 +170,8 @@ public sealed partial class FirelockGroupSystem : SharedFirelockGroupSystem
         var result = new HashSet<Entity<FirelockComponent>>();
         foreach (var id in ids)
         {
-            if (!TryComp<FirelockComponent>(id, out var firelockComp)) continue;
             if (!IsValid(id)) continue;
+            if (!TryComp<FirelockComponent>(id, out var firelockComp)) continue;
             result.Add((id, firelockComp));
         }
         return result;
@@ -314,11 +304,5 @@ record IslandScan()
 {
     public HashSet<Entity<FirelockComponent>> Firelocks = new();
     public HashSet<Entity<FirelockLeaderComponent>> Leaders = new();
-    public HashSet<Entity<FirelockFollowerComponent>> Members = new();
-}
-
-record Island(Entity<FirelockLeaderComponent> Leader)
-{
-    public Entity<FirelockLeaderComponent> Leader = Leader;
     public HashSet<Entity<FirelockFollowerComponent>> Members = new();
 }

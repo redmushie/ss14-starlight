@@ -32,7 +32,7 @@ namespace Content.Server.Doors.Systems
         {
             base.Initialize();
 
-            SubscribeLocalEvent<FirelockComponent, AtmosAlarmEvent>(OnAtmosAlarm);
+            // SubscribeLocalEvent<FirelockComponent, AtmosAlarmEvent>(OnAtmosAlarm);
             SubscribeLocalEvent<FirelockComponent, PowerChangedEvent>(PowerChanged);
 
             _atmosAlarmQuery = GetEntityQuery<AtmosAlarmableComponent>();
@@ -44,7 +44,8 @@ namespace Content.Server.Doors.Systems
             Dirty(uid, component);
         }
 
-        public override void Update(float frameTime)
+        //public override void Update(float frameTime)
+        public void Unused(float frameTime) // Starlight
         {
             _accumulatedTicks += 1;
             if (_accumulatedTicks < UpdateInterval)
@@ -81,38 +82,29 @@ namespace Content.Server.Doors.Systems
                     && xformQuery.TryGetComponent(uid, out var xform)
                     && appearanceQuery.TryGetComponent(uid, out var appearance))
                 {
-                    var closingConditions = CheckPressureAndFire(uid, firelock, xform, airtight, airtightQuery, door.State == DoorState.Open); // Funky change
+                    var (pressure, fire) = CheckPressureAndFire(uid, firelock, xform, airtight, airtightQuery, door.State == DoorState.Open); // Funky change
 
                     // Funky change
                     if (door.State == DoorState.Open)
                     {
-                        if (closingConditions.Close) // Starlight-edit
+                        if (pressure || fire)
                         {
                             EmergencyPressureStop(uid, firelock, door);
                         }
                     }
-
-                    // Starlight-start
-                    var bolting = false;
-                    var changed = false;
-                    if (closingConditions.HardClose)
-                        (bolting, changed) = StartOrContinueBoltingCountdown((uid, firelock), door);
                     else
-                        CancelCountdownOrUnboltNow((uid, firelock));
-
-                    // var previous = GetConditionsFromFirelock(firelock);
-                    // // if (previous.Equals(closingConditions) && !changed)
-                    // //     continue;
-
-                    ApplyConditionsToFirelock(firelock, closingConditions);
-                    _appearance.SetData(uid, FirelockVisuals.TemperatureWarning, GetTemperatureVisual(closingConditions, bolting), appearance);
-                    _appearance.SetData(uid, FirelockVisuals.PressureWarning, GetPressureVisual(closingConditions, bolting), appearance);
-                    Dirty(uid, firelock);
-                    // Starlight-end
-
-                    if (pointLightQuery.TryComp(uid, out var pointLight))
                     {
-                        _pointLight.SetEnabled(uid, closingConditions.Close, pointLight); // Starlight-edit
+                        _appearance.SetData(uid, DoorVisuals.ClosedLights, fire || pressure, appearance);
+                        firelock.Temperature = fire;
+                        firelock.Pressure = pressure;
+                        _appearance.SetData(uid, FirelockVisuals.PressureWarning, pressure, appearance);
+                        _appearance.SetData(uid, FirelockVisuals.TemperatureWarning, fire, appearance);
+                        Dirty(uid, firelock);
+
+                        if (pointLightQuery.TryComp(uid, out var pointLight))
+                        {
+                            _pointLight.SetEnabled(uid, fire | pressure, pointLight);
+                        }
                     }
                 }
             }
@@ -137,15 +129,15 @@ namespace Content.Server.Doors.Systems
             }
         }
 
-        public ClosingConditions CheckPressureAndFire(EntityUid uid, FirelockComponent firelock) // Starlight: Return record
+        public (bool Pressure, bool Fire) CheckPressureAndFire(EntityUid uid, FirelockComponent firelock)
         {
             var query = GetEntityQuery<AirtightComponent>();
             if (query.TryGetComponent(uid, out AirtightComponent? airtight))
                 return CheckPressureAndFire(uid, firelock, Transform(uid), airtight, query);
-            return new ClosingConditions(); // Starlight-edit
+            return (false, false);
         }
 
-        public ClosingConditions CheckPressureAndFire( // Starlight-edit: Return record
+        public (bool Pressure, bool Fire) CheckPressureAndFire(
             EntityUid uid,
             FirelockComponent firelock,
             TransformComponent xform,
@@ -153,18 +145,17 @@ namespace Content.Server.Doors.Systems
             EntityQuery<AirtightComponent> airtightQuery,
             bool checkEvenIfOpen = false) // Funky change
         {
-            var closingConditions = new ClosingConditions();
             if (!checkEvenIfOpen && !airtight.AirBlocked) // Funky change
-                return closingConditions; // Starlight-edit
+                return (false, false);
 
             if (TryComp(uid, out DockingComponent? dock) && dock.Docked)
             {
                 // Currently docking automatically opens the doors. But maybe in future, check the pressure difference before opening doors?
-                return closingConditions; // Starlight-edit
+                return (false, false);
             }
 
             if (!HasComp<GridAtmosphereComponent>(xform.ParentUid))
-                return closingConditions; // Starlight-edit
+                return (false, false);
 
             var grid = Comp<MapGridComponent>(xform.ParentUid);
             var pos = _mapping.CoordinatesToTile(xform.ParentUid, grid, xform.Coordinates);
@@ -172,7 +163,8 @@ namespace Content.Server.Doors.Systems
             var maxPressure = float.MinValue;
             var minTemperature = float.MaxValue;
             var maxTemperature = float.MinValue;
-
+            var holdingFire = false;
+            var holdingPressure = false;
 
             // We cannot simply use `_atmosSystem.GetAdjacentTileMixtures` because of how the `includeBlocked` option
             // works, we want to ignore the firelock's blocking, while including blockers on other tiles.
@@ -200,7 +192,7 @@ namespace Content.Server.Doors.Systems
 
             var gasses = _atmosSystem.GetTileMixtures(xform.ParentUid, xform.MapUid, tiles);
             if (gasses == null)
-                return closingConditions; // Starlight-edit
+                return (false, false);
 
             for (var i = 0; i < count; i++)
             {
@@ -222,25 +214,15 @@ namespace Content.Server.Doors.Systems
                     maxTemperature = Math.Max(maxTemperature, gas.Temperature);
                 }
 
-                // Starlight start
-                closingConditions.TempDelta |= maxTemperature - minTemperature > firelock.ThresholdTempDelta;
-                closingConditions.TempDeltaExtreme |= maxTemperature - minTemperature > firelock.ThresholdTempDeltaExtreme;
-                closingConditions.TempLow |= minTemperature < firelock.ThresholdTempLow && minTemperature > TCMBWithDelta;
-                closingConditions.TempLowExtreme |= minTemperature < firelock.ThresholdTempLowExtreme && minTemperature > TCMBWithDelta;
-                closingConditions.TempHigh |= maxTemperature > firelock.ThresholdTempHigh;
-                closingConditions.TempHighExtreme |= maxTemperature > firelock.ThresholdTempHighExtreme;
+                holdingPressure |= maxPressure - minPressure > firelock.PressureThreshold;
+                holdingFire |= maxTemperature - minTemperature > firelock.TemperatureThreshold;
 
-                closingConditions.PressureDelta |= maxPressure - minPressure > firelock.ThresholdPressureDelta;
-                closingConditions.PressureDeltaExtreme |= maxPressure - minPressure > firelock.ThresholdPressureDeltaExtreme;
-                closingConditions.PressureLow |= minPressure < firelock.ThresholdPressureLow;
-                closingConditions.PressureLowExtreme |= minPressure < firelock.ThresholdPressureLowExtreme;
-                closingConditions.PressureHigh |= maxPressure > firelock.ThresholdPressureHigh;
-                closingConditions.PressureHighExtreme |= maxPressure > firelock.ThresholdPressureHighExtreme;
-                // Starlight end
+                if (holdingPressure && holdingFire)
+                    return (holdingPressure, holdingFire);
             }
 
             if (airtight.AirBlockedDirection == AtmosDirection.All)
-                return closingConditions;
+                return (holdingPressure, holdingFire);
 
             var local = gasses[count];
             if (local != null)
@@ -259,23 +241,10 @@ namespace Content.Server.Doors.Systems
                 maxTemperature = Math.Max(maxTemperature, 0);
             }
 
-            // Starlight start
-            closingConditions.TempDelta |= maxTemperature - minTemperature > firelock.ThresholdTempDelta;
-            closingConditions.TempDeltaExtreme |= maxTemperature - minTemperature > firelock.ThresholdTempDeltaExtreme;
-            closingConditions.TempLow |= minTemperature < firelock.ThresholdTempLow && minTemperature > TCMBWithDelta;
-            closingConditions.TempLowExtreme |= minTemperature < firelock.ThresholdTempLowExtreme && minTemperature > TCMBWithDelta;
-            closingConditions.TempHigh |= maxTemperature > firelock.ThresholdTempHigh;
-            closingConditions.TempHighExtreme |= maxTemperature > firelock.ThresholdTempHighExtreme;
+            holdingPressure |= maxPressure - minPressure > firelock.PressureThreshold;
+            holdingFire |= maxTemperature - minTemperature > firelock.TemperatureThreshold;
 
-            closingConditions.PressureDelta |= maxPressure - minPressure > firelock.ThresholdPressureDelta;
-            closingConditions.PressureDeltaExtreme |= maxPressure - minPressure > firelock.ThresholdPressureDeltaExtreme;
-            closingConditions.PressureLow |= minPressure < firelock.ThresholdPressureLow;
-            closingConditions.PressureLowExtreme |= minPressure < firelock.ThresholdPressureLowExtreme;
-            closingConditions.PressureHigh |= maxPressure > firelock.ThresholdPressureHigh;
-            closingConditions.PressureHighExtreme |= maxPressure > firelock.ThresholdPressureHighExtreme;
-
-            return closingConditions;
-            // Starlight end
+            return (holdingPressure, holdingFire);
         }
 
         private bool HasAirtightBlocker(IEnumerable<EntityUid> enumerable, AtmosDirection dir, EntityQuery<AirtightComponent> airtightQuery)

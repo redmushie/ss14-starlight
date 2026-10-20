@@ -14,8 +14,8 @@
       "name": "pressure_delta_blinking",
       "delays": [
         [
-          0.8,
-          0.8
+          1.0,
+          1.0
         ]
       ]
     },
@@ -35,8 +35,8 @@
       "name": "pressure_high_blinking",
       "delays": [
         [
-          0.8,
-          0.8
+          1.0,
+          1.0
         ]
       ]
     },
@@ -56,8 +56,8 @@
       "name": "pressure_low_blinking",
       "delays": [
         [
-          0.8,
-          0.8
+          1.0,
+          1.0
         ]
       ]
     },
@@ -77,8 +77,8 @@
       "name": "temperature_low_blinking",
       "delays": [
         [
-          0.8,
-          0.8
+          1.0,
+          1.0
         ]
       ]
     },
@@ -98,8 +98,8 @@
       "name": "temperature_high_blinking",
       "delays": [
         [
-          0.8,
-          0.8
+          1.0,
+          1.0
         ]
       ]
     },

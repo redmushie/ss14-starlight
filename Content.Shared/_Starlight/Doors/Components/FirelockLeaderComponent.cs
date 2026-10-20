@@ -2,7 +2,6 @@ using Content.Shared._Starlight.Doors.Systems;
 using Content.Shared._Starlight.Maths;
 using Content.Shared.Atmos;
 using Robust.Shared.GameStates;
-using Robust.Shared.Serialization;
 
 namespace Content.Shared._Starlight.Doors.Components;
 
@@ -39,8 +38,6 @@ public sealed partial class FirelockLeaderComponent : Component
     public bool IslandsInitialized = false;
     public bool IslandsPending = false;
 
-    public SensingThresholds SensingThresholds = new();
-
     [DataField] public TimeSpan SensingIslandsLastCalculated = TimeSpan.Zero;
 
     /// <summary>
@@ -60,29 +57,6 @@ public sealed partial class FirelockLeaderComponent : Component
     public SensingIsland InternalSensingIsland = new() { Internal = true };
 
     #endregion
-}
-
-public record struct SensingThresholds()
-{
-    public float LowPressureDanger = 40;
-    public float LowPressureWarning = 70;
-
-    public float HighPressureWarning = 250;
-    public float HighPressureDanger = 500;
-    public float HighPressureDeath = 1000;
-
-    public float LowTemperatureWarning = Atmospherics.T0C - 10;
-    public float LowTemperatureDanger = Atmospherics.T0C - 60;
-    public float LowTemperatureDeath = Atmospherics.T0C - 200;
-
-    public float HighTemperatureWarning = Atmospherics.T0C + 45;
-    public float HighTemperatureDanger = Atmospherics.T0C + 70;
-    public float HighTemperatureDeath = Atmospherics.T0C + 500;
-
-    // public float DeltaPressureWarning = 30;
-    // public float DeltaPressureDanger = 200;
-    // public float DeltaPressureDeath = 1000;
-
 }
 
 public record SensingIsland

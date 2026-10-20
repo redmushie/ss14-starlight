@@ -1,13 +1,25 @@
+using Content.Server.Atmos.Components;
+using Content.Server.Doors.Systems;
 using Content.Shared._Starlight.Doors.Components;
 using Content.Shared.Doors.Components;
 
 namespace Content.Server._Starlight.Doors.Systems;
 
-public sealed partial class FirelockGroupSystem
+public sealed partial class FirelockLeaderSystem
 {
+    [Dependency] private FirelockSystem _firelock = default!;
 
-    private const int GroupUpdatesPerTick = 3;
-    private readonly Queue<Entity<FirelockLeaderComponent>> GroupUpdateQueue = new();
+    private EntityQuery<AirtightComponent> _airtightQuery;
+
+    private int _groupCount = 3;
+    private int _groupUpdatesPerTick = 1;
+    private readonly Queue<Entity<FirelockLeaderComponent>> _groupUpdateQueue = new();
+
+    public override void Initialize()
+    {
+        base.Initialize();
+        _airtightQuery = GetEntityQuery<AirtightComponent>();
+    }
 
     public override void Update(float frameTime)
     {
@@ -15,22 +27,26 @@ public sealed partial class FirelockGroupSystem
         UpdateSensingGlobal(frameTime);
 
         // Refill the update queue if empty.
-        if (GroupUpdateQueue.Count == 0)
+        if (_groupUpdateQueue.Count == 0)
         {
-            var query = EntityQueryEnumerator<FirelockComponent, FirelockLeaderComponent>();
-            while (query.MoveNext(out var uid, out var firelock, out var groupComp))
+            var query = EntityQueryEnumerator<FirelockLeaderComponent>();
+            while (query.MoveNext(out var uid, out var leader))
             {
                 if (LifeStage(uid) >= EntityLifeStage.Terminating)
                     continue;
 
-                UpdateGroup((uid, groupComp));
+                _groupUpdateQueue.Enqueue((uid, leader));
             }
+
+            _groupCount = _groupUpdateQueue.Count;
+            _groupUpdatesPerTick = (int)Math.Ceiling((double)_groupCount / _timing.TickRate);
         }
 
         // Update groups.
-        for (var i = 0; i < GroupUpdatesPerTick; i++)
+        for (var i = 0; i < _groupUpdatesPerTick; i++)
         {
-            if (!GroupUpdateQueue.TryDequeue(out var group)) break;
+            if (!_groupUpdateQueue.TryDequeue(out var group)) break;
+            if (LifeStage(group) >= EntityLifeStage.Terminating) continue;
             UpdateGroup(group);
         }
     }
@@ -49,7 +65,7 @@ public sealed partial class FirelockGroupSystem
             return;
 
         // Check if we should sense.
-        if (group.Comp.SensingIslandsLastSensed + _sensingInterval < _timing.CurTime)
+        if (group.Comp.SensingIslandsLastSensed + _sensingInterval > _timing.CurTime)
             return;
 
         // Sense each island.
@@ -69,7 +85,7 @@ public sealed partial class FirelockGroupSystem
     {
         if (!TryComp<FirelockComponent>(id, out var firelock)) return;
 
-
+        _firelock.AcceptEnvironmentReadings((id, firelock), newState.Readings);
     }
 
     private (Dictionary<EntityUid, FirelockState> FirelockStates, Dictionary<Vector2i, HologramState> TileStates) CalculateStates(Entity<FirelockLeaderComponent> group)
@@ -82,12 +98,10 @@ public sealed partial class FirelockGroupSystem
             var reading = SenseIsland(group, sensingIsland);
 
             // Judge the sensed heat/pressure parameters against the group's thresholds.
-            var judgement = JudgeReading(group, reading);
+            // TODO clean up
 
             // Convert the threshold states to light states for firelocks.
-            var tileHoloState = ToHologramState(judgement);
-            var tempLightState = ToLightState(judgement.LowTemperature, judgement.HighTemperature);
-            var pressureLightState = ToLightState(judgement.LowPressure, judgement.HighPressure);
+            var tileHoloState = ToHologramState(reading);
 
             // Apply to each firelock- and tile state on the island.
             foreach (var sensingTile in sensingIsland.Tiles)
@@ -101,9 +115,7 @@ public sealed partial class FirelockGroupSystem
                     if (!firelockStates.TryGetValue(sensingFirelock, out var firelockState))
                         firelockStates[sensingFirelock] = firelockState = new FirelockState();
 
-                    // Set the firelock state to whichever scores worse.
-                    firelockState.TemperatureLight = LightStateExtensions.Max(firelockState.TemperatureLight, tempLightState);
-                    firelockState.PressureLight = LightStateExtensions.Max(firelockState.PressureLight, pressureLightState);
+                    firelockState.Readings.Add(reading);
                 }
             }
         }
@@ -113,28 +125,10 @@ public sealed partial class FirelockGroupSystem
 
     #region Judgement-to-State Conversion
 
-    private HologramState ToHologramState(SensingResult result)
+    private HologramState ToHologramState(SensingReading reading)
     {
         // TODO: implement hologram state determining
         return HologramState.None;
-    }
-
-    private LightState ToLightState(SensorSeverity low, SensorSeverity high)
-    {
-        // TODO: fix this abomination
-        if (high == SensorSeverity.Death)
-            return LightState.HighDeath;
-        if (low == SensorSeverity.Death)
-            return LightState.LowDeath;
-        if (high == SensorSeverity.Danger)
-            return LightState.HighDanger;
-        if (low == SensorSeverity.Danger)
-            return LightState.LowDanger;
-        if (high == SensorSeverity.Warning)
-            return LightState.HighWarn;
-        if (low == SensorSeverity.Warning)
-            return LightState.LowWarn;
-        return LightState.None;
     }
 
     #endregion
@@ -143,36 +137,7 @@ public sealed partial class FirelockGroupSystem
 
 record FirelockState
 {
-    public ClosingState Closing = ClosingState.None;
-
-    public LightState TemperatureLight = LightState.None;
-    public LightState PressureLight = LightState.None;
-}
-
-[Flags]
-enum ClosingState : byte
-{
-    None = 0,
-    SoftClose = 1,
-    HardClose = 2,
-    Bolt = 4
-}
-
-[Flags]
-enum LightState : byte
-{
-    None = 0,
-    LowWarn = 1 << 0,
-    HighWarn = 1 << 1,
-    LowDanger = 1 << 2,
-    HighDanger = 1 << 3,
-    LowDeath = 1 << 4,
-    HighDeath = 1 << 5,
-}
-
-static class LightStateExtensions
-{
-    public static LightState Max(LightState a, LightState b) => a >= b ? a : b;
+    public List<SensingReading> Readings = new();
 }
 
 [Flags]

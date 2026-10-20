@@ -14,7 +14,7 @@ public abstract partial class SharedFirelockSystem : EntitySystem
     [Dependency] private SharedPopupSystem _popupSystem = default!;
     [Dependency] private SharedAppearanceSystem _appearance = default!;
     [Dependency] private SharedDoorSystem _doorSystem = default!;
-    [Dependency] private IGameTiming _gameTiming = default!;
+    [Dependency] protected IGameTiming _gameTiming = default!;
 
     public override void Initialize()
     {
@@ -81,15 +81,15 @@ public abstract partial class SharedFirelockSystem : EntitySystem
     private void WarnPlayer(Entity<FirelockComponent> ent, EntityUid user)
     {
         // Starlight-start
-        if (ent.Comp.TemperatureLow)
-            _popupSystem.PopupClient(Loc.GetString("firelock-component-is-holding-low-temperature-message"),
-                ent.Owner, user, PopupType.MediumCaution);
-        else if (ent.Comp.TemperatureHigh)
-            _popupSystem.PopupClient(Loc.GetString("firelock-component-is-holding-low-temperature-message"),
-                ent.Owner, user, PopupType.MediumCaution);
-        else if (ent.Comp.PressureDelta)
-            _popupSystem.PopupClient(Loc.GetString("firelock-component-is-holding-pressure-message"),
-                ent.Owner, user, PopupType.MediumCaution);
+        // if (ent.Comp.TemperatureLow)
+        //     _popupSystem.PopupClient(Loc.GetString("firelock-component-is-holding-low-temperature-message"),
+        //         ent.Owner, user, PopupType.MediumCaution);
+        // else if (ent.Comp.TemperatureHigh)
+        //     _popupSystem.PopupClient(Loc.GetString("firelock-component-is-holding-low-temperature-message"),
+        //         ent.Owner, user, PopupType.MediumCaution);
+        // else if (ent.Comp.PressureDelta)
+        //     _popupSystem.PopupClient(Loc.GetString("firelock-component-is-holding-pressure-message"),
+        //         ent.Owner, user, PopupType.MediumCaution);
         // Starlight-end
     }
 
@@ -138,21 +138,26 @@ public abstract partial class SharedFirelockSystem : EntitySystem
     {
         using (args.PushGroup(nameof(FirelockComponent)))
         {
+            // TODO
             // Starlight-start
-            if (ent.Comp.TemperatureExtremelyLow)
-                args.PushMarkup(Loc.GetString("firelock-component-examine-extreme-low-temp-warning"));
-            else if (ent.Comp.TemperatureLow)
-                args.PushMarkup(Loc.GetString("firelock-component-examine-low-temp-warning"));
+            static string GetKey(string baseKey, SensorSeverity severity)
+            {
+                return $"firelock-component-examine-{baseKey}-{severity switch {
+                    SensorSeverity.Warning => "warning",
+                    SensorSeverity.Danger => "danger",
+                    SensorSeverity.Death => "death",
+                    _ => "warning"
+                }}";
+            }
 
-            if (ent.Comp.TemperatureExtremelyHigh)
-                args.PushMarkup(Loc.GetString("firelock-component-examine-extreme-high-temp-warning"));
-            else if (ent.Comp.TemperatureHigh)
-                args.PushMarkup(Loc.GetString("firelock-component-examine-high-temp-warning"));
+            if (ent.Comp.SensorLowTemperature != SensorSeverity.Safe)
+                args.PushMarkup(Loc.GetString(GetKey("low-temp", ent.Comp.SensorLowTemperature)));
 
-            if (ent.Comp.PressureDeltaExtreme)
-                args.PushMarkup(Loc.GetString("firelock-component-examine-extreme-pressure-warning"));
-            else if (ent.Comp.PressureDelta)
-                args.PushMarkup(Loc.GetString("firelock-component-examine-pressure-warning"));
+            if (ent.Comp.SensorHighTemperature != SensorSeverity.Safe)
+                args.PushMarkup(Loc.GetString(GetKey("high-temp", ent.Comp.SensorHighTemperature)));
+
+            if (ent.Comp.SensorHighPressure != SensorSeverity.Safe)
+                args.PushMarkup(Loc.GetString(GetKey("high-pressure", ent.Comp.SensorHighPressure)));
             // Starlight-end
         }
     }
