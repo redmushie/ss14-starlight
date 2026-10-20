@@ -10,7 +10,7 @@ using Robust.Shared.Timing;
 
 namespace Content.Server._Starlight.Doors.Systems;
 
-public sealed partial class FirelockGroupSystem
+public sealed partial class FirelockLeaderSystem
 {
     [Dependency] private IGameTiming _timing = default!;
     [Dependency] private AtmosphereSystem _atmos = default!;
@@ -60,9 +60,7 @@ public sealed partial class FirelockGroupSystem
         group.Comp.IslandsPending = false;
         group.Comp.SensingIslandsLastCalculated = _timing.CurTime;
 
-        var airtightQuery = GetEntityQuery<AirtightComponent>();
-
-        var sensingTiles = CollectSensingTiles(group, airtightQuery);
+        var sensingTiles = CollectSensingTiles(group);
         var (internalIsland, externalIslands) = CollectSensingIslands(sensingTiles);
 
         group.Comp.ExternalSensingIslands = externalIslands;
@@ -70,89 +68,6 @@ public sealed partial class FirelockGroupSystem
     }
 
     #endregion
-    #region Judging
-
-    private SensingResult JudgeReading(
-        Entity<FirelockLeaderComponent> group,
-        SensorReading reading)
-    {
-        var judgement = new SensingResult();
-        JudgeReadingPressure(ref group.Comp.SensingThresholds, ref reading, ref judgement);
-        JudgeReadingTemperature(ref group.Comp.SensingThresholds, ref reading, ref judgement);
-        return judgement;
-    }
-
-    private void JudgeReadingPressure(
-        ref SensingThresholds thresholds,
-        ref SensorReading reading,
-        ref SensingResult judgement)
-    {
-        var permittedPressureDelta = 20 + (0.1f * reading.MaxPressure);
-        // TODO: Also meet-in-the-middle for permitted delta maybe?
-        // TODO: Debounce permittedPressureDelta / permittedTemperatureDelta, add activation and deactivation margins.
-
-        // If the delta is too small, we will not trigger.
-        if (reading.DeltaPressure < permittedPressureDelta)
-            return;
-
-        // TODO: For now, no direct delta states.
-        judgement.DeltaPressure = SensorSeverity.Safe;
-
-        judgement.LowPressure = JudgeSeverity(-reading.MinPressure,
-            warn: -thresholds.LowPressureWarning,
-            danger: -thresholds.LowPressureDanger);
-
-        judgement.HighPressure = JudgeSeverity(reading.MaxPressure,
-            warn: thresholds.HighPressureWarning,
-            danger: thresholds.HighPressureDanger,
-            death: thresholds.HighPressureDeath);
-    }
-
-    private void JudgeReadingTemperature(
-        ref SensingThresholds thresholds,
-        ref SensorReading reading,
-        ref SensingResult judgement)
-    {
-        var permittedTemperatureDelta = 0.2f * reading.MaxTemperature;
-        // TODO: Also meet-in-the-middle for permitted delta maybe?
-        // TODO: Debounce permittedPressureDelta / permittedTemperatureDelta, add activation and deactivation margins.
-
-        // If the delta is too small, we will not trigger.
-        if (reading.DeltaTemperature < permittedTemperatureDelta)
-            return;
-
-        // TODO: For now, no direct delta states.
-        judgement.DeltaTemperature = SensorSeverity.Safe;
-
-        judgement.LowTemperature = JudgeSeverity(-reading.MinTemperature,
-            warn: -thresholds.LowTemperatureWarning,
-            danger: -thresholds.LowTemperatureDanger,
-            death: -thresholds.LowTemperatureDeath);
-
-        judgement.HighTemperature = JudgeSeverity(reading.MaxTemperature,
-            warn: thresholds.HighTemperatureWarning,
-            danger: thresholds.HighTemperatureDanger,
-            death: thresholds.HighTemperatureDeath);
-    }
-
-    /// <summary>
-    /// Given a reading and thresholds, checks if the reading exceeds each of the thresholds, and returns the
-    /// corresponding severity. Tip: You can pass all-negative values to use for low and minimums rather than highs and
-    /// maximums.
-    /// </summary>
-    private SensorSeverity JudgeSeverity(float reading, float? warn = null, float? danger = null, float? death = null)
-    {
-        if (reading > death)
-            return SensorSeverity.Death;
-        if (reading > danger)
-            return SensorSeverity.Danger;
-        if (reading > warn)
-            return SensorSeverity.Warning;
-        return SensorSeverity.Safe;
-    }
-
-    #endregion
-
     #region Sensing
 
     /// <summary>
@@ -161,24 +76,24 @@ public sealed partial class FirelockGroupSystem
     /// <param name="group"></param>
     /// <param name="island"></param>
     /// <returns></returns>
-    private SensorReading SenseIsland(
+    private SensingReading SenseIsland(
         Entity<FirelockLeaderComponent> group,
         SensingIsland island)
     {
         var xform = Transform(group.Owner);
         var airtightQuery = GetEntityQuery<AirtightComponent>();
-        var result = new SensorReading();
+        var result = new SensingReading();
 
         if (!HasComp<GridAtmosphereComponent>(xform.ParentUid))
             return result;
 
         var grid = Comp<MapGridComponent>(xform.ParentUid);
+        var (minMoles, maxMoles) = (float.MaxValue, float.MinValue);
         var (minPressure, maxPressure) = (float.MaxValue, float.MinValue);
         var (minTemperature, maxTemperature) = (float.MaxValue, float.MinValue);
 
         // We bulk request the gas mixtures in each sensing tile of this island.
-        var positions
-            = island.Tiles.Keys.ToList();
+        var positions = island.Tiles.Keys.ToList();
         var gases = _atmos.GetTileMixtures(xform.ParentUid, xform.MapUid, positions);
         if (gases == null)
             return result;
@@ -217,12 +132,16 @@ public sealed partial class FirelockGroupSystem
 
             // At this point we know for sure at least one firelock is able to sense this tile.
             // Time to sense!
+            minMoles = Math.Min(minMoles, gas.TotalMoles);
+            maxMoles = Math.Max(maxMoles, gas.TotalMoles);
             minPressure = Math.Min(minPressure, gas.Pressure);
             maxPressure = Math.Max(maxPressure, gas.Pressure);
             minTemperature = Math.Min(minTemperature, gas.Temperature);
             maxTemperature = Math.Max(maxTemperature, gas.Temperature);
         }
 
+        result.MinMoles = minMoles;
+        result.MaxMoles = maxMoles;
         result.MinPressure = minPressure;
         result.MaxPressure = maxPressure;
         result.MinTemperature = minTemperature;
@@ -263,14 +182,13 @@ public sealed partial class FirelockGroupSystem
     /// Given a firelock group, collects all tiles eligible for sensing, grouped by coordinate.
     /// </summary>
     private Dictionary<Vector2i, SensingTile> CollectSensingTiles(
-        Entity<FirelockLeaderComponent> group,
-        EntityQuery<AirtightComponent> airtightQuery)
+        Entity<FirelockLeaderComponent> group)
     {
         Dictionary<Vector2i, SensingTile> tiles = new();
 
         foreach (var memberId in group.Comp.Members)
         {
-            if (!airtightQuery.TryGetComponent(memberId, out var airtight))
+            if (!_airtightQuery.TryGetComponent(memberId, out var airtight))
                 continue;
 
             var xform = Transform(memberId);
@@ -393,7 +311,8 @@ public sealed partial class FirelockGroupSystem
             // We start a new island when no visitable tiles remain on this island, but not all tiles were visited yet.
             if (toVisit.Count == 0)
             {
-                completedIslands.Add(currentIsland);
+                if (currentIsland.Tiles.Count > 0) // TODO: this should not be necessary
+                    completedIslands.Add(currentIsland);
                 currentIsland = new SensingIsland();
                 QueueNextIsland();
                 continue;
@@ -445,58 +364,28 @@ public sealed partial class FirelockGroupSystem
     #endregion
 }
 
-record struct SensorReading(float MinPressure, float MaxPressure, float MinTemperature, float MaxTemperature)
+public record SensingReading
 {
-    public float MinPressure = MinPressure;
-    public float MaxPressure = MaxPressure;
-    public float MinTemperature = MinTemperature;
-    public float MaxTemperature = MaxTemperature;
+    public float MinMoles = float.MaxValue;
+    public float MaxMoles = float.MinValue;
 
-    public float DeltaPressure = MaxPressure - MinPressure;
-    public float DeltaTemperature = MaxTemperature - MinTemperature;
+    public float MinPressure = float.MaxValue;
+    public float MaxPressure = float.MinValue;
+    public float MinTemperature = float.MaxValue;
+    public float MaxTemperature = float.MinValue;
+
+    public float DeltaPressure => MaxPressure - MinPressure;
+    public float DeltaTemperature => MaxTemperature - MinTemperature;
+
+    public static SensingReading Combine(SensingReading left, SensingReading right) =>
+        new()
+        {
+            MinMoles = Math.Min(left.MinMoles, right.MinMoles),
+            MaxMoles = Math.Max(left.MaxMoles, right.MaxMoles),
+            MinPressure = Math.Min(left.MinPressure, right.MinPressure),
+            MaxPressure = Math.Max(left.MaxPressure, right.MaxPressure),
+            MinTemperature = Math.Min(left.MinTemperature, right.MinTemperature),
+            MaxTemperature = Math.Max(left.MaxTemperature, right.MaxTemperature)
+        };
 }
 
-[Flags]
-enum SensorSeverity
-{
-    Safe = 0,
-    Warning = 1,
-    Danger = 2,
-    Death = 4
-}
-
-static class SensorSeverityExtensions
-{
-    public static SensorSeverity Max(this SensorSeverity self, SensorSeverity other) =>
-        (int)self > (int)other ? self : other;
-
-    public static SensorSeverity Min(this SensorSeverity self, SensorSeverity other) =>
-        (int)self < (int)other ? self : other;
-}
-
-record SensingResult()
-{
-    public SensorSeverity DeltaTemperature = SensorSeverity.Safe;
-    public SensorSeverity LowTemperature = SensorSeverity.Safe;
-    public SensorSeverity HighTemperature = SensorSeverity.Safe;
-
-    public SensorSeverity DeltaPressure = SensorSeverity.Safe;
-    public SensorSeverity LowPressure = SensorSeverity.Safe;
-    public SensorSeverity HighPressure = SensorSeverity.Safe;
-
-    public SensorSeverity Combined => DeltaTemperature | LowTemperature | HighTemperature |
-                                      DeltaPressure | LowPressure | HighPressure;
-
-    public SensorSeverity GetHighestSeverity()
-    {
-        var combined = Combined;
-
-        var values = Enum.GetValues<SensorSeverity>();
-        var greatest = SensorSeverity.Safe;
-        foreach (var test in values)
-            if ((combined & test) == test && test > greatest)
-                greatest = test;
-
-        return greatest;
-    }
-}
