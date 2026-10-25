@@ -100,11 +100,27 @@ public sealed partial class HeatExchangerSystem : EntitySystem
         // Radiation
         float dTR = xfer.Temperature - radTemp;
         float dTRA = MathF.Abs(dTR);
-        float a0 = tileLoss / MathF.Pow(Atmospherics.T20C, 4);
-        // ΔT' = -kΔT^4, k = -ΔT'/ΔT^4
+        // Radiation power law exponent. Physically 4 (blackbody), but lowered to
+        // flatten the ΔT^n curve. a0 is normalized to the same exponent so the
+        // tileLoss rating still holds at 20 degC regardless of the exponent.
+        var expN = comp.n;
+        float a0 = tileLoss / MathF.Pow(Atmospherics.T20C, expN);
+        // ΔT' = -kΔT^n, k = -ΔT'/ΔT^n
         float kR = comp.alpha * a0 * TdivQ;
-        // Based on the fact that ((3t)^(-1/3))' = -(3t)^(-4/3) = -((3t)^(-1/3))^4, and ΔT' = -kΔT^4.
-        float dT2R = dTR * MathF.Pow((1f + 3f * kR * dt * dTRA * dTRA * dTRA), -1f/3f);
+        // Exact solution of ΔT' = -kΔT^n over the tick (for ΔT > 0):
+        // ΔT(t) = (ΔT0^(1-n) + (n-1)*k*t)^(1/(1-n)), applied to |ΔT| and re-signed.
+        // Reduces to ΔT0*(1 + 3*k*ΔT0^3*t)^(-1/3) when n = 4.
+        float dT2R = dTR;
+        if (dTRA > 0f)
+            dT2R = MathF.Sign(dTR) * MathF.Pow(MathF.Pow(dTRA, 1f - expN) + (expN - 1f) * kR * dt, 1f / (1f - expN));
+        // Additional linear term (ΔT^1), operator-split and applied to the result of the
+        // ΔT^n term. Exact solution of ΔT' = -k*ΔT is ΔT*exp(-k*dt): it preserves sign and
+        // vanishes at ΔT = 0, so it lifts the low-ΔT end without ever overshooting radTemp.
+        if (comp.beta > 0f)
+        {
+            float kRLinear = comp.beta * (tileLoss / Atmospherics.T20C) * TdivQ;
+            dT2R *= MathF.Exp(-kRLinear * dt);
+        }
         float dER = (dTR - dT2R) / TdivQ;
         _atmosphereSystem.AddHeat(xfer, -dER);
         if (hasEnv && environment != null)
