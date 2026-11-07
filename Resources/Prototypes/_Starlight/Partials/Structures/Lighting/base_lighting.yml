@@ -1,0 +1,18 @@
+
+- type: !type:PartialOnly entity
+  id: !type:CreateVariants
+    values:
+      - PoweredlightEmpty
+      - PoweredLightPostSmallEmpty
+  components:
+    - type: ToggleableDevice
+    - type: ToggleableDeviceSignaling
+    - type: DeviceLinkSink
+      ports:
+        - "On"
+        - "Off"
+        - "Toggle"
+        - "State"
+    - type: DeviceLinkSource
+      ports:
+        - "Status"
