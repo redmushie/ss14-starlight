@@ -47,6 +47,8 @@ public sealed partial class AirlockCyclerSystem : EntitySystem
     {
         _deviceLink.EnsureSourcePorts(ent, [.. ent.Comp.Sides]);
         _deviceLink.EnsureSourcePorts(ent, ent.Comp.InletPort, ent.Comp.OutletPort);
+        _deviceLink.EnsureSourcePorts(ent, ent.Comp.PressurizingPort, ent.Comp.PressurizedPort,
+            ent.Comp.CyclingPort, ent.Comp.DepressurizingPort, ent.Comp.DepressurizedPort);
     }
 
     /// <summary>

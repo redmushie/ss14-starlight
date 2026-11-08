@@ -55,3 +55,16 @@ signal-port-name-airlock-cycler-inlets = Inlets
 signal-port-description-airlock-cycler-inlets = Air vents that fill the chamber.
 signal-port-name-airlock-cycler-outlets = Outlets
 signal-port-description-airlock-cycler-outlets = Air vents, scrubbers or pumps that empty the chamber. A small chamber can use one air vent on both ports.
+
+signal-port-name-airlock-cycler-pressurizing = Is Pressurizing
+signal-port-description-airlock-cycler-pressurizing = Held high while the chamber is being pressurized, low otherwise.
+signal-port-name-airlock-cycler-pressurized = Is Pressurized
+signal-port-description-airlock-cycler-pressurized = Held high when the last completed action was pressurizing.
+
+signal-port-name-airlock-cycler-cycling = Cycling
+signal-port-description-airlock-cycler-cycling = Held high while the chamber is cycling.
+
+signal-port-name-airlock-cycler-depressurizing = Is Deressurizing
+signal-port-description-airlock-cycler-depressurizing = Held high while the chamber is being depressurized, low otherwise.
+signal-port-name-airlock-cycler-depressurized = Is Depressurized
+signal-port-description-airlock-cycler-depressurized = Held high when the last completed action was depressurizing.

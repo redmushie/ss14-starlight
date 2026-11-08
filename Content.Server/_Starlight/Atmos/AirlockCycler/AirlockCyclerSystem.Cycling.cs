@@ -438,9 +438,16 @@ public sealed partial class AirlockCyclerSystem
         if (ent.Comp.State == state)
             return;
 
-        var wasCycling = IsCycling(ent.Comp.State);
+        var prevState = ent.Comp.State;
+        var wasCycling = IsCycling(prevState);
         ent.Comp.State = state;
         _appearance.SetData(ent, AirlockCyclerVisuals.State, state);
+
+        _deviceLink.SendSignal(ent.Owner, ent.Comp.CyclingPort, IsCycling(state));
+        _deviceLink.SendSignal(ent.Owner, ent.Comp.PressurizingPort, state is AirlockCyclerState.Pressurizing);
+        _deviceLink.SendSignal(ent.Owner, ent.Comp.PressurizedPort, prevState is AirlockCyclerState.Pressurizing);
+        _deviceLink.SendSignal(ent.Owner, ent.Comp.DepressurizedPort, state is AirlockCyclerState.Depressurizing);
+        _deviceLink.SendSignal(ent.Owner, ent.Comp.DepressurizedPort, prevState is AirlockCyclerState.Depressurizing);
 
         if (wasCycling != IsCycling(state) || state is AirlockCyclerState.Off or AirlockCyclerState.Idle)
             UpdateButtons(ent);

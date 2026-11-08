@@ -32,6 +32,12 @@ public sealed partial class AirlockCyclerComponent : Component
     [DataField]
     public ProtoId<SourcePortPrototype> OutletPort = "AirlockCyclerOutlets";
 
+    [DataField] public ProtoId<SourcePortPrototype> PressurizingPort = "AirlockCyclerPressurizing";
+    [DataField] public ProtoId<SourcePortPrototype> PressurizedPort = "AirlockCyclerPressurized";
+    [DataField] public ProtoId<SourcePortPrototype> CyclingPort = "AirlockCyclerCycling";
+    [DataField] public ProtoId<SourcePortPrototype> DepressurizingPort = "AirlockCyclerDepressurizing";
+    [DataField] public ProtoId<SourcePortPrototype> DepressurizedPort = "AirlockCyclerDepressurized";
+
     /// <summary>
     /// Once the chamber is this close to the pressure behind the doors (kPa), the controller keeps pumping for at most
     /// <see cref="SettleTime"/> to finish the job, then opens.
