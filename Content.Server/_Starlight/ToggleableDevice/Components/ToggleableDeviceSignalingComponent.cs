@@ -12,26 +12,33 @@ public sealed partial class ToggleableDeviceSignalingComponent : Component
     /// <summary>
     /// Input port to turn the device on.
     /// </summary>
-    [DataField] public ProtoId<SinkPortPrototype> OnPort = "On";
+    [DataField] public ProtoId<SinkPortPrototype> OnPort = "ToggleableDeviceOn";
 
     /// <summary>
     /// Input port to turn the device off.
     /// </summary>
-    [DataField] public ProtoId<SinkPortPrototype> OffPort = "Off";
+    [DataField] public ProtoId<SinkPortPrototype> OffPort = "ToggleableDeviceOff";
 
     /// <summary>
     /// Input port that toggles the device state upon going High.
     /// </summary>
-    [DataField] public ProtoId<SinkPortPrototype> TogglePort = "Toggle";
+    [DataField] public ProtoId<SinkPortPrototype> TogglePort = "ToggleableDeviceToggle";
 
     /// <summary>
     /// Input state port that when connected will make the device state follow the signal state.
     /// That means that while the signal is High, the device will be on, and if it goes Low, it will turn off.
     /// </summary>
-    [DataField] public ProtoId<SinkPortPrototype> StatePort = "State";
+    [DataField] public ProtoId<SinkPortPrototype> StatePort = "ToggleableDeviceState";
+
+    [DataField] public ProtoId<SinkPortPrototype> StateInvertedPort = "ToggleableDeviceStateInverted";
 
     /// <summary>
-    /// (Output) Status port that is High when the device is on, and Low when it's off.
+    /// (Output) Status port that is High when the device is on and Low when it's off.
     /// </summary>
-    [DataField] public ProtoId<SourcePortPrototype> StatusPort = "Status";
+    [DataField] public ProtoId<SourcePortPrototype> StatusPort = "ToggleableDeviceStatus";
+
+    /// <summary>
+    /// (Output) Status port that is Low when the device is on and High when it's off.
+    /// </summary>
+    [DataField] public ProtoId<SourcePortPrototype> StatusInvertedPort = "ToggleableDeviceStatusInverted";
 }

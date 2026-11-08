@@ -54,14 +54,16 @@
     - type: ToggleableDevice
     - type: ToggleableDeviceSignaling
     - type: DeviceLinkSink
-      ports:
-        - "On"
-        - "Off"
-        - "Toggle"
-        - "State"
+      ports: !Clear
+        - "ToggleableDeviceOn"
+        - "ToggleableDeviceOff"
+        - "ToggleableDeviceToggle"
+        - "ToggleableDeviceState"
+        - "ToggleableDeviceStateInverted"
     - type: DeviceLinkSource
-      ports:
-        - "Status"
+      ports: !Clear
+        - "ToggleableDeviceStatus"
+        - "ToggleableDeviceStatusInverted"
     - type: SubFloorHide
       subfloorLayer: Pipes
 

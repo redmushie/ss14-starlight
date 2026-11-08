@@ -1,5 +1,21 @@
-signal-port-name-state = State
-signal-port-description-state = The state the device should match.
+# ToggleableDevice START
+
+signal-port-name-toggleable-device-on = On
+signal-port-description-toggleable-device-on = Turns the device on when receiving a High or Momentary signal.
+
+signal-port-name-toggleable-device-off = Off
+signal-port-description-toggleable-device-off = Turns the device off when receiving a High or Momentary signal.
+
+signal-port-name-toggleable-device-toggle = Toggle
+signal-port-description-toggleable-device-toggle = Toggles the device power when receiving a High or Momentary signal.
+
+signal-port-name-toggleable-device-state = State
+signal-port-description-toggleable-device-state = The state which the device should match.
+
+signal-port-name-toggleable-device-state-inverted = State (Inverted)
+signal-port-description-toggleable-device-state-inverted = The state the opposite of which the device should match.
+
+# ToggleableDevice END
 
 signal-port-name-body-scanner-receiver = Operating Table
 signal-port-description-body-scanner-receiver = Sending info only to Operating Console about patient.
