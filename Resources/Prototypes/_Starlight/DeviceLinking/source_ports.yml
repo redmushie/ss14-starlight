@@ -114,3 +114,28 @@
   name: signal-port-name-airlock-cycler-outlets
   description: signal-port-description-airlock-cycler-outlets
   defaultLinks: [ AirlockCyclerDevice ]
+
+- type: sourcePort
+  id: AirlockCyclerPressurizing
+  name: signal-port-name-airlock-cycler-pressurizing
+  description: signal-port-description-airlock-cycler-pressurizing
+
+- type: sourcePort
+  id: AirlockCyclerPressurized
+  name: signal-port-name-airlock-cycler-pressurized
+  description: signal-port-description-airlock-cycler-pressurized
+
+- type: sourcePort
+  id: AirlockCyclerCycling
+  name: signal-port-name-airlock-cycler-cycling
+  description: signal-port-description-airlock-cycler-cycling
+
+- type: sourcePort
+  id: AirlockCyclerDepressurizing
+  name: signal-port-name-airlock-cycler-depressurizing
+  description: signal-port-description-airlock-cycler-depressurizing
+
+- type: sourcePort
+  id: AirlockCyclerDepressurized
+  name: signal-port-name-airlock-cycler-depressurized
+  description: signal-port-description-airlock-cycler-depressurized
