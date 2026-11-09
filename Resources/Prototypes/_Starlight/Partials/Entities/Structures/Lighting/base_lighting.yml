@@ -36,13 +36,13 @@
     - type: ToggleableDevice
     - type: ToggleableDeviceSignaling
     - type: DeviceLinkSink
-      ports: !Clear
-        - "ToggleableDeviceOn"
-        - "ToggleableDeviceOff"
-        - "ToggleableDeviceToggle"
+      ports:
+        - "On"
+        - "Off"
+        - "Toggle"
         - "ToggleableDeviceState"
         - "ToggleableDeviceStateInverted"
     - type: DeviceLinkSource
-      ports: !Clear
-        - "ToggleableDeviceStatus"
+      ports:
+        - "Status"
         - "ToggleableDeviceStatusInverted"
