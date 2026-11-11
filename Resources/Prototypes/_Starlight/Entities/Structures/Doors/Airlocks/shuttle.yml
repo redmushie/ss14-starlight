@@ -1,0 +1,70 @@
+- type: entity
+  parent: AirlockShuttle
+  id: AirlockShuttleLatch
+  suffix: Docking, Latch
+  name: external latchdock
+  description: Placeholder
+  components:
+  - type: Docking
+    radarColor: "#FF8C00"
+    highlightedRadarColor: "#FFC966"
+  - type: LatchDock
+
+- type: entity
+  id: AirlockGlassShuttleLatch
+  parent: AirlockShuttleLatch
+  suffix: Glass, Docking, Latch
+  components:
+  - type: Sprite
+    sprite: Structures/Doors/Airlocks/Glass/shuttle.rsi
+  - type: Occluder
+    enabled: false
+  - type: Door
+    occludes: false
+  - type: Fixtures
+    fixtures:
+      fix1:
+        layer:
+        - GlassAirlockLayer
+
+- type: entity
+  parent: BaseStructureDynamic
+  id: EmergencyLatchdock
+  name: emergency latchdock
+  description: Placeholder
+  components:
+  - type: Docking
+    radarColor: "#39FF88"
+    highlightedRadarColor: "#A6FFCE"
+  - type: LatchDock
+  - type: Fixtures
+    fixtures:
+      docking:
+        shape:
+          !type:PhysShapeCircle
+          radius: 0.2
+          position: "0,-0.5"
+        hard: false
+  - type: Sprite
+    sprite: Structures/Doors/Airlocks/Standard/shuttle.rsi
+    snapCardinals: false
+    layers:
+    - state: closed
+      map: ["enum.DoorVisualLayers.Base"]
+    - state: closed_unlit
+      shader: unshaded
+      map: ["enum.DoorVisualLayers.BaseUnlit"]
+      visible: false
+    - state: welded
+      map: ["enum.WeldableLayers.BaseWelded"]
+  - type: Damageable
+    damageContainer: Inorganic
+    damageModifierSet: Metallic
+  - type: Destructible
+    thresholds:
+    - trigger:
+        !type:DamageTrigger
+        damage: 150
+      behaviors:
+      - !type:DoActsBehavior
+        acts: ["Destruction"]
