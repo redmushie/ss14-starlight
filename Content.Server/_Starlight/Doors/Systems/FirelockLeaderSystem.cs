@@ -97,7 +97,7 @@ public sealed partial class FirelockLeaderSystem
 
         // Phase 4 and 5 are per firelock.
         var firelockStates = new Dictionary<EntityUid, FirelockState>();
-        var tileStates = new Dictionary<Vector2i, HologramState>();
+        // var tileStates = new Dictionary<Vector2i, HologramState>();
 
         foreach (var followerId in leader.Comp.Members)
         {
@@ -110,92 +110,43 @@ public sealed partial class FirelockLeaderSystem
                 maximum = maximum.Max(deltaJudgements);
             }
 
+            // Get or create state for this firelock.
+            if (!firelockStates.TryGetValue(followerId, out var firelockState))
+                firelockStates[followerId] = firelockState = new FirelockState();
 
-
-
+            firelockState.Judgement = maximum;
         }
-
-        foreach (var island in islands)
-        {
-            foreach (var tile in island.Tiles)
-            {
-                foreach (var (_, sensingFirelock, _) in tile.Value.SensingFirelocks)
-                {
-                    // Get or create state for this firelock.
-                    if (!firelockStates.TryGetValue(sensingFirelock, out var firelockState))
-                        firelockStates[sensingFirelock] = firelockState = new FirelockState();
-
-                    firelockState.Readings.Add(reading);
-                }
-            }
-        }
-
-
-        foreach (var followerId in leader.Comp.Members)
-        {
-            // Phase 4: Per firelock, determine the adjacent islands. Grab the deltas that apply for those islands.
-
-
-            // Phase 5: Aggregate them into a maximum.
-        }
-
-        // Calculate new firelock- and tile states.
-        // var (firelockStates, tileStates) = CalculateStates(leader);
 
         // Apply it.
         foreach (var (firelock, firelockState) in firelockStates)
             ApplyFirelockState(firelock, firelockState);
-
-        // TODO: apply tile states
     }
 
-    private void ApplyFirelockState(EntityUid id, FirelockState newState)
+    private void ApplyFirelockState(EntityUid id, FirelockState state)
     {
         if (!TryComp<FirelockComponent>(id, out var firelock)) return;
-
-        _firelock.AcceptEnvironmentReadings((id, firelock), newState.Readings);
+        var closingState = GetClosingState(state.Judgement);
+        _firelock.AcceptState((id, firelock), state.Judgement, closingState);
     }
 
-    private (Dictionary<EntityUid, FirelockState> FirelockStates, Dictionary<Vector2i, HologramState> TileStates) CalculateStates(Entity<FirelockLeaderComponent> group)
+    private ClosingState GetClosingState(SensingJudgements judgements)
     {
-        var firelockStates = new Dictionary<EntityUid, FirelockState>();
-        var tileStates = new Dictionary<Vector2i, HologramState>();
-
-        foreach (var sensingIsland in group.Comp.ExternalSensingIslands)
+        var (_, severity) = judgements.GetHighest();
+        return severity switch
         {
-            var reading = SenseIsland(group, sensingIsland);
-
-            // Judge the sensed heat/pressure parameters against the group's thresholds.
-            // TODO clean up
-
-            // Convert the threshold states to light states for firelocks.
-            // var tileHoloState = ToHologramState(reading);
-
-            // Apply to each firelock- and tile state on the island.
-            foreach (var sensingTile in sensingIsland.Tiles)
-            {
-                // Store the tile hologram state.
-                // tileStates[sensingTile.Key] = tileHoloState;
-
-                foreach (var (_, sensingFirelock, _) in sensingTile.Value.SensingFirelocks)
-                {
-                    // Get or create state for this firelock.
-                    if (!firelockStates.TryGetValue(sensingFirelock, out var firelockState))
-                        firelockStates[sensingFirelock] = firelockState = new FirelockState();
-
-                    firelockState.Readings.Add(reading);
-                }
-            }
-        }
-
-        return (firelockStates, tileStates);
+            SensorSeverity.Safe => ClosingState.Open,
+            SensorSeverity.Warning => ClosingState.SoftClose,
+            SensorSeverity.Danger => ClosingState.HardClose,
+            SensorSeverity.Death => ClosingState.Bolt,
+            _ => throw new ArgumentOutOfRangeException()
+        };
     }
 
 }
 
 record FirelockState
 {
-    public List<((int, int), SensingJudgements)> Readings = new();
+    public SensingJudgements Judgement = new();
 }
 
 [Flags]

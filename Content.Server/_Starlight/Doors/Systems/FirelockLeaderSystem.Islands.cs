@@ -267,9 +267,11 @@ public sealed partial class FirelockLeaderSystem
     {
         foreach (var a in ids)
             foreach (var b in ids)
-                if (a < b)
+                if (IsValidDelta(a, b))
                     yield return (a, b);
     }
+
+    private bool IsValidDelta(int a, int b) => a < b;
 
     private Direction8 GetDirectionCone45(Direction8 direction) =>
         direction.TurnCounterClockwise() | direction | direction.TurnClockwise();

@@ -238,15 +238,13 @@ public sealed partial class FirelockLeaderSystem
             foreach (var b in islands)
             {
                 if (a.Id == b.Id) continue;
-                // Using greater-than to cut duplicates. First index is lower, second index is higher.
-                if (a.Id > b.Id) continue;
+                if (IsValidDelta(a.Id, b.Id)) continue;
 
                 var left = islandJudgements[a.Id];
                 var right = islandJudgements[b.Id];
                 var delta = GetJudgementDelta(left, right);
 
                 deltas.Add((a.Id, b.Id), delta);
-                deltas.Add((b.Id, a.Id), delta);
             }
         }
 
@@ -337,12 +335,41 @@ public record SensingJudgements
     public SensorSeverity Combined => DeltaTemperature | HighTemperature | LowTemperature |
                                       DeltaPressure | LowPressure | HighPressure;
 
+    public SensorSeverity GetSeverity(Sensor sensor) =>
+        sensor switch
+        {
+            Sensor.LowTemperature => LowTemperature,
+            Sensor.HighTemperature => HighTemperature,
+            Sensor.DeltaTemperature => DeltaTemperature,
+            Sensor.LowPressure => LowPressure,
+            Sensor.HighPressure => HighPressure,
+            Sensor.DeltaPressure => DeltaPressure,
+            _ => throw new ArgumentOutOfRangeException(nameof(sensor), sensor, null)
+        };
 }
 
 public static class SensingJudgementsExtensions
 {
     extension(SensingJudgements a)
     {
+        public (Sensor?, SensorSeverity) GetHighest()
+        {
+            Sensor? highestSensor = null;
+            var highestSeverity = SensorSeverity.Safe;
+
+            foreach (var sensor in Enum.GetValues<Sensor>())
+            {
+                var severity = a.GetSeverity(sensor);
+                if (severity > highestSeverity)
+                {
+                    highestSensor = sensor;
+                    highestSeverity = severity;
+                }
+            }
+
+            return (highestSensor, highestSeverity);
+        }
+
         public SensingJudgements Max(SensingJudgements b) =>
             new()
             {

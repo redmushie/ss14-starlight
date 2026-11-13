@@ -106,6 +106,23 @@ public enum ClosingState : byte
     Bolt = 8
 }
 
+
+/// <summary>
+/// Sensor types for a firelock. Corresponds to the fields in a SensingJudgements record.
+/// Note: These are sorted from "most important" to "least important" in terms of visuals.
+/// </summary>
+public enum Sensor
+{
+    HighPressure,
+    HighTemperature,
+
+    LowTemperature,
+    LowPressure,
+
+    DeltaTemperature,
+    DeltaPressure
+}
+
 /// <summary>
 /// Represents the severity of a single metric, such as "low temperature"
 /// </summary>

@@ -100,33 +100,24 @@ public sealed partial class FirelockSystem
     /// Accept environmental sensor readings.
     /// </summary>
     /// <param name="firelock">The firelock to which this reading pertains</param>
-    /// <param name="reading">The reading</param>
-    public void AcceptEnvironmentReadings(Entity<FirelockComponent> firelock, List<SensingReading> readings)
+    /// <param name="judgement">The judgements</param>
+    /// <param name="closing">The ClosingState derived from the judgements</param>
+    public void AcceptState(Entity<FirelockComponent> firelock, SensingJudgements judgement, ClosingState closing)
     {
-        // var judgements = new List<SensingJudgements>();
-        //
-        // // Evaluate each reading, comparing it against thresholds.
-        // foreach (var reading in readings)
-        //     judgements.Add(JudgeReading(ref firelock.Comp.Thresholds, reading));
-        //
-        // // Aggregate all judgements into one 'net' reading for this firelock.
-        // var judgement = AggregateJudgements(judgements);
-        //
-        // firelock.Comp.SensorDeltaPressure = judgement.DeltaPressure;
-        // firelock.Comp.SensorLowPressure = judgement.LowPressure;
-        // firelock.Comp.SensorHighPressure = judgement.HighPressure;
-        //
-        // firelock.Comp.SensorDeltaTemperature = judgement.DeltaTemperature;
-        // firelock.Comp.SensorLowTemperature = judgement.LowTemperature;
-        // firelock.Comp.SensorHighTemperature = judgement.HighTemperature;
-        // Dirty(firelock);
-        //
-        // if (judgement.Closing != firelock.Comp.EnvironmentClosingState)
-        //     Log.Debug($"Updated environment closing state for {firelock.Owner} to: {judgement.Closing}");
-        //
-        // firelock.Comp.EnvironmentClosingState = judgement.Closing;
-        //
-        // UpdateState(firelock);
+        firelock.Comp.SensorDeltaPressure = judgement.DeltaPressure;
+        firelock.Comp.SensorLowPressure = judgement.LowPressure;
+        firelock.Comp.SensorHighPressure = judgement.HighPressure;
+
+        firelock.Comp.SensorDeltaTemperature = judgement.DeltaTemperature;
+        firelock.Comp.SensorLowTemperature = judgement.LowTemperature;
+        firelock.Comp.SensorHighTemperature = judgement.HighTemperature;
+        Dirty(firelock);
+
+        if (closing != firelock.Comp.EnvironmentClosingState)
+            Log.Debug($"Updated environment closing state for {firelock.Owner} to: {closing}");
+
+        firelock.Comp.EnvironmentClosingState = closing;
+        UpdateState(firelock);
     }
 
     public void AcceptAirAlarmState(Entity<FirelockComponent> firelock, AtmosAlarmType type)
@@ -148,156 +139,5 @@ public sealed partial class FirelockSystem
         UpdateState(firelock);
     }
 
-    private (bool bolting, bool changed) StartOrContinueBoltingCountdown(Entity<FirelockComponent> firelock)
-    {
-        if (firelock.Comp.Bolted)
-            return (false, false);
-
-        // If end time is already set, we just have to wait.
-        if (firelock.Comp.BoltCountdownEnd != null)
-        {
-            // If end time is reached, bolt for real.
-            if (firelock.Comp.BoltCountdownEnd <= _gameTiming.CurTime)
-            {
-                DoBolt(firelock);
-                return (false, true);
-            }
-
-            return (true, false);
-        }
-
-        firelock.Comp.BoltCountdownStart = _gameTiming.CurTime;
-        firelock.Comp.BoltCountdownEnd = _gameTiming.CurTime + firelock.Comp.BoltCountdownDuration;
-        _ambient.SetAmbience(firelock, true);
-        return (true, false);
-    }
-
-    private void CancelCountdownOrUnboltNow(Entity<FirelockComponent> firelock)
-    {
-        if (!firelock.Comp.Bolted && firelock.Comp.BoltCountdownStart == null)
-            return;
-
-        if (firelock.Comp.Bolted)
-        {
-            _audio.PlayPvs(firelock.Comp.BoltUpSound, firelock);
-            _appearance.SetData(firelock, DoorVisuals.ClosedLights, false);
-            firelock.Comp.Bolted = false;
-        }
-
-        firelock.Comp.BoltCountdownStart = null;
-        firelock.Comp.BoltCountdownEnd = null;
-        _ambient.SetAmbience(firelock, false);
-    }
-
-    #region Door helpers
-
-    private (bool open, bool opening) TryOpen(Entity<FirelockComponent> firelock)
-    {
-        if (!TryComp<DoorComponent>(firelock, out var door))
-            return (false, false);
-
-        if (door.State is DoorState.Open)
-            return (true, false);
-        if (door.State is DoorState.Opening)
-            return (false, true);
-
-        if (_doorSystem.TryOpen(firelock, door))
-            return (false, true);
-
-        _doorSystem.OnPartialOpen(firelock, door);
-        return (false, true);
-    }
-
-    private (bool closed, bool closing) TryClose(Entity<FirelockComponent> firelock)
-    {
-        if (!TryComp<DoorComponent>(firelock, out var door))
-            return (false, false);
-
-        if (door.State is DoorState.Closed or DoorState.Welded or DoorState.Denying)
-            return (true, false);
-        if (door.State is DoorState.Closing)
-            return (false, true);
-
-        if (_doorSystem.TryClose(firelock, door))
-            return (false, true);
-
-        return (false, _doorSystem.OnPartialClose(firelock, door));
-    }
-
-    private void DoBolt(Entity<FirelockComponent> firelock)
-    {
-        firelock.Comp.Bolted = true;
-        firelock.Comp.BoltCountdownStart = null;
-        firelock.Comp.BoltCountdownEnd = null;
-        _ambient.SetAmbience(firelock, false);
-        _appearance.SetData(firelock, DoorVisuals.ClosedLights, true);
-        _audio.PlayPvs(firelock.Comp.BoltDownSound, firelock, new AudioParams()
-        {
-            Volume = -3f,
-            Variation = 0.05f
-        });
-        EmergencyPressureStop(firelock, firelock);
-    }
-
-    private bool IsClosed(Entity<FirelockComponent> firelock, DoorComponent? door)
-    {
-        if (!Resolve(firelock, ref door))
-            return false;
-
-        return door.State is DoorState.Closed or DoorState.Welded or DoorState.Denying;
-    }
-
-    private bool IsBolted(Entity<FirelockComponent> firelock, DoorComponent? door)
-        => IsClosed(firelock, door) && firelock.Comp.Bolted;
-
-    #endregion
-
-    private FirelockVisuals GetTemperatureVisual(Entity<FirelockComponent> firelock, bool bolting)
-    {
-        // If there is no delta, we have nothing to show as both sides are equal.
-        // if (!conditions.TempDelta)
-        //     return FirelockVisuals.None;
-        // TODO: implement and use delta?
-
-        // TODO: for loop this shit
-        if ((firelock.Comp.SensorHighTemperature & SensorSeverity.Death) != 0)
-            return bolting ? FirelockVisuals.HighAlternating : FirelockVisuals.HighBlinking;
-        if ((firelock.Comp.SensorLowTemperature & SensorSeverity.Death) != 0)
-            return bolting ? FirelockVisuals.LowAlternating : FirelockVisuals.LowBlinking;
-        if ((firelock.Comp.SensorHighTemperature & SensorSeverity.Danger) != 0)
-            return bolting ? FirelockVisuals.HighAlternating : FirelockVisuals.HighBlinking;
-        if ((firelock.Comp.SensorLowTemperature & SensorSeverity.Danger) != 0)
-            return bolting ? FirelockVisuals.LowAlternating : FirelockVisuals.LowBlinking;
-        if ((firelock.Comp.SensorHighTemperature & SensorSeverity.Warning) != 0)
-            return FirelockVisuals.HighSolid;
-        if ((firelock.Comp.SensorLowTemperature & SensorSeverity.Warning) != 0)
-            return FirelockVisuals.LowSolid;
-
-        return FirelockVisuals.None;
-    }
-
-    private FirelockVisuals GetPressureVisual(Entity<FirelockComponent> firelock, bool bolting)
-    {
-        // If there is no delta, we have nothing to show as both sides are equal.
-        // if (!conditions.PressureDelta)
-        //     return FirelockVisuals.None;
-        // TODO: implement and use delta?
-
-        // TODO: for loop this shit
-        if ((firelock.Comp.SensorHighPressure & SensorSeverity.Death) != 0)
-            return bolting ? FirelockVisuals.HighAlternating : FirelockVisuals.HighBlinking;
-        if ((firelock.Comp.SensorLowPressure & SensorSeverity.Death) != 0)
-            return bolting ? FirelockVisuals.LowAlternating : FirelockVisuals.LowBlinking;
-        if ((firelock.Comp.SensorHighPressure & SensorSeverity.Danger) != 0)
-            return bolting ? FirelockVisuals.HighAlternating : FirelockVisuals.HighBlinking;
-        if ((firelock.Comp.SensorLowPressure & SensorSeverity.Danger) != 0)
-            return bolting ? FirelockVisuals.LowAlternating : FirelockVisuals.LowBlinking;
-        if ((firelock.Comp.SensorHighPressure & SensorSeverity.Warning) != 0)
-            return FirelockVisuals.HighSolid;
-        if ((firelock.Comp.SensorLowPressure & SensorSeverity.Warning) != 0)
-            return FirelockVisuals.LowSolid;
-
-        return FirelockVisuals.None;
-    }
 
 }
