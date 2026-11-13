@@ -156,9 +156,9 @@ public sealed partial class FirelockLeaderSystem
         // TODO: Also meet-in-the-middle for permitted delta maybe?
         // TODO: Debounce permittedPressureDelta / permittedTemperatureDelta, add activation and deactivation margins.
 
-        // If the delta is too small, we will not trigger.
-        if (reading.DeltaPressure < permittedPressureDelta)
-            return;
+        // // If the delta is too small, we will not trigger.
+        // if (reading.DeltaPressure < permittedPressureDelta)
+        //     return;
 
         // TODO: For now, no direct delta states.
         judgement.DeltaPressure = SensorSeverity.Safe;
@@ -182,9 +182,9 @@ public sealed partial class FirelockLeaderSystem
         // TODO: Also meet-in-the-middle for permitted delta maybe?
         // TODO: Debounce permittedPressureDelta / permittedTemperatureDelta, add activation and deactivation margins.
 
-        // If the delta is too small, we will not trigger.
-        if (reading.DeltaTemperature < permittedTemperatureDelta)
-            return;
+        // // If the delta is too small, we will not trigger.
+        // if (reading.DeltaTemperature < permittedTemperatureDelta)
+        //     return;
 
         // TODO: For now, no direct delta states.
         judgement.DeltaTemperature = SensorSeverity.Safe;
@@ -228,23 +228,23 @@ public sealed partial class FirelockLeaderSystem
     #region Phase 3 - Calculate inter-island deltas
 
     private Dictionary<(int, int), SensingJudgements> CalculateIslandDeltas(
-        List<SensingIsland> islands,
+        Dictionary<int, SensingIsland> islands,
         Dictionary<int, SensingJudgements> islandJudgements)
     {
         var deltas = new Dictionary<(int, int), SensingJudgements>();
 
-        foreach (var a in islands)
+        foreach (var a in islands.Keys)
         {
-            foreach (var b in islands)
+            foreach (var b in islands.Keys)
             {
-                if (a.Id == b.Id) continue;
-                if (IsValidDelta(a.Id, b.Id)) continue;
+                if (a == b) continue;
+                if (!IsValidDelta(a, b)) continue;
 
-                var left = islandJudgements[a.Id];
-                var right = islandJudgements[b.Id];
+                var left = islandJudgements[a];
+                var right = islandJudgements[b];
                 var delta = GetJudgementDelta(left, right);
 
-                deltas.Add((a.Id, b.Id), delta);
+                deltas.Add((a, b), delta);
             }
         }
 

@@ -6,14 +6,14 @@ namespace Content.Shared._Starlight.Doors.Components;
 /// Marks an entity as being part of a firelock group. Every member of the group has this component,
 /// including the 'main' entity that holds the <see cref="FirelockLeaderComponent"/>.
 /// </summary>
-[RegisterComponent, NetworkedComponent]
+[RegisterComponent, UnsavedComponent, NetworkedComponent]
 [AutoGenerateComponentState(fieldDeltas: true)]
 public sealed partial class FirelockFollowerComponent : Component
 {
     /// <summary>
     /// The entity that holds the <see cref="FirelockLeaderComponent"/>.
     /// </summary>
-    [DataField, AutoNetworkedField] public EntityUid Leader = EntityUid.Invalid;
+    [AutoNetworkedField] public EntityUid Leader = EntityUid.Invalid;
 
     /// <summary>
     /// The IDs of the islands sensed by this follower.

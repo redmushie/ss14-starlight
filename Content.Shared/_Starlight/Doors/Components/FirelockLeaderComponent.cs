@@ -11,7 +11,7 @@ namespace Content.Shared._Starlight.Doors.Components;
 /// multi-tile opening. Every firelock in a group is expected to operate together.
 /// Populated by <see cref="SharedFirelockGroupSystem"/>.
 /// </summary>
-[RegisterComponent, NetworkedComponent]
+[RegisterComponent, UnsavedComponent, NetworkedComponent]
 [AutoGenerateComponentState(fieldDeltas: true)]
 // [AutoGenerateComponentPause]
 public sealed partial class FirelockLeaderComponent : Component
@@ -21,7 +21,7 @@ public sealed partial class FirelockLeaderComponent : Component
     /// <summary>
     /// Every firelock in this group, including the entity this component is on.
     /// </summary>
-    [DataField, AutoNetworkedField] public HashSet<EntityUid> Members = new();
+    [AutoNetworkedField] public HashSet<EntityUid> Members = new();
 
     #endregion
 
@@ -39,12 +39,12 @@ public sealed partial class FirelockLeaderComponent : Component
     public bool IslandsInitialized = false;
     public bool IslandsDirty = false;
 
-    [DataField] public TimeSpan SensingIslandsLastCalculated = TimeSpan.Zero;
+    public TimeSpan SensingIslandsLastCalculated = TimeSpan.Zero;
 
     /// <summary>
     /// When the sensing islands last sensed.
     /// </summary>
-    [DataField] public TimeSpan SensingIslandsNextSense = TimeSpan.Zero;
+    public TimeSpan SensingIslandsNextSense = TimeSpan.Zero;
 
     /// <summary>
     /// Server-only list of sensing islands. Each island is a list of tile indices that together form one unit.
@@ -113,9 +113,9 @@ public record SensingTile(
     /// </summary>
     public Direction8 IslandingDirections = Direction8.All;
 
-    public bool SenseHighTemperature;
-    public bool SenseLowTemperature;
-    public bool SenseLowPressure;
-    public bool SenseHighPressure;
+    public bool SenseHighTemperature = true;
+    public bool SenseLowTemperature = true;
+    public bool SenseLowPressure = true;
+    public bool SenseHighPressure = true;
 
 }

@@ -277,3 +277,23 @@ public sealed partial class FirelockLeaderSystem
         direction.TurnCounterClockwise() | direction | direction.TurnClockwise();
 
 }
+
+public readonly record struct IslandRef(int Id)
+{
+    public int Id { get; } = Id;
+
+    public static implicit operator IslandRef(int id) => new(id);
+    public static implicit operator int(IslandRef @ref) => @ref.Id;
+
+    public bool Equals(IslandRef other) => Id == other.Id;
+    public override int GetHashCode() => Id;
+}
+
+public readonly record struct IslandDeltaRef(IslandRef IdA, IslandRef IdB)
+{
+    public IslandRef IdA { get; } = Math.Min(IdA, IdB);
+    public IslandRef IdB { get; } = Math.Max(IdA, IdB);
+
+    public static implicit operator IslandDeltaRef((int idA, int idB) @ref) => new(@ref.idA, @ref.idB);
+    public static implicit operator (int, int)(IslandDeltaRef deltaRef) => (deltaRef.IdA, deltaRef.IdB);
+}

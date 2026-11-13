@@ -82,13 +82,13 @@ public sealed partial class FirelockLeaderSystem
         if (!_firelockQuery.TryComp(leader, out var leaderFirelock)) return;
 
         // Phase 1 & 2. Sense and judge each individual island.
-        var islands = leader.Comp.SensingIslands.ToList();
+        var islands = leader.Comp.SensingIslands.ToDictionary(i => i.Id);
         Dictionary<int, SensingJudgements> islandJudgements = new();
-        foreach (var island in islands)
+        foreach (var (id, island) in islands)
         {
             var reading = SenseIsland(leader, island); // Phase 1
             var judgement = JudgeReading(ref leaderFirelock.Thresholds, reading); // Phase 2
-            islandJudgements[island.Id] = judgement;
+            islandJudgements[id] = judgement;
         }
 
         // Phase 3: Calculate deltas between every two islands.
@@ -106,8 +106,13 @@ public sealed partial class FirelockLeaderSystem
             var maximum = new SensingJudgements();
             foreach (var delta in CalculateValidDeltaIds(follower.SensedIslands))
             {
-                var deltaJudgements = islandDeltas[delta];
-                maximum = maximum.Max(deltaJudgements);
+                // TODO: This should be impossible maybe?
+                if (!islandDeltas.TryGetValue(delta, out var judgement))
+                    continue;
+
+                if (islands[delta.Item1].Internal || islands[delta.Item2].Internal)
+                    continue;
+                maximum = maximum.Max(judgement);
             }
 
             // Get or create state for this firelock.
@@ -134,7 +139,7 @@ public sealed partial class FirelockLeaderSystem
         var (_, severity) = judgements.GetHighest();
         return severity switch
         {
-            SensorSeverity.Safe => ClosingState.Open,
+            SensorSeverity.Safe => ClosingState.None,
             SensorSeverity.Warning => ClosingState.SoftClose,
             SensorSeverity.Danger => ClosingState.HardClose,
             SensorSeverity.Death => ClosingState.Bolt,

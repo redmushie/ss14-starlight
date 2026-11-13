@@ -58,6 +58,7 @@ public sealed partial class FirelockSystem
         if (door.State is DoorState.Opening)
             return (false, true);
 
+        Log.Debug($"Trying to open: {firelock.Owner}");
         if (_doorSystem.TryOpen(firelock, door))
             return (false, true);
 
@@ -75,6 +76,7 @@ public sealed partial class FirelockSystem
         if (door.State is DoorState.Closing)
             return (false, true);
 
+        Log.Debug($"Trying to close: {firelock.Owner}");
         if (_doorSystem.TryClose(firelock, door))
             return (false, true);
 

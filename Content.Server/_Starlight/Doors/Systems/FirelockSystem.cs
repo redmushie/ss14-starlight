@@ -31,14 +31,12 @@ public sealed partial class FirelockSystem
         // Try to realize the state in order of effectiveness.
         if (targetState is ClosingState.SoftClose or ClosingState.HardClose)
         {
-            Log.Debug($"Trying to close: {firelock.Owner}");
             TryClose(firelock);
             return;
         }
 
         if (targetState is ClosingState.Open)
         {
-            Log.Debug($"Trying to open: {firelock.Owner}");
             TryOpen(firelock);
             return;
         }

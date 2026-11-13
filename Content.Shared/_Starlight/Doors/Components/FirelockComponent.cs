@@ -135,34 +135,34 @@ public enum SensorSeverity
     Death = 4
 }
 
-[Serializable, NetSerializable]
-public record struct FirelockThresholds()
+[DataDefinition, Serializable, NetSerializable]
+public partial record struct FirelockThresholds()
 {
     /// <summary>
     /// Amount of mols required before accepting temperature readings.
     /// Particularly helpful against spacing registering as 'extremely cold'.
     /// </summary>
-    public float TemperatureReadingMinMoles = 5;
+    [DataField] public float TemperatureReadingMinMoles = 5;
 
     /// <summary>
     /// Minimum temperature to detect. Offset by 5K above cosmic background (2.7K).
     /// </summary>
-    public float TemperatureReadingMinTemp = Atmospherics.TCMB + 5;
+    [DataField] public float TemperatureReadingMinTemp = Atmospherics.TCMB + 5;
 
-    public float LowPressureDanger = 40;
-    public float LowPressureWarning = 70;
+    [DataField] public float LowPressureDanger = 40;
+    [DataField] public float LowPressureWarning = 70;
 
-    public float HighPressureWarning = 250;
-    public float HighPressureDanger = 500;
-    public float HighPressureDeath = 1000;
+    [DataField] public float HighPressureWarning = 250;
+    [DataField] public float HighPressureDanger = 500;
+    [DataField] public float HighPressureDeath = 1000;
 
-    public float LowTemperatureWarning = Atmospherics.T0C - 10;
-    public float LowTemperatureDanger = Atmospherics.T0C - 60;
-    public float LowTemperatureDeath = Atmospherics.T0C - 200;
+    [DataField] public float LowTemperatureWarning = Atmospherics.T0C - 10;
+    [DataField] public float LowTemperatureDanger = Atmospherics.T0C - 60;
+    [DataField] public float LowTemperatureDeath = Atmospherics.T0C - 200;
 
-    public float HighTemperatureWarning = Atmospherics.T0C + 45;
-    public float HighTemperatureDanger = Atmospherics.T0C + 70;
-    public float HighTemperatureDeath = Atmospherics.T0C + 500;
+    [DataField] public float HighTemperatureWarning = Atmospherics.T0C + 45;
+    [DataField] public float HighTemperatureDanger = Atmospherics.T0C + 70;
+    [DataField] public float HighTemperatureDeath = Atmospherics.T0C + 500;
 
     // public float DeltaPressureWarning = 30;
     // public float DeltaPressureDanger = 200;
