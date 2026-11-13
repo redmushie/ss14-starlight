@@ -14,4 +14,10 @@ public sealed partial class FirelockFollowerComponent : Component
     /// The entity that holds the <see cref="FirelockLeaderComponent"/>.
     /// </summary>
     [DataField, AutoNetworkedField] public EntityUid Leader = EntityUid.Invalid;
+
+    /// <summary>
+    /// The IDs of the islands sensed by this follower.
+    /// </summary>
+    public HashSet<int> SensedIslands = new();
+
 }

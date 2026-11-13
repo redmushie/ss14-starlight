@@ -1,3 +1,4 @@
+using System.Linq;
 using Content.Shared._Starlight.Doors.Systems;
 using Content.Shared._Starlight.Maths;
 using Content.Shared.Atmos;
@@ -36,14 +37,14 @@ public sealed partial class FirelockLeaderComponent : Component
     /// Whether sensing island should be redetermined before sensing.
     /// </summary>
     public bool IslandsInitialized = false;
-    public bool IslandsPending = false;
+    public bool IslandsDirty = false;
 
     [DataField] public TimeSpan SensingIslandsLastCalculated = TimeSpan.Zero;
 
     /// <summary>
     /// When the sensing islands last sensed.
     /// </summary>
-    [DataField] public TimeSpan SensingIslandsLastSensed = TimeSpan.Zero;
+    [DataField] public TimeSpan SensingIslandsNextSense = TimeSpan.Zero;
 
     /// <summary>
     /// Server-only list of sensing islands. Each island is a list of tile indices that together form one unit.
@@ -56,13 +57,25 @@ public sealed partial class FirelockLeaderComponent : Component
     /// </summary>
     public SensingIsland InternalSensingIsland = new() { Internal = true };
 
+    public IEnumerable<SensingIsland> SensingIslands => ExternalSensingIslands.Prepend(InternalSensingIsland);
+
     #endregion
 }
 
 public record SensingIsland
 {
+    public int Id;
     public Dictionary<Vector2i, SensingTile> Tiles = new();
     public bool Internal;
+
+    public IEnumerable<EntityUid> Firelocks()
+    {
+        foreach (var (_, tile) in Tiles)
+            foreach (var (_, firelock, _) in tile.SensingFirelocks)
+                yield return firelock;
+    }
+
+
 }
 
 public record SensingTile(
@@ -100,6 +113,9 @@ public record SensingTile(
     /// </summary>
     public Direction8 IslandingDirections = Direction8.All;
 
-    public bool IsFirelock => Firelock != null;
-    public bool IsSensing => Firelock == null;
+    public bool SenseHighTemperature;
+    public bool SenseLowTemperature;
+    public bool SenseLowPressure;
+    public bool SenseHighPressure;
+
 }
