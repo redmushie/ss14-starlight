@@ -341,6 +341,22 @@ namespace Content.Server.GameTicking
             if (jobBans != null)
                 restrictedRoles.UnionWith(jobBans);
 
+            // An explicitly requested job (e.g. latejoin via the joingame command) must still pass role
+            // requirements, whitelist and job bans; restrictedRoles is otherwise only applied when auto-picking,
+            // letting a crafted request spawn as any job.
+            if (jobId is not null && restrictedRoles.Contains(jobId))
+            {
+                if (!LobbyEnabled)
+                    JoinAsObserver(player);
+
+                var evRestricted = new NoJobsAvailableSpawningEvent(player); // Used by gamerules to wipe their antag slot, if they got one
+                RaiseLocalEvent(evRestricted);
+
+                _chatManager.DispatchServerMessage(player,
+                    Loc.GetString("game-ticker-player-no-jobs-available-when-joining"));
+                return;
+            }
+
             // Pick best job best on prefs.
             var playerPreferences = _prefsManager.GetPreferences(player.UserId);
             var jobPrioritiesFiltered = playerPreferences.JobPrioritiesFiltered();

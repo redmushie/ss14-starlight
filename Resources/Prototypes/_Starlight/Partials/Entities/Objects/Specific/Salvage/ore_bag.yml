@@ -21,6 +21,7 @@
     components:
     - type: MagnetPickup
       requiresEquipping: false # make it work even without being equipped
+      requiresHolding: true # but not on the ground
   - type: Sprite
     sprite: _Starlight/Objects/Specific/Mining/ore_bag.rsi
   - type: Clothing

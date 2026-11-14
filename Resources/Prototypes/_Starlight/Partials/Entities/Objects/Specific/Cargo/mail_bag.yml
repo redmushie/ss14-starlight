@@ -32,6 +32,7 @@
     components:
     - type: MagnetPickup
       requiresEquipping: false # make it work even without being equipped
+      requiresHolding: true # but not on the ground
   # added visual indicator for magnet
   - type: Appearance
   - type: GenericVisualizer
