@@ -89,6 +89,8 @@ public sealed partial class BorgSystem : SharedBorgSystem
             if (state != MobState.Alive)
             {
                 _sprite.LayerSetVisible((ent.Owner, ent.Comp3), BorgVisualLayers.Light, false);
+                if (_sprite.LayerMapTryGet((ent.Owner, ent.Comp3), BorgVisualLayers.Powered, out var deadPowered, false)) // Starlight
+                    _sprite.LayerSetVisible((ent.Owner, ent.Comp3), deadPowered, false);
                 return;
             }
         }
@@ -128,10 +130,14 @@ public sealed partial class BorgSystem : SharedBorgSystem
             mindColor = ent.Comp1.NoMindColor;
         }
 
-        _sprite.LayerSetVisible((ent.Owner, ent.Comp3), BorgVisualLayers.Light,
-            ent.Comp1.BrainEntity != null || hasPlayerOrRemoteControl);
+        var isActive = ent.Comp1.BrainEntity != null || hasPlayerOrRemoteControl;
+        _sprite.LayerSetVisible((ent.Owner, ent.Comp3), BorgVisualLayers.Light, isActive);
         _sprite.LayerSetRsiState((ent.Owner, ent.Comp3), BorgVisualLayers.Light, mindState);
         _sprite.LayerSetColor((ent.Owner, ent.Comp3), BorgVisualLayers.Light, mindColor);
+
+        // Pre-colored on/off Powered emission layer (only present when a subtype defines it).
+        if (_sprite.LayerMapTryGet((ent.Owner, ent.Comp3), BorgVisualLayers.Powered, out var poweredIdx, false))
+            _sprite.LayerSetVisible((ent.Owner, ent.Comp3), poweredIdx, isActive);
         // Starlight - end
     }
 

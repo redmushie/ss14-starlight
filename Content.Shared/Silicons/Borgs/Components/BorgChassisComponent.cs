@@ -201,4 +201,11 @@ public enum BorgVisualLayers : byte
     /// Layer for the borg flashlight status.
     /// </summary>
     LightStatus,
+
+    /// <summary>
+    /// Starlight: optional pre-colored emission that is simply on/off with the borg's
+    /// mind/control state, shown alongside (not instead of) the mind-state <see cref="Light"/>
+    /// eye. Only exists when a subtype defines a <c>PoweredState</c>.
+    /// </summary>
+    Powered,
 }

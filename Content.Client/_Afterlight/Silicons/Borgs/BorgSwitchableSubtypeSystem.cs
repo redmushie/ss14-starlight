@@ -99,6 +99,21 @@ public sealed partial class BorgSwitchableSubtypeSystem : SharedBorgSwitchableSu
         if (borgSubtype.SpriteEmissionPath is { } emissionPath)
             _sprite.LayerSetRsi((entity, chassisSprite), BorgVisualLayers.Light, emissionPath);
 
+        // Starlight: add a pre-colored on/off Powered emission layer only when the subtype
+        // defines one. Visibility is toggled with the mind/control state in BorgSystem.
+        if (borgSubtype.PoweredState is { } poweredState)
+        {
+            var poweredLayer = new PrototypeLayerData
+            {
+                RsiPath = (borgSubtype.PoweredEmissionPath ?? borgSubtype.SpritePath)?.ToString(),
+                State = poweredState,
+                Shader = "unshaded",
+                Visible = false,
+            };
+            var poweredIndex = _sprite.AddLayer((owner, chassisSprite), poweredLayer, null);
+            _sprite.LayerMapSet((owner, chassisSprite), BorgVisualLayers.Powered, poweredIndex);
+        }
+
         if (TryComp<BorgChassisComponent>(entity, out var chassis))
         {
             _borg.SetMindStates(

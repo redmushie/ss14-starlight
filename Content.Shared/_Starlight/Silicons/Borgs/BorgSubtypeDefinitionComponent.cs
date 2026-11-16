@@ -13,16 +13,16 @@ public sealed partial class BorgSubtypeDefinitionComponent
     public ResPath? SpriteEmissionPath { get; set; }
 
     [DataField]
-    public string SpriteNoMindState { get; set; } = "borg_emission";
+    public string SpriteNoMindState { get; set; } = "borg_emission_mind";
 
     [DataField]
-    public string SpriteLocalMindState { get; set; } = "borg_emission";
+    public string SpriteLocalMindState { get; set; } = "borg_emission_mind";
 
     [DataField]
-    public string SpriteShuntMindState { get; set; } = "borg_emission";
+    public string SpriteShuntMindState { get; set; } = "borg_emission_mind";
 
     [DataField]
-    public string SpriteRemoteControlState { get; set; } = "borg_emission";
+    public string SpriteRemoteControlState { get; set; } = "borg_emission_mind";
 
 
     [DataField]
@@ -36,5 +36,21 @@ public sealed partial class BorgSubtypeDefinitionComponent
 
     [DataField]
     public Color SpriteRemoteControlColor { get; set; } = Color.FromHex("#00ff00");
+
+    /// <summary>
+    /// Optional pre-colored emission state shown on its own on/off layer
+    /// (BorgVisualLayers.Powered) whenever the borg has a mind/control, alongside the
+    /// mind-state eye. When null the layer is not created at all. Not tintable — the
+    /// sprite carries its own color.
+    /// </summary>
+    [DataField]
+    public string? PoweredState { get; set; }
+
+    /// <summary>
+    /// Optional separate rsi for <see cref="PoweredState"/>; falls back to
+    /// <see cref="SpritePath"/> when null.
+    /// </summary>
+    [DataField]
+    public ResPath? PoweredEmissionPath { get; set; }
 
 }
