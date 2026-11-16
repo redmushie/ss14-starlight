@@ -23,6 +23,18 @@
             "name": "borg_l",
             "directions": 4
         },
+        {
+            "name": "borg_emission_mind",
+            "directions": 4,
+            "copyright": "borg_e created by Conflee (GitHub), split and colored into borg_emision_power and borg_emission_mind by @redmushie (GitHub).",
+            "license": "CC-BY-SA-3.0"
+        },
+        {
+            "name": "borg_emission_power",
+            "directions": 4,
+            "copyright": "borg_e created by Conflee (GitHub), split and colored into borg_emision_power and borg_emission_mind by @redmushie (GitHub).",
+            "license": "CC-BY-SA-3.0"
+        },
 		{
             "name": "green",
             "directions": 4

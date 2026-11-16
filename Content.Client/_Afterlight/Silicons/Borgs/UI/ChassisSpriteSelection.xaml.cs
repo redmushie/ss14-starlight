@@ -56,6 +56,11 @@ public sealed partial class ChassisSpriteSelection : Control
             if (subtype.ParentType != borgTypePrototype.ID)
                 continue;
 
+            // Starlight: the type's default subtype is already represented by the built-in
+            // "default" button (which selects null -> resolves to it), so don't list it twice.
+            if (ent.ID == borgTypePrototype.DefaultSubtype)
+                continue;
+
             var button = new Button
             {
                 Group = buttonGroup,

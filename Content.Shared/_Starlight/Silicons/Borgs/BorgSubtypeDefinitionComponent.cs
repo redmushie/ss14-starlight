@@ -5,43 +5,66 @@ namespace Content.Shared._Afterlight.Silicons.Borgs;
 
 public sealed partial class BorgSubtypeDefinitionComponent
 {
+    // Mind-state eye.
+    //
+    // Additive over the stock borg_e / borg_e_r model: by default a subtype renders the
+    // plain pre-colored eye with no tint, exactly as before. The emission/tint features
+    // below are all opt-in — point an eye state at a greyscale emission sprite and/or set
+    // a tint color, and only then does the advanced path kick in.
+
     /// <summary>
-    /// Optional separate rsi for the mind-state (emission) layer, letting the greyscale
-    /// emission art live under _Starlight while the body keeps using <see cref="SpritePath"/>.
+    /// Eye state when the borg has a (local player) mind. Stock default; emission subtypes
+    /// override it with their greyscale emission state.
+    /// </summary>
+    [DataField]
+    public string SpriteHasMindState { get; set; } = "borg_e";
+
+    /// <summary>
+    /// Eye state when the borg has no mind.
+    /// </summary>
+    [DataField]
+    public string SpriteNoMindState { get; set; } = "borg_e_r";
+
+    /// <summary>
+    /// Optional eye state when an AI is shunted into the borg. Null falls back to
+    /// <see cref="SpriteHasMindState"/>.
+    /// </summary>
+    [DataField]
+    public string? SpriteShuntMindState { get; set; }
+
+    /// <summary>
+    /// Optional eye state when the borg is remote-controlled. Null falls back to
+    /// <see cref="SpriteHasMindState"/>.
+    /// </summary>
+    [DataField]
+    public string? SpriteRemoteControlState { get; set; }
+
+    /// <summary>
+    /// Optional separate rsi for the mind-state eye layer (greyscale emission art under
+    /// _Starlight). Null keeps the eye on <see cref="SpritePath"/>.
     /// </summary>
     [DataField]
     public ResPath? SpriteEmissionPath { get; set; }
 
+    // Per-state tints. Null = no tint (white), so the stock pre-colored eye is untouched;
+    // emission subtypes set these to color their greyscale mask.
     [DataField]
-    public string SpriteNoMindState { get; set; } = "borg_emission_mind";
+    public Color? SpriteHasMindColor { get; set; }
 
     [DataField]
-    public string SpriteLocalMindState { get; set; } = "borg_emission_mind";
+    public Color? SpriteNoMindColor { get; set; }
 
     [DataField]
-    public string SpriteShuntMindState { get; set; } = "borg_emission_mind";
+    public Color? SpriteShuntMindColor { get; set; }
 
     [DataField]
-    public string SpriteRemoteControlState { get; set; } = "borg_emission_mind";
-
-
-    [DataField]
-    public Color SpriteNoMindColor { get; set; } = Color.FromHex("#ffc300");
-
-    [DataField]
-    public Color SpriteLocalMindColor { get; set; } = Color.FromHex("#00a7b9");
-
-    [DataField]
-    public Color SpriteShuntMindColor { get; set; } = Color.FromHex("#ff00ff");
-
-    [DataField]
-    public Color SpriteRemoteControlColor { get; set; } = Color.FromHex("#00ff00");
+    public Color? SpriteRemoteControlColor { get; set; }
 
     /// <summary>
-    /// Optional pre-colored emission state shown on its own on/off layer
-    /// (BorgVisualLayers.Powered) whenever the borg has a mind/control, alongside the
-    /// mind-state eye. When null the layer is not created at all. Not tintable — the
-    /// sprite carries its own color.
+    /// Optional pre-colored on/off emission shown on its own layer
+    /// (BorgVisualLayers.Powered) whenever the borg has a mind/control, alongside the eye.
+    /// When null the layer is not created at all. Not tintable — the sprite carries its
+    /// own color.
     /// </summary>
     [DataField]
     public string? PoweredState { get; set; }
@@ -52,5 +75,4 @@ public sealed partial class BorgSubtypeDefinitionComponent
     /// </summary>
     [DataField]
     public ResPath? PoweredEmissionPath { get; set; }
-
 }

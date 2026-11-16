@@ -1,3 +1,19 @@
+#- type: !PartialOnly entity
+#  id: BorgChassisSelectable
+#  components:
+#  - type: Sprite
+#    layers:
+#      - state: borg
+#        map: [ "movement", "enum.BorgVisualLayers.Body" ]
+#      - state: borg_e_r
+#        map: [ "enum.BorgVisualLayers.Light" ]
+#        shader: unshaded
+#        visible: false
+#      - state: borg_l
+#        shader: unshaded
+#        map: [ "light","enum.BorgVisualLayers.LightStatus" ]
+#        visible: false
+
 - type: !PartialOnly entity
   id: BorgChassisSyndicateMedical
   components:

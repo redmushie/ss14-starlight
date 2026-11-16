@@ -14,11 +14,10 @@
   components:
     - type: BorgSubtypeDefinition
       spritePath: Mobs/Silicon/Chassis/generic.rsi
+      spriteEmissionPath: _Starlight/Mobs/Silicon/Chassis/emission/generic.rsi
+      spriteNoMindState: borg_emission_mind
+      spriteHasMindState: borg_emission_mind
       inventoryTemplateId: borg
-      spriteLocalMindState: borg_e
-      spriteNoMindState: borg_e_r
-      spriteShuntMindState: borg_e
-      spriteRemoteControlState: borg_e
 
 - type: entity
   parent: BorgEngineerSubtypeBase
@@ -27,11 +26,10 @@
   components:
     - type: BorgSubtypeDefinition
       spritePath: Mobs/Silicon/Chassis/engineer.rsi
+      spriteEmissionPath: _Starlight/Mobs/Silicon/Chassis/emission/engineer_borg.rsi
+      spriteNoMindState: borg_emission_mind
+      spriteHasMindState: borg_emission_mind
       inventoryTemplateId: borgShort
-      spriteLocalMindState: borg_e
-      spriteNoMindState: borg_e_r
-      spriteShuntMindState: borg_e
-      spriteRemoteControlState: borg_e
 
 - type: entity
   parent: BorgMiningSubtypeBase
@@ -40,11 +38,10 @@
   components:
     - type: BorgSubtypeDefinition
       spritePath: Mobs/Silicon/Chassis/miner.rsi
+      spriteEmissionPath: _Starlight/Mobs/Silicon/Chassis/emission/miner_borg.rsi
+      spriteNoMindState: borg_emission_mind
+      spriteHasMindState: borg_emission_mind
       inventoryTemplateId: borgTall
-      spriteLocalMindState: borg_e
-      spriteNoMindState: borg_e_r
-      spriteShuntMindState: borg_e
-      spriteRemoteControlState: borg_e
 
 - type: entity
   parent: BorgJanitorSubtypeBase
@@ -53,11 +50,10 @@
   components:
     - type: BorgSubtypeDefinition
       spritePath: Mobs/Silicon/Chassis/janitor.rsi
+      spriteEmissionPath: _Starlight/Mobs/Silicon/Chassis/emission/janitor_borg.rsi
+      spriteNoMindState: borg_emission_mind
+      spriteHasMindState: borg_emission_mind
       inventoryTemplateId: borgShort
-      spriteLocalMindState: borg_e
-      spriteNoMindState: borg_e_r
-      spriteShuntMindState: borg_e
-      spriteRemoteControlState: borg_e
 
 - type: entity
   parent: BorgMedicalSubtypeBase
@@ -66,11 +62,10 @@
   components:
     - type: BorgSubtypeDefinition
       spritePath: Mobs/Silicon/Chassis/medical.rsi
+      spriteEmissionPath: _Starlight/Mobs/Silicon/Chassis/emission/medical_borg.rsi
+      spriteNoMindState: borg_emission_mind
+      spriteHasMindState: borg_emission_mind
       inventoryTemplateId: borgDutch
-      spriteLocalMindState: borg_e
-      spriteNoMindState: borg_e_r
-      spriteShuntMindState: borg_e
-      spriteRemoteControlState: borg_e
 
 - type: entity
   parent: BorgServiceSubtypeBase
@@ -79,11 +74,10 @@
   components:
     - type: BorgSubtypeDefinition
       spritePath: Mobs/Silicon/Chassis/service.rsi
+      spriteEmissionPath: _Starlight/Mobs/Silicon/Chassis/emission/generic.rsi
+      spriteNoMindState: borg_emission_mind
+      spriteHasMindState: borg_emission_mind
       inventoryTemplateId: borgTall
-      spriteLocalMindState: borg_e
-      spriteNoMindState: borg_e_r
-      spriteShuntMindState: borg_e
-      spriteRemoteControlState: borg_e
 
 - type: entity
   parent: BorgCargoSubtypeBase
@@ -92,11 +86,10 @@
   components:
     - type: BorgSubtypeDefinition
       spritePath: Mobs/Silicon/Chassis/cargo.rsi
+      spriteEmissionPath: _Starlight/Mobs/Silicon/Chassis/emission/cargo_borg.rsi
+      spriteNoMindState: borg_emission_mind
+      spriteHasMindState: borg_emission_mind
       inventoryTemplateId: borgTall
-      spriteLocalMindState: borg_e
-      spriteNoMindState: borg_e_r
-      spriteShuntMindState: borg_e
-      spriteRemoteControlState: borg_e
 
 - type: entity
   parent: BorgSecuritySubtypeBase
@@ -105,11 +98,10 @@
   components:
     - type: BorgSubtypeDefinition
       spritePath: _Starlight/Mobs/Silicon/Chassis/security.rsi
+      spriteEmissionPath: _Starlight/Mobs/Silicon/Chassis/emission/generic.rsi
+      spriteNoMindState: borg_emission_mind
+      spriteHasMindState: borg_emission_mind
       inventoryTemplateId: borgShort
-      spriteLocalMindState: borg_e
-      spriteNoMindState: borg_e_r
-      spriteShuntMindState: borg_e
-      spriteRemoteControlState: borg_e
 
 - type: entity
   parent: BorgPurrfusSubtypeBase
@@ -118,8 +110,7 @@
   components:
     - type: BorgSubtypeDefinition
       spritePath: _Starlight/Mobs/Silicon/Chassis/purrfus.rsi
+      spriteNoMindState: borg_emission_mind
+      spriteHasMindState: borg_emission_mind
       inventoryTemplateId: borgTall
-      spriteLocalMindState: borg_e
-      spriteNoMindState: borg_e_r
-      spriteShuntMindState: borg_e
-      spriteRemoteControlState: borg_e
+      poweredState: borg_emission_power

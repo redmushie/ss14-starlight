@@ -1,0 +1,27 @@
+# Emission conversion patches (mind eye + optional Powered glow) per borgs.md.
+#
+# Purrfus example. All three purrfus subtypes share the same emission states
+# (one tintable mind eye + one pre-colored on/off glow) — only the mind colors
+# differ per mind state, and those come from defaults unless overridden here.
+#
+#- type: !PartialOnly entity
+#  id: BorgPurrfusSubtypeGreen
+#  components:
+#  - type: BorgSubtypeDefinition
+#    # One white mind-eye mask, tinted per mind state by the four spriteXMindColor
+#    # values (no-mind / local / shunt / remote). In-place on purrfus.rsi, so no
+#    # spriteEmissionPath is needed.
+#    spriteHasMindState: borg_emission_mind
+#    spriteNoMindState: borg_emission_mind
+#    spriteShuntMindState: borg_emission_mind
+#    spriteRemoteControlState: borg_emission_mind
+#
+#    # Pre-colored on/off glow shown alongside the eye whenever the borg has a
+#    # mind/control. Lives in the same rsi, so no poweredEmissionPath.
+#    poweredState: borg_emission_power
+#
+#    # Colors default to yellow / cyan / magenta / green; uncomment to customize:
+#    # spriteNoMindColor: "#ffc300"
+#    # spriteHasMindColor: "#00a7b9"
+#    # spriteShuntMindColor: "#ff00ff"
+#    # spriteRemoteControlColor: "#00ff00"

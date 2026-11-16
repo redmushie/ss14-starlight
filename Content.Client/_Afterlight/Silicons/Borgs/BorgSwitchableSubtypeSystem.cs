@@ -96,8 +96,11 @@ public sealed partial class BorgSwitchableSubtypeSystem : SharedBorgSwitchableSu
 
         // Starlight: point the mind-state (emission) layer at its own rsi if one is set,
         // so greyscale emission art can live under _Starlight without a shared chassis rsi.
+        // Set the state in the same call: otherwise LayerSetRsi keeps the layer's current
+        // state (borg_e, from the chassis layerData) and errors validating it against the
+        // emission rsi before SetMindStates overrides it below.
         if (borgSubtype.SpriteEmissionPath is { } emissionPath)
-            _sprite.LayerSetRsi((entity, chassisSprite), BorgVisualLayers.Light, emissionPath);
+            _sprite.LayerSetRsi((entity, chassisSprite), BorgVisualLayers.Light, emissionPath, borgSubtype.SpriteNoMindState);
 
         // Starlight: add a pre-colored on/off Powered emission layer only when the subtype
         // defines one. Visibility is toggled with the mind/control state in BorgSystem.
@@ -118,11 +121,11 @@ public sealed partial class BorgSwitchableSubtypeSystem : SharedBorgSwitchableSu
         {
             _borg.SetMindStates(
                 (entity.Owner, chassis),
-                borgSubtype.SpriteLocalMindState,
+                borgSubtype.SpriteHasMindState,
                 borgSubtype.SpriteNoMindState,
                 borgSubtype.SpriteShuntMindState,
                 borgSubtype.SpriteRemoteControlState,
-                borgSubtype.SpriteLocalMindColor,
+                borgSubtype.SpriteHasMindColor,
                 borgSubtype.SpriteNoMindColor,
                 borgSubtype.SpriteShuntMindColor,
                 borgSubtype.SpriteRemoteControlColor);

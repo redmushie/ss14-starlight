@@ -8,8 +8,9 @@
     - type: BorgSubtypeDefinition
       spritePath: Mobs/Silicon/Chassis/engineer.rsi
       spriteBodyState: standard
-      spriteHasMindState: standard_e
-      spriteNoMindState: standard_e_r
+      spriteEmissionPath: _Starlight/Mobs/Silicon/Chassis/emission/standard.rsi
+      spriteHasMindState: standard_emission_mind
+      spriteNoMindState: standard_emission_mind
       spriteToggleLightState: standard_l
       inventoryTemplateId: borg
 
@@ -21,8 +22,9 @@
     - type: BorgSubtypeDefinition
       spritePath: Mobs/Silicon/Chassis/engineer.rsi
       spriteBodyState: generic
-      spriteHasMindState: generic_e
-      spriteNoMindState: generic_e_r
+      spriteEmissionPath: _Starlight/Mobs/Silicon/Chassis/emission/generic.rsi
+      spriteHasMindState: borg_emission_mind
+      spriteNoMindState: borg_emission_mind
       spriteToggleLightState: generic_l
       inventoryTemplateId: borgTall
 
@@ -100,8 +102,9 @@
     - type: BorgSubtypeDefinition
       spritePath: Mobs/Silicon/Chassis/generic.rsi
       spriteBodyState: generic
-      spriteHasMindState: generic_e
-      spriteNoMindState: generic_e_r
+      spriteEmissionPath: _Starlight/Mobs/Silicon/Chassis/emission/generic.rsi
+      spriteHasMindState: borg_emission_mind
+      spriteNoMindState: borg_emission_mind
       spriteToggleLightState: generic_l
       inventoryTemplateId: borgTall
 
@@ -153,8 +156,9 @@
     - type: BorgSubtypeDefinition
       spritePath: Mobs/Silicon/Chassis/janitor.rsi
       spriteBodyState: standard
-      spriteHasMindState: standard_e
-      spriteNoMindState: standard_e_r
+      spriteEmissionPath: _Starlight/Mobs/Silicon/Chassis/emission/standard.rsi
+      spriteHasMindState: standard_emission_mind
+      spriteNoMindState: standard_emission_mind
       spriteToggleLightState: standard_l
       inventoryTemplateId: borg
 
@@ -166,8 +170,9 @@
     - type: BorgSubtypeDefinition
       spritePath: Mobs/Silicon/Chassis/janitor.rsi
       spriteBodyState: generic
-      spriteHasMindState: generic_e
-      spriteNoMindState: generic_e_r
+      spriteEmissionPath: _Starlight/Mobs/Silicon/Chassis/emission/generic.rsi
+      spriteHasMindState: borg_emission_mind
+      spriteNoMindState: borg_emission_mind
       spriteToggleLightState: generic_l
       inventoryTemplateId: borgTall
 
@@ -245,8 +250,9 @@
     - type: BorgSubtypeDefinition
       spritePath: Mobs/Silicon/Chassis/medical.rsi
       spriteBodyState: standard
-      spriteHasMindState: standard_e
-      spriteNoMindState: standard_e_r
+      spriteEmissionPath: _Starlight/Mobs/Silicon/Chassis/emission/standard.rsi
+      spriteHasMindState: standard_emission_mind
+      spriteNoMindState: standard_emission_mind
       spriteToggleLightState: standard_l
       inventoryTemplateId: borg
 
@@ -258,8 +264,9 @@
     - type: BorgSubtypeDefinition
       spritePath: Mobs/Silicon/Chassis/medical.rsi
       spriteBodyState: generic
-      spriteHasMindState: generic_e
-      spriteNoMindState: generic_e_r
+      spriteEmissionPath: _Starlight/Mobs/Silicon/Chassis/emission/generic.rsi
+      spriteHasMindState: borg_emission_mind
+      spriteNoMindState: borg_emission_mind
       spriteToggleLightState: generic_l
       inventoryTemplateId: borgTall
 
@@ -271,8 +278,9 @@
     - type: BorgSubtypeDefinition
       spritePath: Mobs/Silicon/Chassis/medical.rsi
       spriteBodyState: needles
-      spriteHasMindState: generic_e
-      spriteNoMindState: generic_e_r
+      spriteEmissionPath: _Starlight/Mobs/Silicon/Chassis/emission/generic.rsi
+      spriteHasMindState: borg_emission_mind
+      spriteNoMindState: borg_emission_mind
       spriteToggleLightState: generic_l
       inventoryTemplateId: borgTall
 
@@ -350,8 +358,9 @@
     - type: BorgSubtypeDefinition
       spritePath: Mobs/Silicon/Chassis/miner.rsi
       spriteBodyState: standard
-      spriteHasMindState: standard_e
-      spriteNoMindState: standard_e_r
+      spriteEmissionPath: _Starlight/Mobs/Silicon/Chassis/emission/standard.rsi
+      spriteHasMindState: standard_emission_mind
+      spriteNoMindState: standard_emission_mind
       spriteToggleLightState: standard_l
       inventoryTemplateId: borg
 
@@ -363,8 +372,9 @@
     - type: BorgSubtypeDefinition
       spritePath: Mobs/Silicon/Chassis/miner.rsi
       spriteBodyState: generic
-      spriteHasMindState: generic_e
-      spriteNoMindState: generic_e_r
+      spriteEmissionPath: _Starlight/Mobs/Silicon/Chassis/emission/generic.rsi
+      spriteHasMindState: borg_emission_mind
+      spriteNoMindState: borg_emission_mind
       spriteToggleLightState: generic_l
       inventoryTemplateId: borgTall
 
@@ -455,8 +465,9 @@
     - type: BorgSubtypeDefinition
       spritePath: Mobs/Silicon/Chassis/service.rsi
       spriteBodyState: standard
-      spriteHasMindState: standard_e
-      spriteNoMindState: standard_e_r
+      spriteEmissionPath: _Starlight/Mobs/Silicon/Chassis/emission/standard.rsi
+      spriteHasMindState: standard_emission_mind
+      spriteNoMindState: standard_emission_mind
       spriteToggleLightState: standard_l
       inventoryTemplateId: borg
 
@@ -468,6 +479,9 @@
     - type: BorgSubtypeDefinition
       spritePath: Mobs/Silicon/Chassis/service.rsi
       spriteBodyState: generic
+      spriteEmissionPath: _Starlight/Mobs/Silicon/Chassis/emission/generic.rsi
+      spriteHasMindState: borg_emission_mind
+      spriteNoMindState: borg_emission_mind
       inventoryTemplateId: borgTall
 
 - type: entity
@@ -478,6 +492,9 @@
     - type: BorgSubtypeDefinition
       spritePath: Mobs/Silicon/Chassis/service.rsi
       spriteBodyState: waitress
+      spriteEmissionPath: _Starlight/Mobs/Silicon/Chassis/emission/generic.rsi
+      spriteHasMindState: borg_emission_mind
+      spriteNoMindState: borg_emission_mind
       inventoryTemplateId: borgTall
 
 - type: entity
@@ -592,8 +609,9 @@
     - type: BorgSubtypeDefinition
       spritePath: _Starlight/Mobs/Silicon/Chassis/security.rsi
       spriteBodyState: standard
-      spriteHasMindState: standard_e
-      spriteNoMindState: standard_e_r
+      spriteEmissionPath: _Starlight/Mobs/Silicon/Chassis/emission/standard.rsi
+      spriteHasMindState: standard_emission_mind
+      spriteNoMindState: standard_emission_mind
       spriteToggleLightState: standard_l
       inventoryTemplateId: borg
 
@@ -646,8 +664,9 @@
     - type: BorgSubtypeDefinition
       spritePath: Mobs/Silicon/Chassis/cargo.rsi
       spriteBodyState: standard
-      spriteHasMindState: standard_e
-      spriteNoMindState: standard_e_r
+      spriteEmissionPath: _Starlight/Mobs/Silicon/Chassis/emission/standard.rsi
+      spriteHasMindState: standard_emission_mind
+      spriteNoMindState: standard_emission_mind
       spriteToggleLightState: standard_l
       inventoryTemplateId: borg
 
