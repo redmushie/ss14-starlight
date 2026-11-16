@@ -1,0 +1,125 @@
+# Per-borgType "default" subtypes.
+#
+# These are auto-selected when no subtype is chosen (see BorgTypePrototype.DefaultSubtype),
+# so the bare chassis appearance flows through the subtype emission/color render path
+# instead of the borgType's legacy two-state eye handling.
+#
+# They currently reproduce the stock chassis eye (borg_e / borg_e_r, no tint). Convert to
+# the emission + four mind colors per borgs.md, same as any other subtype.
+
+- type: entity
+  parent: BorgGenericSubtypeBase
+  id: BorgGenericSubtypeDefault
+  name: Default
+  components:
+    - type: BorgSubtypeDefinition
+      spritePath: Mobs/Silicon/Chassis/generic.rsi
+      inventoryTemplateId: borg
+      spriteLocalMindState: borg_e
+      spriteNoMindState: borg_e_r
+      spriteShuntMindState: borg_e
+      spriteRemoteControlState: borg_e
+
+- type: entity
+  parent: BorgEngineerSubtypeBase
+  id: BorgEngineerSubtypeDefault
+  name: Default
+  components:
+    - type: BorgSubtypeDefinition
+      spritePath: Mobs/Silicon/Chassis/engineer.rsi
+      inventoryTemplateId: borgShort
+      spriteLocalMindState: borg_e
+      spriteNoMindState: borg_e_r
+      spriteShuntMindState: borg_e
+      spriteRemoteControlState: borg_e
+
+- type: entity
+  parent: BorgMiningSubtypeBase
+  id: BorgMiningSubtypeDefault
+  name: Default
+  components:
+    - type: BorgSubtypeDefinition
+      spritePath: Mobs/Silicon/Chassis/miner.rsi
+      inventoryTemplateId: borgTall
+      spriteLocalMindState: borg_e
+      spriteNoMindState: borg_e_r
+      spriteShuntMindState: borg_e
+      spriteRemoteControlState: borg_e
+
+- type: entity
+  parent: BorgJanitorSubtypeBase
+  id: BorgJanitorSubtypeDefault
+  name: Default
+  components:
+    - type: BorgSubtypeDefinition
+      spritePath: Mobs/Silicon/Chassis/janitor.rsi
+      inventoryTemplateId: borgShort
+      spriteLocalMindState: borg_e
+      spriteNoMindState: borg_e_r
+      spriteShuntMindState: borg_e
+      spriteRemoteControlState: borg_e
+
+- type: entity
+  parent: BorgMedicalSubtypeBase
+  id: BorgMedicalSubtypeDefault
+  name: Default
+  components:
+    - type: BorgSubtypeDefinition
+      spritePath: Mobs/Silicon/Chassis/medical.rsi
+      inventoryTemplateId: borgDutch
+      spriteLocalMindState: borg_e
+      spriteNoMindState: borg_e_r
+      spriteShuntMindState: borg_e
+      spriteRemoteControlState: borg_e
+
+- type: entity
+  parent: BorgServiceSubtypeBase
+  id: BorgServiceSubtypeDefault
+  name: Default
+  components:
+    - type: BorgSubtypeDefinition
+      spritePath: Mobs/Silicon/Chassis/service.rsi
+      inventoryTemplateId: borgTall
+      spriteLocalMindState: borg_e
+      spriteNoMindState: borg_e_r
+      spriteShuntMindState: borg_e
+      spriteRemoteControlState: borg_e
+
+- type: entity
+  parent: BorgCargoSubtypeBase
+  id: BorgCargoSubtypeDefault
+  name: Default
+  components:
+    - type: BorgSubtypeDefinition
+      spritePath: Mobs/Silicon/Chassis/cargo.rsi
+      inventoryTemplateId: borgTall
+      spriteLocalMindState: borg_e
+      spriteNoMindState: borg_e_r
+      spriteShuntMindState: borg_e
+      spriteRemoteControlState: borg_e
+
+- type: entity
+  parent: BorgSecuritySubtypeBase
+  id: BorgSecuritySubtypeDefault
+  name: Default
+  components:
+    - type: BorgSubtypeDefinition
+      spritePath: _Starlight/Mobs/Silicon/Chassis/security.rsi
+      inventoryTemplateId: borgShort
+      spriteLocalMindState: borg_e
+      spriteNoMindState: borg_e_r
+      spriteShuntMindState: borg_e
+      spriteRemoteControlState: borg_e
+
+- type: entity
+  parent: BorgPurrfusSubtypeBase
+  id: BorgPurrfusSubtypeDefault
+  name: Default
+  components:
+    - type: BorgSubtypeDefinition
+      spritePath: _Starlight/Mobs/Silicon/Chassis/purrfus.rsi
+      inventoryTemplateId: borgTall
+      spriteLocalMindState: borg_e
+      spriteNoMindState: borg_e_r
+      spriteShuntMindState: borg_e
+      spriteRemoteControlState: borg_e
