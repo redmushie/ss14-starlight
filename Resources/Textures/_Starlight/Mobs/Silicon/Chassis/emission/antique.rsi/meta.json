@@ -1,0 +1,17 @@
+{
+  "version": 1,
+  "size": {
+    "x": 32,
+    "y": 32
+  },
+  "license": "CC-BY-SA-3.0",
+  "copyright": "State based copyright",
+  "states": [
+    {
+      "name": "antique_emission_mind",
+      "directions": 4,
+      "copyright": "Originals taken from Paradise Station at https://github.com/ParadiseSS13/Paradise/commit/34f3823923b7692533b7a99c6f2a8bc91c834870, possible edits by Conflee (GitHub), split into borg_emission_mind by @redmushie (GitHub)",
+      "license": "CC-BY-SA-3.0"
+    }
+  ]
+}
