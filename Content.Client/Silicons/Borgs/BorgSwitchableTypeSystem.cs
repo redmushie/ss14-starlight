@@ -47,6 +47,11 @@ public sealed partial class BorgSwitchableTypeSystem : SharedBorgSwitchableTypeS
             subtype.BorgSubtype != null)
             return;
 
+        // Starlight: if the type defines a default subtype, the subtype system renders the
+        // chassis default (emission/color path); don't double-render here.
+        if (prototype.DefaultSubtype != null)
+            return;
+
         if (TryComp(entity, out SpriteComponent? sprite))
         {
             if (_resourceCache.TryGetResource<RSIResource>(

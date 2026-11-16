@@ -34,7 +34,7 @@ public abstract partial class SharedBorgSwitchableSubtypeSystem : EntitySystem
 
     private void OnMapInit(Entity<BorgSwitchableSubtypeComponent> ent, ref MapInitEvent args)
     {
-        if (ent.Comp.BorgSubtype != null)
+        if (ResolveSubtype(ent) != null)
         {
             SelectBorgSubtype(ent);
         }
@@ -42,18 +42,36 @@ public abstract partial class SharedBorgSwitchableSubtypeSystem : EntitySystem
 
     private void OnBorgTypeSelect(Entity<BorgSwitchableSubtypeComponent> ent, ref AfterBorgTypeSelectEvent args)
     {
-        if (!ent.Comp.BorgSubtype.HasValue)
+        if (ResolveSubtype(ent) == null)
             return;
 
         Dirty(ent);
         SelectBorgSubtype(ent);
     }
 
+    /// <summary>
+    /// Starlight: the effective subtype to render — the explicitly selected one, or the
+    /// current borg type's <see cref="BorgTypePrototype.DefaultSubtype"/> when none is set.
+    /// </summary>
+    protected ProtoId<EntityPrototype>? ResolveSubtype(Entity<BorgSwitchableSubtypeComponent> ent)
+    {
+        if (ent.Comp.BorgSubtype is { } explicitSubtype)
+            return explicitSubtype;
+
+        if (TryComp<BorgSwitchableTypeComponent>(ent, out var type)
+            && type.SelectedBorgType is { } typeId
+            && Prototypes.TryIndex(typeId, out var typeProto)
+            && typeProto.DefaultSubtype is { } def)
+            return def;
+
+        return null;
+    }
+
     protected virtual void SelectBorgSubtype(Entity<BorgSwitchableSubtypeComponent> ent) => UpdateEntityAppearance(ent); // Starlight
 
     private void UpdateEntityAppearance(Entity<BorgSwitchableSubtypeComponent> entity)
     {
-        if (!Prototypes.TryIndex(entity.Comp.BorgSubtype, out var subtypePrototype))
+        if (ResolveSubtype(entity) is not { } subtypeId || !Prototypes.TryIndex(subtypeId, out var subtypePrototype))
             return;
 
         UpdateEntityAppearance(entity, subtypePrototype);

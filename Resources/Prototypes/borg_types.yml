@@ -24,6 +24,7 @@
   # Visual
   inventoryTemplateId: borg # Starlight - why was this not always the case?
   spritePath: Mobs/Silicon/Chassis/generic.rsi
+  defaultSubtype: BorgGenericSubtypeDefault
 
   # Pet
   petSuccessString: petting-success-generic-cyborg
@@ -68,6 +69,7 @@
   # Visual
   inventoryTemplateId: borgShort
   spritePath: Mobs/Silicon/Chassis/engineer.rsi
+  defaultSubtype: BorgEngineerSubtypeDefault
 
   # Pet
   petSuccessString: petting-success-engineer-cyborg
@@ -111,6 +113,7 @@
   # Visual
   inventoryTemplateId: borgTall
   spritePath: Mobs/Silicon/Chassis/miner.rsi
+  defaultSubtype: BorgMiningSubtypeDefault
   spriteBodyMovementState: borg_moving
 
   # Pet
@@ -161,6 +164,7 @@
   # Visual
   inventoryTemplateId: borgShort
   spritePath: Mobs/Silicon/Chassis/janitor.rsi
+  defaultSubtype: BorgJanitorSubtypeDefault
   spriteBodyMovementState: borg_moving
 
   # Pet
@@ -247,6 +251,7 @@
   # Visual
   inventoryTemplateId: borgDutch
   spritePath: Mobs/Silicon/Chassis/medical.rsi
+  defaultSubtype: BorgMedicalSubtypeDefault
   spriteBodyMovementState: borg_moving
 
   # Pet
@@ -299,6 +304,7 @@
   # Visual
   inventoryTemplateId: borgTall
   spritePath: Mobs/Silicon/Chassis/service.rsi
+  defaultSubtype: BorgServiceSubtypeDefault
 
   # Pet
   petSuccessString: petting-success-service-cyborg

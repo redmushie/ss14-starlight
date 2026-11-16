@@ -33,7 +33,8 @@ public sealed partial class BorgSwitchableSubtypeSystem : SharedBorgSwitchableSu
     private void OnAutoHandleEvent(Entity<BorgSwitchableSubtypeComponent> ent, ref AfterAutoHandleStateEvent args)
     {
         // Starlight Begin
-        if (ent.Comp.BorgSubtype == null)
+        // No explicit subtype and no type-default: fall back to the legacy borg-type eye path.
+        if (ResolveSubtype(ent) == null)
         {
             if (TryComp<BorgSwitchableTypeComponent>(ent, out var borgType))
                 _borgType.UpdateEntityAppearance((ent.Owner, borgType));
@@ -93,12 +94,23 @@ public sealed partial class BorgSwitchableSubtypeSystem : SharedBorgSwitchableSu
         if (borgSubtype.SpriteBodyState is { } bodyState)
             _sprite.LayerSetRsiState((entity, chassisSprite), BorgVisualLayers.Body, bodyState);
 
+        // Starlight: point the mind-state (emission) layer at its own rsi if one is set,
+        // so greyscale emission art can live under _Starlight without a shared chassis rsi.
+        if (borgSubtype.SpriteEmissionPath is { } emissionPath)
+            _sprite.LayerSetRsi((entity, chassisSprite), BorgVisualLayers.Light, emissionPath);
+
         if (TryComp<BorgChassisComponent>(entity, out var chassis))
         {
             _borg.SetMindStates(
                 (entity.Owner, chassis),
-                borgSubtype.SpriteHasMindState,
-                borgSubtype.SpriteNoMindState);
+                borgSubtype.SpriteLocalMindState,
+                borgSubtype.SpriteNoMindState,
+                borgSubtype.SpriteShuntMindState,
+                borgSubtype.SpriteRemoteControlState,
+                borgSubtype.SpriteLocalMindColor,
+                borgSubtype.SpriteNoMindColor,
+                borgSubtype.SpriteShuntMindColor,
+                borgSubtype.SpriteRemoteControlColor);
 
             if (TryComp(entity, out AppearanceComponent? appearance))
             {

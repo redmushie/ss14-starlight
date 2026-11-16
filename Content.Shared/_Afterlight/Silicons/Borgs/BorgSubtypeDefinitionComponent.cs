@@ -46,11 +46,11 @@ public sealed partial class BorgSubtypeDefinitionComponent : Component
     [DataField(required: true), AutoNetworkedField]
     public PrototypeLayerData[] LayerData;
 
-    [DataField]
-    public string SpriteHasMindState { get; set; } = "borg_e";
-
-    [DataField]
-    public string SpriteNoMindState { get; set; } = "borg_e_r";
+    // [DataField]
+    // public string SpriteHasMindState { get; set; } = "borg_e";
+    //
+    // [DataField]
+    // public string SpriteNoMindState { get; set; } = "borg_e_r";
 
     [DataField]
     public string? SpriteBodyState;

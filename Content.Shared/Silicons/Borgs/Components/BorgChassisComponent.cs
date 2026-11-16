@@ -122,6 +122,26 @@ public sealed partial class BorgChassisComponent : Component
 
     [DataField]
     public string NoMindState = string.Empty;
+
+    // Starlight begin
+    [DataField]
+    public string ShuntMindState = string.Empty;
+
+    [DataField]
+    public string RemoteControlState = string.Empty;
+
+    [DataField]
+    public Color HasMindColor = Color.White;
+
+    [DataField]
+    public Color NoMindColor = Color.White;
+
+    [DataField]
+    public Color ShuntMindColor = Color.White;
+
+    [DataField]
+    public Color RemoteControlColor = Color.White;
+    // Starlight end
     #endregion
 
     /// <summary>

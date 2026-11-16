@@ -25,6 +25,7 @@
   # Visual
   inventoryTemplateId: borgShort
   spritePath: _Starlight/Mobs/Silicon/Chassis/security.rsi
+  defaultSubtype: BorgSecuritySubtypeDefault
 
   # Pet
   petSuccessString: petting-success-security-cyborg
@@ -206,6 +207,7 @@
   # Visual
   inventoryTemplateId: borgTall
   spritePath: _Starlight/Mobs/Silicon/Chassis/purrfus.rsi
+  defaultSubtype: BorgPurrfusSubtypeDefault
 
   # Pet
   petSuccessString: petting-success-generic-cyborg
@@ -240,6 +242,7 @@
   # Visual
   inventoryTemplateId: borgTall
   spritePath: Mobs/Silicon/Chassis/cargo.rsi
+  defaultSubtype: BorgCargoSubtypeDefault
 
   # Pet
   petSuccessString: petting-success-cargo-cyborg

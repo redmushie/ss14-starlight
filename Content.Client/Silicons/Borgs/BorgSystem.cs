@@ -102,11 +102,36 @@ public sealed partial class BorgSystem : SharedBorgSystem
             BorgVisualsStarlight.RemoteControlled,
             out var remoteControlled,
             ent.Comp2) && remoteControlled;
+        var isShunted = TryComp<StationAIShuntComponent>(ent.Owner, out var shunt) && shunt.Return != null;
         var hasPlayerOrRemoteControl = hasPlayer || isRemoteControlled;
+
+        string mindState;
+        Color mindColor;
+        if (isRemoteControlled)
+        {
+            mindState = ent.Comp1.RemoteControlState;
+            mindColor = ent.Comp1.RemoteControlColor;
+        }
+        else if (hasPlayer && isShunted)
+        {
+            mindState = ent.Comp1.ShuntMindState;
+            mindColor = ent.Comp1.ShuntMindColor;
+        }
+        else if (hasPlayer)
+        {
+            mindState = ent.Comp1.HasMindState;
+            mindColor = ent.Comp1.HasMindColor;
+        }
+        else
+        {
+            mindState = ent.Comp1.NoMindState;
+            mindColor = ent.Comp1.NoMindColor;
+        }
+
         _sprite.LayerSetVisible((ent.Owner, ent.Comp3), BorgVisualLayers.Light,
             ent.Comp1.BrainEntity != null || hasPlayerOrRemoteControl);
-        _sprite.LayerSetRsiState((ent.Owner, ent.Comp3), BorgVisualLayers.Light,
-            hasPlayerOrRemoteControl ? ent.Comp1.HasMindState : ent.Comp1.NoMindState);
+        _sprite.LayerSetRsiState((ent.Owner, ent.Comp3), BorgVisualLayers.Light, mindState);
+        _sprite.LayerSetColor((ent.Owner, ent.Comp3), BorgVisualLayers.Light, mindColor);
         // Starlight - end
     }
 
@@ -133,19 +158,5 @@ public sealed partial class BorgSystem : SharedBorgSystem
                 : component.NoMindState;
             _sprite.LayerSetRsiState((uid, sprite), MMIVisualLayers.Base, state);
         }
-    }
-
-    /// <summary>
-    /// Sets the sprite states used for the borg "is there a mind or not" indication.
-    /// </summary>
-    /// <param name="borg">The entity and component to modify.</param>
-    /// <param name="hasMindState">The state to use if the borg has a mind.</param>
-    /// <param name="noMindState">The state to use if the borg has no mind.</param>
-    /// <seealso cref="BorgChassisComponent.HasMindState"/>
-    /// <seealso cref="BorgChassisComponent.NoMindState"/>
-    public void SetMindStates(Entity<BorgChassisComponent> borg, string hasMindState, string noMindState)
-    {
-        borg.Comp.HasMindState = hasMindState;
-        borg.Comp.NoMindState = noMindState;
     }
 }
