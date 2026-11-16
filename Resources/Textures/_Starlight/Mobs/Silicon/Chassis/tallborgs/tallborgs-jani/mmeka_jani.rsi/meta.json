@@ -30,6 +30,10 @@
       "directions": 4
     },
     {
+      "name": "borg_emission_mind",
+      "directions": 4
+    },
+    {
       "name": "borg_e_r",
       "directions": 4
     },

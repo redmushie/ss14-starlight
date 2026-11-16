@@ -40,6 +40,10 @@
             "directions": 4
         },
         {
+            "name": "red-knight_emission_mind",
+            "directions": 4
+        },
+        {
             "name": "black-knight",
             "directions": 4
         },
@@ -53,6 +57,10 @@
         },
         {
             "name": "black-knight_l",
+            "directions": 4
+        },
+        {
+            "name": "black-knight_emission_mind",
             "directions": 4
         },
         {
@@ -104,6 +112,10 @@
             "directions": 4
         },
         {
+            "name": "cricket_emission_mind",
+            "directions": 4
+        },
+        {
             "name": "heavy",
             "directions": 4
         },
@@ -117,6 +129,10 @@
         },
         {
             "name": "heavy_l",
+            "directions": 4
+        },
+        {
+            "name": "heavy_emission_mind",
             "directions": 4
         }
     ]

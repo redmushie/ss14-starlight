@@ -14,9 +14,9 @@
   components:
     - type: BorgSubtypeDefinition
       spritePath: Mobs/Silicon/Chassis/generic.rsi
-      spriteEmissionPath: _Starlight/Mobs/Silicon/Chassis/emission/generic.rsi
-      spriteNoMindState: borg_emission_mind
-      spriteHasMindState: borg_emission_mind
+      spriteEmissionPath: _Starlight/Mobs/Silicon/Chassis/emission/standard.rsi
+      spriteNoMindState: standard_emission_mind
+      spriteHasMindState: standard_emission_mind
       inventoryTemplateId: borg
 
 - type: entity
@@ -110,6 +110,7 @@
   components:
     - type: BorgSubtypeDefinition
       spritePath: _Starlight/Mobs/Silicon/Chassis/purrfus.rsi
+      spriteEmissionPath: _Starlight/Mobs/Silicon/Chassis/purrfus.rsi
       spriteNoMindState: borg_emission_mind
       spriteHasMindState: borg_emission_mind
       inventoryTemplateId: borgTall

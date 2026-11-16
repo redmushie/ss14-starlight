@@ -131,16 +131,24 @@ public sealed partial class BorgChassisComponent : Component
     public string RemoteControlState = string.Empty;
 
     [DataField]
-    public Color HasMindColor = Color.White;
+    public Color HasMindColor = Color.FromHex("#00cfe6"); // Blue
 
     [DataField]
-    public Color NoMindColor = Color.White;
+    public Color NoMindColor = Color.FromHex("#ffc300"); // Yellow
 
     [DataField]
-    public Color ShuntMindColor = Color.White;
+    public Color ShuntMindColor = Color.FromHex("#ed5aed"); // Magenta
 
     [DataField]
-    public Color RemoteControlColor = Color.White;
+    public Color RemoteControlColor = Color.FromHex("#35e935"); // Green
+
+    /// <summary>
+    /// Set when the eye is a greyscale emission mask (the subtype configured a
+    /// SpriteEmissionPath), so the mind colors may be multiplied onto it. False leaves the
+    /// stock pre-colored eye untinted — the original behavior.
+    /// </summary>
+    [DataField]
+    public bool UseMindColors = false;
     // Starlight end
     #endregion
 

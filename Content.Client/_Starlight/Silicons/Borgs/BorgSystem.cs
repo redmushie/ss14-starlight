@@ -26,16 +26,20 @@ public sealed partial class BorgSystem
         Color? hasMindColor = null,
         Color? noMindColor = null,
         Color? shuntMindColor = null,
-        Color? remoteControlColor = null)
+        Color? remoteControlColor = null,
+        bool useMindColors = false)
     {
         borg.Comp.HasMindState = hasMindState;
         borg.Comp.NoMindState = noMindState;
         // Shunt and remote-control states fall back to the has-mind state.
         borg.Comp.ShuntMindState = shuntMindState ?? hasMindState;
         borg.Comp.RemoteControlState = remoteControlState ?? hasMindState;
-        borg.Comp.HasMindColor = hasMindColor ?? Color.White;
-        borg.Comp.NoMindColor = noMindColor ?? Color.White;
-        borg.Comp.ShuntMindColor = shuntMindColor ?? borg.Comp.HasMindColor;
-        borg.Comp.RemoteControlColor = remoteControlColor ?? borg.Comp.HasMindColor;
+        // Null = subtype doesn't override; keep the chassis component's default color.
+        borg.Comp.HasMindColor = hasMindColor ?? borg.Comp.HasMindColor;
+        borg.Comp.NoMindColor = noMindColor ?? borg.Comp.NoMindColor;
+        borg.Comp.ShuntMindColor = shuntMindColor ?? borg.Comp.ShuntMindColor;
+        borg.Comp.RemoteControlColor = remoteControlColor ?? borg.Comp.RemoteControlColor;
+        // Only tint when the eye is an emission mask; stock eyes render untinted.
+        borg.Comp.UseMindColors = useMindColors;
     }
 }

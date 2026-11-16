@@ -128,7 +128,8 @@ public sealed partial class BorgSwitchableSubtypeSystem : SharedBorgSwitchableSu
                 borgSubtype.SpriteHasMindColor,
                 borgSubtype.SpriteNoMindColor,
                 borgSubtype.SpriteShuntMindColor,
-                borgSubtype.SpriteRemoteControlColor);
+                borgSubtype.SpriteRemoteControlColor,
+                borgSubtype.SpriteEmissionPath != null);
 
             if (TryComp(entity, out AppearanceComponent? appearance))
             {

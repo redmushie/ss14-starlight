@@ -111,12 +111,13 @@ public sealed partial class BorgSystem : SharedBorgSystem
         Color mindColor;
         if (isRemoteControlled)
         {
-            mindState = ent.Comp1.RemoteControlState;
+            // Shunt/remote reuse the has-mind sprite when no dedicated state is set.
+            mindState = string.IsNullOrEmpty(ent.Comp1.RemoteControlState) ? ent.Comp1.HasMindState : ent.Comp1.RemoteControlState;
             mindColor = ent.Comp1.RemoteControlColor;
         }
         else if (hasPlayer && isShunted)
         {
-            mindState = ent.Comp1.ShuntMindState;
+            mindState = string.IsNullOrEmpty(ent.Comp1.ShuntMindState) ? ent.Comp1.HasMindState : ent.Comp1.ShuntMindState;
             mindColor = ent.Comp1.ShuntMindColor;
         }
         else if (hasPlayer)
@@ -129,6 +130,12 @@ public sealed partial class BorgSystem : SharedBorgSystem
             mindState = ent.Comp1.NoMindState;
             mindColor = ent.Comp1.NoMindColor;
         }
+
+        // Mind colors are multiplied onto the eye, so they only read correctly on a
+        // greyscale emission mask. UseMindColors is set only when the subtype configured an
+        // emission mask; a stock pre-colored eye stays untinted (the original behavior).
+        if (!ent.Comp1.UseMindColors)
+            mindColor = Color.White;
 
         var isActive = ent.Comp1.BrainEntity != null || hasPlayerOrRemoteControl;
         _sprite.LayerSetVisible((ent.Owner, ent.Comp3), BorgVisualLayers.Light, isActive);

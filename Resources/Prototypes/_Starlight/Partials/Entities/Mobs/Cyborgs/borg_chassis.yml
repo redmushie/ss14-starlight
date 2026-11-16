@@ -1,18 +1,26 @@
-#- type: !PartialOnly entity
-#  id: BorgChassisSelectable
-#  components:
-#  - type: Sprite
-#    layers:
-#      - state: borg
-#        map: [ "movement", "enum.BorgVisualLayers.Body" ]
-#      - state: borg_e_r
-#        map: [ "enum.BorgVisualLayers.Light" ]
-#        shader: unshaded
-#        visible: false
-#      - state: borg_l
-#        shader: unshaded
-#        map: [ "light","enum.BorgVisualLayers.LightStatus" ]
-#        visible: false
+# Starlight: unselected chassis uses the standard emission mask (its borg_e art == standard_e)
+# so the bare borg tints like a converted one. !Remove drops the stock Light layer and !Index:1
+# puts the emission layer back in its place; a selected subtype rebuilds the layers anyway.
+- type: !PartialOnly entity
+  id: BorgChassisSelectable
+  components:
+  - type: Sprite
+    layers:
+    - !Remove
+      state: borg_e_r
+      map: [ "enum.BorgVisualLayers.Light" ]
+      shader: unshaded
+      visible: false
+    - !Index:1
+      sprite: _Starlight/Mobs/Silicon/Chassis/emission/standard.rsi
+      state: standard_emission_mind
+      map: [ "enum.BorgVisualLayers.Light" ]
+      shader: unshaded
+      visible: false
+  - type: BorgChassis
+    hasMindState: standard_emission_mind
+    noMindState: standard_emission_mind
+    useMindColors: true
 
 - type: !PartialOnly entity
   id: BorgChassisSyndicateMedical

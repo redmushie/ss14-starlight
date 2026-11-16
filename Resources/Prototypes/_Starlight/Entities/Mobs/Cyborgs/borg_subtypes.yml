@@ -36,8 +36,9 @@
     - type: BorgSubtypeDefinition
       spritePath: Mobs/Silicon/Chassis/engineer.rsi
       spriteBodyState: antique
-      spriteHasMindState: antique_e
-      spriteNoMindState: antique_e_r
+      spriteEmissionPath: _Starlight/Mobs/Silicon/Chassis/emission/antique.rsi
+      spriteHasMindState: antique_emission_mind
+      spriteNoMindState: antique_emission_mind
       spriteToggleLightState: antique_l
       inventoryTemplateId: borgTall
 
@@ -76,9 +77,10 @@
   components:
     - type: BorgSubtypeDefinition
       spritePath: _Starlight/Mobs/Silicon/Chassis/tallborgs/tallborgs-engi/mmeka_engi.rsi
+      spriteEmissionPath: _Starlight/Mobs/Silicon/Chassis/tallborgs/tallborgs-engi/mmeka_engi.rsi
       spriteBodyState: borg-alt
-      spriteHasMindState: borg_e
-      spriteNoMindState: borg_e_r
+      spriteHasMindState: borg_emission_mind
+      spriteNoMindState: borg_emission_mind
       spriteToggleLightState: borg_l
       inventoryTemplateId: Tallborg
 
@@ -89,9 +91,10 @@
   components:
     - type: BorgSubtypeDefinition
       spritePath: _Starlight/Mobs/Silicon/Chassis/mezo.rsi
+      spriteEmissionPath: _Starlight/Mobs/Silicon/Chassis/mezo.rsi
       spriteBodyState: engi
-      spriteHasMindState: engi_e
-      spriteNoMindState: engi_e_r
+      spriteHasMindState: engi_emission_mind
+      spriteNoMindState: engi_emission_mind
       spriteToggleLightState: engi_l
       inventoryTemplateId: borg
 # region Generic
@@ -118,8 +121,9 @@
     - type: BorgSubtypeDefinition
       spritePath: Mobs/Silicon/Chassis/generic.rsi
       spriteBodyState: droid
-      spriteHasMindState: droid_e
-      spriteNoMindState: droid_e_r
+      spriteEmissionPath: _Starlight/Mobs/Silicon/Chassis/emission/droid_generic.rsi
+      spriteHasMindState: droid_emission_mind
+      spriteNoMindState: droid_emission_mind
       spriteToggleLightState: droid_l
       inventoryTemplateId: borg
 
@@ -144,9 +148,10 @@
   components:
     - type: BorgSubtypeDefinition
       spritePath: _Starlight/Mobs/Silicon/Chassis/mezo.rsi
+      spriteEmissionPath: _Starlight/Mobs/Silicon/Chassis/mezo.rsi
       spriteBodyState: borg
-      spriteHasMindState: borg_e
-      spriteNoMindState: borg_e_r
+      spriteHasMindState: borg_emission_mind
+      spriteNoMindState: borg_emission_mind
       spriteToggleLightState: borg_l
       inventoryTemplateId: borg
 # region Janitor
@@ -187,8 +192,9 @@
     - type: BorgSubtypeDefinition
       spritePath: Mobs/Silicon/Chassis/janitor.rsi
       spriteBodyState: mopbot
-      spriteHasMindState: mopbot_e
-      spriteNoMindState: mopbot_e_r
+      spriteEmissionPath: _Starlight/Mobs/Silicon/Chassis/emission/antique.rsi
+      spriteHasMindState: antique_emission_mind
+      spriteNoMindState: antique_emission_mind
       spriteToggleLightState: mopbot_l
       inventoryTemplateId: borgTall
 
@@ -227,9 +233,10 @@
   components:
     - type: BorgSubtypeDefinition
       spritePath: _Starlight/Mobs/Silicon/Chassis/tallborgs/tallborgs-jani/mmeka_jani.rsi
+      spriteEmissionPath: _Starlight/Mobs/Silicon/Chassis/tallborgs/tallborgs-jani/mmeka_jani.rsi
       spriteBodyState: borg
-      spriteHasMindState: borg_e
-      spriteNoMindState: borg_e_r
+      spriteHasMindState: borg_emission_mind
+      spriteNoMindState: borg_emission_mind
       spriteToggleLightState: borg_l
       inventoryTemplateId: Tallborg
 
@@ -240,9 +247,10 @@
   components:
     - type: BorgSubtypeDefinition
       spritePath: _Starlight/Mobs/Silicon/Chassis/mezo.rsi
+      spriteEmissionPath: _Starlight/Mobs/Silicon/Chassis/mezo.rsi
       spriteBodyState: jani
-      spriteHasMindState: jani_e
-      spriteNoMindState: jani_e_r
+      spriteHasMindState: jani_emission_mind
+      spriteNoMindState: jani_emission_mind
       spriteToggleLightState: jani_l
       inventoryTemplateId: borg
 # region Medical
@@ -297,8 +305,9 @@
     - type: BorgSubtypeDefinition
       spritePath: Mobs/Silicon/Chassis/medical.rsi
       spriteBodyState: droid
-      spriteHasMindState: droid_e
-      spriteNoMindState: droid_e_r
+      spriteEmissionPath: _Starlight/Mobs/Silicon/Chassis/emission/droid_medical.rsi
+      spriteHasMindState: droid_emission_mind
+      spriteNoMindState: droid_emission_mind
       spriteToggleLightState: droid_l
       inventoryTemplateId: borgDutch
 
@@ -337,9 +346,10 @@
   components:
     - type: BorgSubtypeDefinition
       spritePath: _Starlight/Mobs/Silicon/Chassis/tallborgs/tallborgs-med/mmeka_med.rsi
+      spriteEmissionPath: _Starlight/Mobs/Silicon/Chassis/tallborgs/tallborgs-med/mmeka_med.rsi
       spriteBodyState: borg-alt
-      spriteHasMindState: borg_e
-      spriteNoMindState: borg_e_r
+      spriteHasMindState: borg_emission_mind
+      spriteNoMindState: borg_emission_mind
       spriteToggleLightState: borg_l
       inventoryTemplateId: Tallborg
 
@@ -350,9 +360,10 @@
   components:
     - type: BorgSubtypeDefinition
       spritePath: _Starlight/Mobs/Silicon/Chassis/mezo.rsi
+      spriteEmissionPath: _Starlight/Mobs/Silicon/Chassis/mezo.rsi
       spriteBodyState: medi
-      spriteHasMindState: medi_e
-      spriteNoMindState: medi_e_r
+      spriteHasMindState: medi_emission_mind
+      spriteNoMindState: medi_emission_mind
       spriteToggleLightState: medi_l
       inventoryTemplateId: borg
 # region Mining(Salvage)
@@ -393,8 +404,9 @@
     - type: BorgSubtypeDefinition
       spritePath: Mobs/Silicon/Chassis/miner.rsi
       spriteBodyState: droid
-      spriteHasMindState: droid_e
-      spriteNoMindState: droid_e_r
+      spriteEmissionPath: _Starlight/Mobs/Silicon/Chassis/emission/droid_miner.rsi
+      spriteHasMindState: droid_emission_mind
+      spriteNoMindState: droid_emission_mind
       spriteToggleLightState: droid_l
       inventoryTemplateId: borgDutch
 
@@ -434,8 +446,9 @@
     - type: BorgSubtypeDefinition
       spritePath: Mobs/Silicon/Chassis/miner.rsi
       spriteBodyState: beetle
-      spriteHasMindState: beetle_e
-      spriteNoMindState: beetle_e_r
+      spriteEmissionPath: _Starlight/Mobs/Silicon/Chassis/emission/beetle.rsi
+      spriteHasMindState: beetle_emission_mind
+      spriteNoMindState: beetle_emission_mind
       spriteToggleLightState: beetle_l
       inventoryTemplateId: borg
 
@@ -446,9 +459,10 @@
   components:
     - type: BorgSubtypeDefinition
       spritePath: _Starlight/Mobs/Silicon/Chassis/tallborgs/tallborgs-salv/mmeka_salv.rsi
+      spriteEmissionPath: _Starlight/Mobs/Silicon/Chassis/tallborgs/tallborgs-salv/mmeka_salv.rsi
       spriteBodyState: borg-alt
-      spriteHasMindState: borg_e
-      spriteNoMindState: borg_e_r
+      spriteHasMindState: borg_emission_mind
+      spriteNoMindState: borg_emission_mind
       spriteToggleLightState: borg_l
       inventoryTemplateId: Tallborg
 
@@ -459,9 +473,10 @@
   components:
     - type: BorgSubtypeDefinition
       spritePath: _Starlight/Mobs/Silicon/Chassis/mezo.rsi
+      spriteEmissionPath: _Starlight/Mobs/Silicon/Chassis/mezo.rsi
       spriteBodyState: mining
-      spriteHasMindState: mining_e
-      spriteNoMindState: mining_e_r
+      spriteHasMindState: mining_emission_mind
+      spriteNoMindState: mining_emission_mind
       spriteToggleLightState: mining_l
       inventoryTemplateId: borg
 # region Service
@@ -514,8 +529,9 @@
     - type: BorgSubtypeDefinition
       spritePath: Mobs/Silicon/Chassis/service.rsi
       spriteBodyState: brobot
-      spriteHasMindState: brobot_e
-      spriteNoMindState: brobot_e_r
+      spriteEmissionPath: _Starlight/Mobs/Silicon/Chassis/emission/brobot.rsi
+      spriteHasMindState: brobot_emission_mind
+      spriteNoMindState: brobot_emission_mind
       inventoryTemplateId: borgTall
 
 - type: entity
@@ -526,8 +542,9 @@
     - type: BorgSubtypeDefinition
       spritePath: Mobs/Silicon/Chassis/service.rsi
       spriteBodyState: maximillion
-      spriteHasMindState: maximillion_e
-      spriteNoMindState: maximillion_e_r
+      spriteEmissionPath: _Starlight/Mobs/Silicon/Chassis/emission/maximillion.rsi
+      spriteHasMindState: maximillion_emission_mind
+      spriteNoMindState: maximillion_emission_mind
       price: 500
       inventoryTemplateId: borgTall
 
@@ -566,9 +583,10 @@
   components:
     - type: BorgSubtypeDefinition
       spritePath: _Starlight/Mobs/Silicon/Chassis/tallborgs/tallborgs-service/meka_alt_service.rsi
+      spriteEmissionPath: _Starlight/Mobs/Silicon/Chassis/tallborgs/tallborgs-service/meka_alt_service.rsi
       spriteBodyState: borg
-      spriteHasMindState: borg_e
-      spriteNoMindState: borg_e_r
+      spriteHasMindState: borg_emission_mind
+      spriteNoMindState: borg_emission_mind
       spriteToggleLightState: borg_l
       inventoryTemplateId: Tallborg
 
@@ -579,9 +597,10 @@
   components:
     - type: BorgSubtypeDefinition
       spritePath: _Starlight/Mobs/Silicon/Chassis/mezo.rsi
+      spriteEmissionPath: _Starlight/Mobs/Silicon/Chassis/mezo.rsi
       spriteBodyState: service
-      spriteHasMindState: service_e
-      spriteNoMindState: service_e_r
+      spriteHasMindState: service_emission_mind
+      spriteNoMindState: service_emission_mind
       spriteToggleLightState: service_l
       inventoryTemplateId: borg
 # region Security
@@ -593,9 +612,10 @@
   components:
     - type: BorgSubtypeDefinition
       spritePath: _Starlight/Mobs/Silicon/Chassis/security.rsi
+      spriteEmissionPath: _Starlight/Mobs/Silicon/Chassis/security.rsi
       spriteBodyState: red-knight
-      spriteHasMindState: red-knight_e
-      spriteNoMindState: red-knight_e_r
+      spriteHasMindState: red-knight_emission_mind
+      spriteNoMindState: red-knight_emission_mind
       spriteToggleLightState: red-knight_l
       inventoryTemplateId: borgTall
 
@@ -606,9 +626,10 @@
   components:
     - type: BorgSubtypeDefinition
       spritePath: _Starlight/Mobs/Silicon/Chassis/security.rsi
+      spriteEmissionPath: _Starlight/Mobs/Silicon/Chassis/security.rsi
       spriteBodyState: black-knight
-      spriteHasMindState: black-knight_e
-      spriteNoMindState: black-knight_e_r
+      spriteHasMindState: black-knight_emission_mind
+      spriteNoMindState: black-knight_emission_mind
       spriteToggleLightState: black-knight_l
       inventoryTemplateId: borgTall
 
@@ -647,9 +668,10 @@
   components:
     - type: BorgSubtypeDefinition
       spritePath: _Starlight/Mobs/Silicon/Chassis/security.rsi
+      spriteEmissionPath: _Starlight/Mobs/Silicon/Chassis/security.rsi
       spriteBodyState: cricket
-      spriteHasMindState: cricket_e
-      spriteNoMindState: cricket_e_r
+      spriteHasMindState: cricket_emission_mind
+      spriteNoMindState: cricket_emission_mind
       spriteToggleLightState: cricket_l
       inventoryTemplateId: borgDutch
 
@@ -660,9 +682,10 @@
   components:
     - type: BorgSubtypeDefinition
       spritePath: _Starlight/Mobs/Silicon/Chassis/security.rsi
+      spriteEmissionPath: _Starlight/Mobs/Silicon/Chassis/security.rsi
       spriteBodyState: heavy
-      spriteHasMindState: heavy_e
-      spriteNoMindState: heavy_e_r
+      spriteHasMindState: heavy_emission_mind
+      spriteNoMindState: heavy_emission_mind
       spriteToggleLightState: heavy_l
       inventoryTemplateId: borg
 
@@ -717,8 +740,9 @@
     - type: BorgSubtypeDefinition
       spritePath: Mobs/Silicon/Chassis/cargo.rsi
       spriteBodyState: real_tech
-      spriteHasMindState: real_tech_e
-      spriteNoMindState: real_tech_e_r
+      spriteEmissionPath: _Starlight/Mobs/Silicon/Chassis/emission/real_tech.rsi
+      spriteHasMindState: real_tech_emission_mind
+      spriteNoMindState: real_tech_emission_mind
       spriteToggleLightState: real_tech_l
       inventoryTemplateId: borgTall
 
@@ -729,9 +753,10 @@
   components:
     - type: BorgSubtypeDefinition
       spritePath: _Starlight/Mobs/Silicon/Chassis/tallborgs/tallborgs-cargo/meka_cargo.rsi
+      spriteEmissionPath: _Starlight/Mobs/Silicon/Chassis/tallborgs/tallborgs-cargo/meka_cargo.rsi
       spriteBodyState: borg-alt
-      spriteHasMindState: borg_e
-      spriteNoMindState: borg_e_r
+      spriteHasMindState: borg_emission_mind
+      spriteNoMindState: borg_emission_mind
       spriteToggleLightState: borg_l
       inventoryTemplateId: Tallborg
 
@@ -742,9 +767,10 @@
   components:
     - type: BorgSubtypeDefinition
       spritePath: _Starlight/Mobs/Silicon/Chassis/tallborgs/tallborgs-cargo/mmeka_cargo.rsi
+      spriteEmissionPath: _Starlight/Mobs/Silicon/Chassis/tallborgs/tallborgs-cargo/mmeka_cargo.rsi
       spriteBodyState: borg-alt
-      spriteHasMindState: borg_e
-      spriteNoMindState: borg_e_r
+      spriteHasMindState: borg_emission_mind
+      spriteNoMindState: borg_emission_mind
       spriteToggleLightState: borg_l
       inventoryTemplateId: Tallborg
 
@@ -755,9 +781,10 @@
   components:
     - type: BorgSubtypeDefinition
       spritePath: _Starlight/Mobs/Silicon/Chassis/mezo.rsi
+      spriteEmissionPath: _Starlight/Mobs/Silicon/Chassis/mezo.rsi
       spriteBodyState: cargo
-      spriteHasMindState: cargo_e
-      spriteNoMindState: cargo_e_r
+      spriteHasMindState: cargo_emission_mind
+      spriteNoMindState: cargo_emission_mind
       spriteToggleLightState: cargo_l
       inventoryTemplateId: borg
 # region Purrfus
