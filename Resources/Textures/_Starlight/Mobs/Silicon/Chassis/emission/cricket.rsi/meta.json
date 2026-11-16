@@ -1,0 +1,17 @@
+{
+  "version": 1,
+  "size": {
+    "x": 32,
+    "y": 32
+  },
+  "license": "CC-BY-SA-3.0",
+  "copyright": "State based copyright",
+  "states": [
+    {
+      "name": "cricket_emission_mind",
+      "directions": 4,
+      "copyright": "Cricket by Conflee (GitHub), split into cricket_emission_mind by @redmushie (GitHub).",
+      "license": "CC-BY-SA-3.0"
+    }
+  ]
+}

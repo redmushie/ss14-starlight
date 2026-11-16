@@ -49,8 +49,9 @@
     - type: BorgSubtypeDefinition
       spritePath: Mobs/Silicon/Chassis/engineer.rsi
       spriteBodyState: noble
-      spriteHasMindState: noble_e
-      spriteNoMindState: noble_e_r
+      spriteEmissionPath: _Starlight/Mobs/Silicon/Chassis/emission/noble.rsi
+      spriteHasMindState: noble_emission_mind
+      spriteNoMindState: noble_emission_mind
       spriteToggleLightState: noble_l
       inventoryTemplateId: borgDutch
 
@@ -62,8 +63,9 @@
     - type: BorgSubtypeDefinition
       spritePath: Mobs/Silicon/Chassis/engineer.rsi
       spriteBodyState: cricket
-      spriteHasMindState: cricket_e
-      spriteNoMindState: cricket_e_r
+      spriteEmissionPath: _Starlight/Mobs/Silicon/Chassis/emission/cricket.rsi
+      spriteHasMindState: cricket_emission_mind
+      spriteNoMindState: cricket_emission_mind
       spriteToggleLightState: cricket_l
       inventoryTemplateId: borgDutch
 
@@ -129,8 +131,9 @@
     - type: BorgSubtypeDefinition
       spritePath: Mobs/Silicon/Chassis/generic.rsi
       spriteBodyState: noble
-      spriteHasMindState: noble_e
-      spriteNoMindState: noble_e_r
+      spriteEmissionPath: _Starlight/Mobs/Silicon/Chassis/emission/noble.rsi
+      spriteHasMindState: noble_emission_mind
+      spriteNoMindState: noble_emission_mind
       spriteToggleLightState: noble_l
       inventoryTemplateId: borgDutch
 
@@ -197,8 +200,9 @@
     - type: BorgSubtypeDefinition
       spritePath: Mobs/Silicon/Chassis/janitor.rsi
       spriteBodyState: noble
-      spriteHasMindState: noble_e
-      spriteNoMindState: noble_e_r
+      spriteEmissionPath: _Starlight/Mobs/Silicon/Chassis/emission/noble.rsi
+      spriteHasMindState: noble_emission_mind
+      spriteNoMindState: noble_emission_mind
       spriteToggleLightState: noble_l
       inventoryTemplateId: borgDutch
 
@@ -210,8 +214,9 @@
     - type: BorgSubtypeDefinition
       spritePath: Mobs/Silicon/Chassis/janitor.rsi
       spriteBodyState: cricket
-      spriteHasMindState: cricket_e
-      spriteNoMindState: cricket_e_r
+      spriteEmissionPath: _Starlight/Mobs/Silicon/Chassis/emission/cricket.rsi
+      spriteHasMindState: cricket_emission_mind
+      spriteNoMindState: cricket_emission_mind
       spriteToggleLightState: cricket_l
       inventoryTemplateId: borgDutch
 
@@ -305,8 +310,9 @@
     - type: BorgSubtypeDefinition
       spritePath: Mobs/Silicon/Chassis/medical.rsi
       spriteBodyState: noble
-      spriteHasMindState: noble_e
-      spriteNoMindState: noble_e_r
+      spriteEmissionPath: _Starlight/Mobs/Silicon/Chassis/emission/noble.rsi
+      spriteHasMindState: noble_emission_mind
+      spriteNoMindState: noble_emission_mind
       spriteToggleLightState: noble_l
       inventoryTemplateId: borgDutch
 
@@ -318,8 +324,9 @@
     - type: BorgSubtypeDefinition
       spritePath: Mobs/Silicon/Chassis/medical.rsi
       spriteBodyState: cricket
-      spriteHasMindState: cricket_e
-      spriteNoMindState: cricket_e_r
+      spriteEmissionPath: _Starlight/Mobs/Silicon/Chassis/emission/cricket.rsi
+      spriteHasMindState: cricket_emission_mind
+      spriteNoMindState: cricket_emission_mind
       spriteToggleLightState: cricket_l
       inventoryTemplateId: borgDutch
 
@@ -399,8 +406,9 @@
     - type: BorgSubtypeDefinition
       spritePath: Mobs/Silicon/Chassis/miner.rsi
       spriteBodyState: noble
-      spriteHasMindState: noble_e
-      spriteNoMindState: noble_e_r
+      spriteEmissionPath: _Starlight/Mobs/Silicon/Chassis/emission/noble.rsi
+      spriteHasMindState: noble_emission_mind
+      spriteNoMindState: noble_emission_mind
       spriteToggleLightState: noble_l
       inventoryTemplateId: borgDutch
 
@@ -412,8 +420,9 @@
     - type: BorgSubtypeDefinition
       spritePath: Mobs/Silicon/Chassis/miner.rsi
       spriteBodyState: cricket
-      spriteHasMindState: cricket_e
-      spriteNoMindState: cricket_e_r
+      spriteEmissionPath: _Starlight/Mobs/Silicon/Chassis/emission/cricket.rsi
+      spriteHasMindState: cricket_emission_mind
+      spriteNoMindState: cricket_emission_mind
       spriteToggleLightState: cricket_l
       inventoryTemplateId: borgDutch
 
@@ -530,8 +539,9 @@
     - type: BorgSubtypeDefinition
       spritePath: Mobs/Silicon/Chassis/service.rsi
       spriteBodyState: noble
-      spriteHasMindState: noble_e
-      spriteNoMindState: noble_e_r
+      spriteEmissionPath: _Starlight/Mobs/Silicon/Chassis/emission/noble_alt.rsi
+      spriteHasMindState: noble_emission_mind
+      spriteNoMindState: noble_emission_mind
       spriteToggleLightState: noble_l
       inventoryTemplateId: borgDutch
 
@@ -543,8 +553,9 @@
     - type: BorgSubtypeDefinition
       spritePath: Mobs/Silicon/Chassis/service.rsi
       spriteBodyState: cricket
-      spriteHasMindState: cricket_e
-      spriteNoMindState: cricket_e_r
+      spriteEmissionPath: _Starlight/Mobs/Silicon/Chassis/emission/cricket.rsi
+      spriteHasMindState: cricket_emission_mind
+      spriteNoMindState: cricket_emission_mind
       spriteToggleLightState: cricket_l
       inventoryTemplateId: borgDutch
 
@@ -623,8 +634,9 @@
     - type: BorgSubtypeDefinition
       spritePath: _Starlight/Mobs/Silicon/Chassis/security.rsi
       spriteBodyState: noble
-      spriteHasMindState: noble_e
-      spriteNoMindState: noble_e_r
+      spriteEmissionPath: _Starlight/Mobs/Silicon/Chassis/emission/noble_alt.rsi
+      spriteHasMindState: noble_emission_mind
+      spriteNoMindState: noble_emission_mind
       spriteToggleLightState: noble_l
       inventoryTemplateId: borgDutch
 
@@ -678,8 +690,9 @@
     - type: BorgSubtypeDefinition
       spritePath: Mobs/Silicon/Chassis/cargo.rsi
       spriteBodyState: noble
-      spriteHasMindState: noble_e
-      spriteNoMindState: noble_e_r
+      spriteEmissionPath: _Starlight/Mobs/Silicon/Chassis/emission/noble.rsi
+      spriteHasMindState: noble_emission_mind
+      spriteNoMindState: noble_emission_mind
       spriteToggleLightState: noble_l
 
 - type: entity
@@ -690,8 +703,9 @@
     - type: BorgSubtypeDefinition
       spritePath: Mobs/Silicon/Chassis/cargo.rsi
       spriteBodyState: cricket
-      spriteHasMindState: cricket_e
-      spriteNoMindState: cricket_e_r
+      spriteEmissionPath: _Starlight/Mobs/Silicon/Chassis/emission/cricket.rsi
+      spriteHasMindState: cricket_emission_mind
+      spriteNoMindState: cricket_emission_mind
       spriteToggleLightState: cricket_l
       inventoryTemplateId: borgDutch
 
