@@ -49,25 +49,7 @@ public abstract partial class SharedBorgSwitchableSubtypeSystem : EntitySystem
         SelectBorgSubtype(ent);
     }
 
-    /// <summary>
-    /// Starlight: the effective subtype to render — the explicitly selected one, or the
-    /// current borg type's <see cref="BorgTypePrototype.DefaultSubtype"/> when none is set.
-    /// </summary>
-    protected ProtoId<EntityPrototype>? ResolveSubtype(Entity<BorgSwitchableSubtypeComponent> ent)
-    {
-        if (ent.Comp.BorgSubtype is { } explicitSubtype)
-            return explicitSubtype;
-
-        if (TryComp<BorgSwitchableTypeComponent>(ent, out var type)
-            && type.SelectedBorgType is { } typeId
-            && Prototypes.TryIndex(typeId, out var typeProto)
-            && typeProto.DefaultSubtype is { } def)
-            return def;
-
-        return null;
-    }
-
-    protected virtual void SelectBorgSubtype(Entity<BorgSwitchableSubtypeComponent> ent) => UpdateEntityAppearance(ent); // Starlight
+    protected virtual void SelectBorgSubtype(Entity<BorgSwitchableSubtypeComponent> ent) => UpdateEntityAppearance(ent); // Starlight-edit
 
     private void UpdateEntityAppearance(Entity<BorgSwitchableSubtypeComponent> entity)
     {
@@ -80,7 +62,7 @@ public abstract partial class SharedBorgSwitchableSubtypeSystem : EntitySystem
     protected virtual void UpdateEntityAppearance(Entity<BorgSwitchableSubtypeComponent> entity,
         EntityPrototype borgSubtypePrototype)
     {
-        if (!borgSubtypePrototype.TryComp<BorgSubtypeDefinitionComponent>(out var borgSubtype, ComponentFactory)) // Starlight
+        if (!borgSubtypePrototype.TryComp<BorgSubtypeDefinitionComponent>(out var borgSubtype, ComponentFactory)) // Starlight-edit
             return;
 
         if (TryComp(entity, out InteractionPopupComponent? popup))
@@ -95,28 +77,5 @@ public abstract partial class SharedBorgSwitchableSubtypeSystem : EntitySystem
         }
     }
 
-    #region Starlight
-    private void SelectSubtypeMessageHandler(Entity<BorgSwitchableTypeComponent> ent, ref BorgSelectSubtypeMessage args)
-    {
-        if (args.Subtype is { } requested && !Prototypes.HasIndex(requested))
-            return;
 
-        if (!TryComp<BorgSwitchableSubtypeComponent>(ent, out var subtypeComp))
-        {
-            _switchableType.TrySelectBorgType(ent, args.BorgType);
-            return;
-        }
-
-        var previous = subtypeComp.BorgSubtype;
-        subtypeComp.BorgSubtype = args.Subtype;
-
-        if (!_switchableType.TrySelectBorgType(ent, args.BorgType))
-        {
-            subtypeComp.BorgSubtype = previous;
-            return;
-        }
-
-        Dirty(ent.Owner, subtypeComp);
-    }
-    #endregion
 }

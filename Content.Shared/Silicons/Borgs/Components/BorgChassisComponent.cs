@@ -122,34 +122,6 @@ public sealed partial class BorgChassisComponent : Component
 
     [DataField]
     public string NoMindState = string.Empty;
-
-    // Starlight begin
-    [DataField]
-    public string ShuntMindState = string.Empty;
-
-    [DataField]
-    public string RemoteControlState = string.Empty;
-
-    [DataField]
-    public Color HasMindColor = Color.FromHex("#00cfe6"); // Blue
-
-    [DataField]
-    public Color NoMindColor = Color.FromHex("#ffc300"); // Yellow
-
-    [DataField]
-    public Color ShuntMindColor = Color.FromHex("#ed5aed"); // Magenta
-
-    [DataField]
-    public Color RemoteControlColor = Color.FromHex("#35e935"); // Green
-
-    /// <summary>
-    /// Set when the eye is a greyscale emission mask (the subtype configured a
-    /// SpriteEmissionPath), so the mind colors may be multiplied onto it. False leaves the
-    /// stock pre-colored eye untinted — the original behavior.
-    /// </summary>
-    [DataField]
-    public bool UseMindColors = false;
-    // Starlight end
     #endregion
 
     /// <summary>
@@ -176,13 +148,6 @@ public sealed partial class BorgChassisComponent : Component
     /// </summary>
     [DataField]
     public bool CanOpenSelfUi;
-
-    // Starlight begin
-    [DataField] public ProtoId<JobIconPrototype> JobIconOverride = "JobIconBorg";
-    [DataField] private string? _jobTitle;
-    [DataField] public LocId? JobTitleOverride = "job-name-borg";
-    public string? LocalizedJobTitle { set => _jobTitle = value; get => _jobTitle ?? Loc.GetString(JobTitleOverride ?? string.Empty); }
-    // Starlight end
 }
 
 [Serializable, NetSerializable]
@@ -210,10 +175,12 @@ public enum BorgVisualLayers : byte
     /// </summary>
     LightStatus,
 
+    // Starlight START
     /// <summary>
     /// Starlight: optional pre-colored emission that is simply on/off with the borg's
     /// mind/control state, shown alongside (not instead of) the mind-state <see cref="Light"/>
     /// eye. Only exists when a subtype defines a <c>PoweredState</c>.
     /// </summary>
     Powered,
+    // Starlight END
 }
